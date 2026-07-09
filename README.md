@@ -1,6 +1,10 @@
-# Turbo Monorepo
+# OutScout
 
-A full-stack monorepo built with [Turborepo](https://turbo.build/repo), featuring a NestJS API and a Next.JS web app with shared DTOs.
+A geo-targeted B2B lead generation and outreach platform. Find local businesses via Google Maps, enrich them with contact details, and reach out via WhatsApp, email, or cold call — all from one dashboard.
+
+> Built for freelancers and agencies targeting Pakistan and Gulf markets where WhatsApp is the dominant communication channel.
+
+---
 
 ## Stack
 
@@ -18,12 +22,14 @@ A full-stack monorepo built with [Turborepo](https://turbo.build/repo), featurin
 | Auth     | JWT, bcrypt                                   |
 | DevOps   | Docker, Docker Compose, GitHub Actions CI     |
 
+See [BUSINESS_LOGIC.md](./BUSINESS_LOGIC.md) for a full breakdown of the product concept, workflow, and outreach rules.
+
 ---
 
 ## Repository Structure
 
 ```
-turbo/
+outscout/
 ├── apps/
 │   ├── api/                # NestJS backend (DDD)
 │   │   └── src/
@@ -57,6 +63,7 @@ turbo/
 │   └── typescript-config/  # Shared TypeScript config
 ├── Dockerfile              # Multi-stage Docker build for the API
 ├── compose.yaml            # Docker Compose for production API
+├── BUSINESS_LOGIC.md       # Product concept and business rules
 └── turbo.json
 ```
 
