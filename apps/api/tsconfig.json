@@ -1,0 +1,27 @@
+{
+  "extends": "@repo/typescript-config/base.json",
+  "compilerOptions": {
+    "target": "es2024",
+    "strict": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "incremental": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@common/*": ["./src/common/*"],
+      "@schema/*": ["./src/database/schema/*"],
+      "@database/*": ["./src/database/*"],
+      "@middleware/*": ["./src/middleware/*"],
+      "@modules/*": ["./src/modules/*"],
+      "@src/*": ["./src/*"]
+    }
+  },
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "eslint.config.ts"]
+}

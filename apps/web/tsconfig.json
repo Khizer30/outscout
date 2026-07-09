@@ -1,0 +1,20 @@
+{
+  "extends": "@repo/typescript-config/base.json",
+  "compilerOptions": {
+    "plugins": [{ "name": "next" }],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "allowJs": true,
+    "noEmit": true,
+    "baseUrl": "./",
+    "paths": {
+      "@app/*": ["./app/*"],
+      "@features/*": ["./features/*"],
+      "@locales/*": ["./locales/*"],
+      "@shared/*": ["./shared/*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", "next.config.js", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

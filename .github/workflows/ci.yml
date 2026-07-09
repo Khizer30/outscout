@@ -1,0 +1,51 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [24]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.JS
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+
+      - name: Install Root Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create .env files
+        env:
+          WEB_ENV_FILE: ${{ secrets.WEB_ENV_FILE }}
+          API_ENV_FILE: ${{ secrets.API_ENV_FILE }}
+        run: |
+          printf "%s" "$WEB_ENV_FILE" > apps/web/.env
+          printf "%s" "$API_ENV_FILE" > apps/api/.env
+
+      - name: Lint Check
+        run: pnpm lint
+
+      - name: Format Check
+        run: pnpm format
+
+      - name: TypeScript Check
+        run: pnpm typecheck
+
+      - name: Build Check
+        run: pnpm build

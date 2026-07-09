@@ -1,0 +1,48 @@
+# Logs
+*.log
+
+# Dependency Directories
+node_modules
+
+# Compiled
+dists
+dist
+build
+.next
+out
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment Variable Files
+.env
+.env.*
+!.env.example
+
+# Developer Directories
+.Extras
+.claude
+.vscode
+
+# Playwright
+playwright
+playwright-report
+test-results
+
+# Turbo
+.turbo
+
+# Vercel
+.vercel
+
+# Misc
+*.pem
+
+# Postman
+postman
+
+# Git
+.git
+.gitignore
+.gitattributes

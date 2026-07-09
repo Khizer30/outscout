@@ -1,0 +1,23 @@
+{
+  "name": "@repo/dtos",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./user": {
+      "types": "./dist/user/index.d.ts",
+      "default": "./dist/user/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "nestjs-zod": "^5.4.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "^5.9.2"
+  }
+}
