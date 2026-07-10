@@ -127,8 +127,8 @@ async function searchNearby(): Promise<void> {
     console.info(`  Phone (local) : ${place.nationalPhoneNumber ?? "N/A"}`);
     console.info(`  Phone (intl)  : ${place.internationalPhoneNumber ?? "N/A"}`);
     console.info(`  Website       : ${place.websiteUri ?? "N/A"}`);
-    console.info(`  Rating        : ${place.rating != null ? `${place.rating} ? (${place.userRatingCount} reviews)` : "N/A"}`);
-    console.info(`  Open Now      : ${place.regularOpeningHours != null ? (place.regularOpeningHours.openNow ? "Yes" : "No") : "N/A"}`);
+    console.info(`  Rating        : ${place.rating !== null ? `${place.rating} ? (${place.userRatingCount} reviews)` : "N/A"}`);
+    console.info(`  Open Now      : ${place.regularOpeningHours !== null ? (place?.regularOpeningHours?.openNow ? "Yes" : "No") : "N/A"}`);
   });
 
   console.info("-".repeat(60) + "\n");
