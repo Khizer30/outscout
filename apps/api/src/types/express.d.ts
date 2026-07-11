@@ -4,7 +4,9 @@ declare namespace Express {
       id: string;
       name?: string;
       email?: string;
-      role?: string;
+      companyId?: string;
+      companyRole?: string;
+      isSuperAdmin?: boolean;
     };
   }
 }

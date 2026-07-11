@@ -4,7 +4,16 @@ import { User, UserInsert } from "@schema/index";
 
 export class UserMapper {
   static toDomain(row: User): UserEntity {
-    return new UserEntity(row.id, row.name, row.email, row.password, row.role, row.createdAt, row.updatedAt, row.deletedAt);
+    return new UserEntity(
+      row.id,
+      row.name,
+      row.email,
+      row.passwordHash,
+      row.isSuperAdmin ? "ADMIN" : "USER",
+      row.createdAt,
+      row.updatedAt,
+      row.deletedAt
+    );
   }
 
   static toPersistence(entity: UserEntity): UserInsert {
@@ -12,8 +21,8 @@ export class UserMapper {
       id: entity.id,
       name: entity.name,
       email: entity.email,
-      password: entity.password,
-      role: entity.role
+      passwordHash: entity.password,
+      isSuperAdmin: entity.role === "ADMIN"
     };
   }
 
@@ -28,3 +37,4 @@ export class UserMapper {
     };
   }
 }
+

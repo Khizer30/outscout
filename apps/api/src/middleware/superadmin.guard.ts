@@ -1,21 +1,20 @@
-import Roles from "@middleware/roles.decorator";
+import SuperAdmin from "@middleware/superadmin.decorator";
 import { JWTService } from "@modules/jwt/services/jwt.service";
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { type CompanyMembershipRole } from "@schema/index";
 import { type Request } from "express";
 import { type JwtPayload } from "jsonwebtoken";
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class SuperAdminGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly jwtService: JWTService
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const roles: CompanyMembershipRole[] = this.reflector.get(Roles, context.getHandler());
-    if (!roles) {
+    const isSuperAdminRequired = this.reflector.get(SuperAdmin, context.getHandler());
+    if (!isSuperAdminRequired) {
       return true;
     }
 
@@ -37,15 +36,7 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException("Invalid token payload");
     }
 
-    if (request.user.isSuperAdmin) {
-      return true;
-    }
-
-    if (!request.user.companyRole) {
-      throw new ForbiddenException("Insufficient permissions to access this resource");
-    }
-
-    if (!roles.includes(request.user.companyRole as CompanyMembershipRole)) {
+    if (!request.user.isSuperAdmin) {
       throw new ForbiddenException("Insufficient permissions to access this resource");
     }
 

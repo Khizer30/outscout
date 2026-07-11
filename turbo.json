@@ -5,6 +5,8 @@
     "CI",
     "PORT",
     "NODE_ENV",
+    "CORS_ORIGINS",
+    "ENCRYPTION_KEY",
     "JWT_SECRET",
     "JWT_EXPIRE_TIME",
     "JWT_REFRESH_SECRET",
