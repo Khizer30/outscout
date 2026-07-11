@@ -1,4 +1,4 @@
-import { DatabaseService } from "@database/database.service";
+import { DatabaseService } from "@database/services/database.service";
 import { UserEntity } from "@modules/user/domain/user.entity";
 import { UserRepository } from "@modules/user/domain/user.repository";
 import { UserMapper } from "@modules/user/infrastructure/user.mapper";
