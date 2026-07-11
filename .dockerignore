@@ -5,10 +5,10 @@
 node_modules
 
 # Compiled
+.next
 dists
 dist
 build
-.next
 out
 
 # TypeScript
