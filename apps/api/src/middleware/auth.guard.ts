@@ -2,7 +2,7 @@ import Roles from "@middleware/roles.decorator";
 import { JWTService } from "@modules/jwt/services/jwt.service";
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { type Role } from "@schema/index";
+import { type CompanyMembershipRole } from "@schema/index";
 import { type Request } from "express";
 import { type JwtPayload } from "jsonwebtoken";
 
@@ -14,7 +14,7 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const roles: Role[] = this.reflector.get(Roles, context.getHandler());
+    const roles: CompanyMembershipRole[] = this.reflector.get(Roles, context.getHandler());
     if (!roles) {
       return true;
     }
@@ -37,7 +37,7 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException("Invalid token payload");
     }
 
-    if (!roles.includes(request.user.role as Role)) {
+    if (!roles.includes(request.user.role as CompanyMembershipRole)) {
       throw new ForbiddenException("Insufficient permissions to access this resource");
     }
 
