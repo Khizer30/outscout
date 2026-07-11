@@ -28,9 +28,12 @@ copilot-instructions.md
 CLAUDE.md
 
 # Playwright
+test-results
+blob-report
 playwright
 playwright-report
-test-results
+playwright/.cache
+playwright/.auth
 
 # Turbo
 .turbo

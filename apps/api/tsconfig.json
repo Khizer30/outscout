@@ -20,7 +20,8 @@
       "@database/*": ["./src/database/*"],
       "@middleware/*": ["./src/middleware/*"],
       "@modules/*": ["./src/modules/*"],
-      "@src/*": ["./src/*"]
+      "@src/*": ["./src/*"],
+      "@tests/*": ["./tests/*"]
     }
   },
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "eslint.config.ts"]
