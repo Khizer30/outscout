@@ -1,5 +1,5 @@
 import Roles from "@middleware/roles.decorator";
-import { JWTService } from "@modules/jwt/jwt.service";
+import { JWTService } from "@modules/jwt/services/jwt.service";
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { type Role } from "@schema/index";

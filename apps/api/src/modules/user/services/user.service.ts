@@ -1,4 +1,4 @@
-import { HashService } from "@modules/hash/hash.service";
+import { HashService } from "@modules/hash/services/hash.service";
 import { UserEntity } from "@modules/user/domain/user.entity";
 import { UserAlreadyExistsError, UserNotFoundError } from "@modules/user/domain/user.errors";
 import { UserRepository } from "@modules/user/domain/user.repository";
