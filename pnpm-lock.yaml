@@ -129,6 +129,9 @@ importers:
       jiti:
         specifier: ^2.6.1
         version: 2.7.0
+      playwright:
+        specifier: ^1.61.1
+        version: 1.61.1
       source-map-support:
         specifier: ^0.5.21
         version: 0.5.21
