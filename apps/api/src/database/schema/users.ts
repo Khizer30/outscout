@@ -9,6 +9,7 @@ export const usersTable = pgTable(
     name: text().notNull(),
     email: text().notNull(),
     passwordHash: text().notNull(),
+    isVerified: boolean().notNull().default(false),
     isSuperAdmin: boolean().notNull().default(false),
     profileImageURL: text(),
     timezone: text().notNull().default("UTC"),
