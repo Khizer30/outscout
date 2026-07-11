@@ -1,9 +1,6 @@
 import cuid from "@common/cuid";
 import { isNull } from "drizzle-orm";
-import { pgTable, text, pgEnum, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
-
-export const roleEnum = pgEnum("role", ["USER", "ADMIN"]);
-export type Role = (typeof roleEnum.enumValues)[number];
+import { pgTable, text, timestamp, boolean, uniqueIndex } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable(
   "users",
@@ -11,8 +8,10 @@ export const usersTable = pgTable(
     id: cuid().primaryKey(),
     name: text().notNull(),
     email: text().notNull(),
-    password: text().notNull(),
-    role: roleEnum().notNull().default("USER"),
+    passwordHash: text().notNull(),
+    isSuperAdmin: boolean().notNull().default(false),
+    profileImageURL: text(),
+    timezone: text().notNull().default("UTC"),
     createdAt: timestamp().defaultNow().notNull(),
     updatedAt: timestamp()
       .defaultNow()
