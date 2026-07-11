@@ -1,6 +1,6 @@
 import { DatabaseModule } from "@database/database.module";
 import { LoggerMiddleware } from "@middleware/logger.middleware";
-import { HashModule } from "@modules/hash/hash.module";
+import { EncryptionModule } from "@modules/encryption/encryption.module";
 import { JWTModule } from "@modules/jwt/jwt.module";
 import { UserModule } from "@modules/user/user.module";
 import { Module, NestModule, MiddlewareConsumer } from "@nestjs/common";
@@ -20,7 +20,7 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
     }),
     ScheduleModule.forRoot({}),
     JWTModule,
-    HashModule,
+    EncryptionModule,
     DatabaseModule,
     UserModule
   ],

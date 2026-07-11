@@ -1,4 +1,4 @@
-import { HashService } from "@modules/hash/services/hash.service";
+import { EncryptionService } from "@modules/encryption/services/encryption.service";
 import { UserEntity } from "@modules/user/domain/user.entity";
 import { UserAlreadyExistsError, UserNotFoundError } from "@modules/user/domain/user.errors";
 import { UserRepository } from "@modules/user/domain/user.repository";
@@ -20,7 +20,7 @@ export interface UpdateUserInput {
 export class UserService {
   constructor(
     private readonly userRepo: UserRepository,
-    private readonly hashService: HashService
+    private readonly encryptionService: EncryptionService
   ) {}
 
   async findById(id: string): Promise<UserEntity> {
@@ -38,7 +38,7 @@ export class UserService {
       throw new UserAlreadyExistsError({ email: input.email });
     }
 
-    const hashed = await this.hashService.hashPassword(input.password);
+    const hashed = await this.encryptionService.hashPassword(input.password);
 
     const user = UserEntity.create({
       name: input.name,
