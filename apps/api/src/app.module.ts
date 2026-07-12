@@ -2,6 +2,7 @@ import { DatabaseModule } from "@database/database.module";
 import { LoggerMiddleware } from "@middleware/logger.middleware";
 import { EncryptionModule } from "@modules/encryption/encryption.module";
 import { JWTModule } from "@modules/jwt/jwt.module";
+import { MailModule } from "@modules/mail/mail.module";
 import { UserModule } from "@modules/user/user.module";
 import { Module, NestModule, MiddlewareConsumer } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
@@ -22,6 +23,7 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
     JWTModule,
     EncryptionModule,
     DatabaseModule,
+    MailModule,
     UserModule
   ],
   providers: [
