@@ -1,4 +1,4 @@
-import { MailService } from "@modules/mail/service/mail.service";
+import { MailService } from "@modules/mail/services/mail.service";
 import { Module } from "@nestjs/common";
 
 @Module({
