@@ -4,7 +4,19 @@ import { User, UserInsert } from "@schema/index";
 
 export class UserMapper {
   static toDomain(row: User): UserEntity {
-    return new UserEntity(row.id, row.name, row.email, row.passwordHash, row.isSuperAdmin ? "ADMIN" : "USER", row.createdAt, row.updatedAt, row.deletedAt);
+    return new UserEntity(
+      row.id,
+      row.name,
+      row.email,
+      row.passwordHash,
+      row.isVerified,
+      row.isSuperAdmin,
+      row.profileImageURL,
+      row.timezone,
+      row.createdAt,
+      row.updatedAt,
+      row.deletedAt
+    );
   }
 
   static toPersistence(entity: UserEntity): UserInsert {
@@ -12,8 +24,14 @@ export class UserMapper {
       id: entity.id,
       name: entity.name,
       email: entity.email,
-      passwordHash: entity.password,
-      isSuperAdmin: entity.role === "ADMIN"
+      passwordHash: entity.passwordHash,
+      isVerified: entity.isVerified,
+      isSuperAdmin: entity.isSuperAdmin,
+      profileImageURL: entity.profileImageURL,
+      timezone: entity.timezone,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
+      deletedAt: entity.deletedAt
     };
   }
 
@@ -22,9 +40,13 @@ export class UserMapper {
       id: entity.id,
       name: entity.name,
       email: entity.email,
-      role: entity.role,
+      isVerified: entity.isVerified,
+      isSuperAdmin: entity.isSuperAdmin,
+      profileImageURL: entity.profileImageURL,
+      timezone: entity.timezone,
       createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt
+      updatedAt: entity.updatedAt,
+      deletedAt: entity.deletedAt
     };
   }
 }
