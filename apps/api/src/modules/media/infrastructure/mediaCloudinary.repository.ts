@@ -1,19 +1,19 @@
 import { Readable } from "stream";
+import { MediaRepository } from "@modules/media/domain/media.repository";
 import { Injectable } from "@nestjs/common";
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import sharp from "sharp";
 
 @Injectable()
-export class CloudinaryService {
-  async uploadImage(file: Express.Multer.File, folder: string): Promise<UploadApiResponse> {
-    const webpBuffer = await sharp(file.buffer).webp({ quality: 100 }).toBuffer();
+export class MediaCloudinaryRepository implements MediaRepository {
+  async uploadImage(file: Express.Multer.File, folder: string): Promise<string> {
+    const webpBuffer = await sharp(file.buffer).webp({ quality: 85 }).toBuffer();
 
-    return new Promise((resolve, reject) => {
+    const result = await new Promise<UploadApiResponse>((resolve, reject) => {
       const upload = cloudinary.uploader.upload_stream({ resource_type: "image", access_mode: "public", folder, format: "webp" }, (error, result) => {
         if (error) {
           return reject(error);
         }
-
         if (!result) {
           return reject(new Error("Upload failed: result is undefined"));
         }
@@ -23,18 +23,21 @@ export class CloudinaryService {
 
       Readable.from(webpBuffer).pipe(upload);
     });
+
+    return result.secure_url;
   }
 
-  urlToPublicId(url: string): string {
+  async deleteImage(url: string): Promise<void> {
+    const publicId = this.urlToPublicId(url);
+    await cloudinary.uploader.destroy(publicId);
+  }
+
+  private urlToPublicId(url: string): string {
     const match = url.match(/\/upload\/(?:v\d+\/)?(.+?)(?:\.[^.]+)?$/);
     if (!match) {
       throw new Error(`Invalid Cloudinary URL: ${url}`);
     }
 
     return match[1];
-  }
-
-  async deleteImage(publicId: string): Promise<void> {
-    await cloudinary.uploader.destroy(publicId);
   }
 }
