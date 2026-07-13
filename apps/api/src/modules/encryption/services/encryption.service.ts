@@ -1,5 +1,5 @@
 import { randomBytes, createCipheriv, createDecipheriv, createHash } from "crypto";
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { genSalt, hash, compare } from "bcrypt";
 
@@ -8,10 +8,7 @@ export class EncryptionService {
   private readonly encryptionKey: Buffer;
 
   constructor(private readonly configService: ConfigService) {
-    const rawKey = this.configService.get<string>("ENCRYPTION_KEY");
-    if (!rawKey) {
-      throw new InternalServerErrorException("ENCRYPTION_KEY environment variable is required");
-    }
+    const rawKey = this.configService.getOrThrow<string>("ENCRYPTION_KEY");
 
     this.encryptionKey = createHash("sha256").update(rawKey).digest();
   }

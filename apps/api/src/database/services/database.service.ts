@@ -12,10 +12,7 @@ export class DatabaseService implements OnApplicationBootstrap, OnModuleDestroy 
   constructor(private readonly configService: ConfigService) {}
 
   async onApplicationBootstrap() {
-    const databaseUrl = this.configService.get<string>("DATABASE_URL");
-    if (!databaseUrl) {
-      throw new Error("DATABASE_URL environment variable is not defined");
-    }
+    const databaseUrl = this.configService.getOrThrow<string>("DATABASE_URL");
 
     this.pool = new Pool({
       connectionString: databaseUrl

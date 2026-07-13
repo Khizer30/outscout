@@ -12,18 +12,8 @@ export class JWTService {
   readonly refreshTokenMaxAge: number;
 
   constructor(private readonly configService: ConfigService) {
-    const secret = this.configService.get<string>("JWT_SECRET");
-    if (!secret) {
-      throw new InternalServerErrorException("JWT_SECRET environment variable is required");
-    }
-
-    const refreshSecret = this.configService.get<string>("JWT_REFRESH_SECRET");
-    if (!refreshSecret) {
-      throw new InternalServerErrorException("JWT_REFRESH_SECRET environment variable is required");
-    }
-
-    this.secret = secret;
-    this.refreshSecret = refreshSecret;
+    this.secret = this.configService.getOrThrow<string>("JWT_SECRET");
+    this.refreshSecret = this.configService.getOrThrow<string>("JWT_REFRESH_SECRET");
     this.accessTokenExpiry = this.configService.get<string>("JWT_EXPIRE_TIME", "15m");
     this.refreshTokenExpiry = this.configService.get<string>("JWT_REFRESH_EXPIRE_TIME", "7d");
 
