@@ -1,5 +1,6 @@
 import { DatabaseModule } from "@database/database.module";
 import { LoggerMiddleware } from "@middleware/logger.middleware";
+import { AuthModule } from "@modules/auth/auth.module";
 import { EncryptionModule } from "@modules/encryption/encryption.module";
 import { JWTModule } from "@modules/jwt/jwt.module";
 import { MailModule } from "@modules/mail/mail.module";
@@ -26,7 +27,8 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
     DatabaseModule,
     MailModule,
     MediaModule,
-    UserModule
+    UserModule,
+    AuthModule
   ],
   providers: [
     {

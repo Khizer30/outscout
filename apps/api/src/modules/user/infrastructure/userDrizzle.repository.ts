@@ -12,15 +12,6 @@ export class UserDrizzleRepository extends UserRepository {
     super();
   }
 
-  async findById(id: string): Promise<UserEntity | null> {
-    const [row] = await this.databaseService.db
-      .select()
-      .from(usersTable)
-      .where(and(eq(usersTable.id, id), isNull(usersTable.deletedAt)))
-      .limit(1);
-    return row ? UserMapper.toDomain(row) : null;
-  }
-
   async findByEmail(email: string): Promise<UserEntity | null> {
     const [row] = await this.databaseService.db
       .select()
@@ -33,14 +24,5 @@ export class UserDrizzleRepository extends UserRepository {
   async create(entity: UserEntity): Promise<UserEntity> {
     const [row] = await this.databaseService.db.insert(usersTable).values(UserMapper.toPersistence(entity)).returning();
     return UserMapper.toDomain(row);
-  }
-
-  async update(id: string, data: Partial<UserEntity>): Promise<UserEntity> {
-    const [row] = await this.databaseService.db.update(usersTable).set(data).where(eq(usersTable.id, id)).returning();
-    return UserMapper.toDomain(row);
-  }
-
-  async softDelete(id: string): Promise<void> {
-    await this.databaseService.db.update(usersTable).set({ deletedAt: new Date() }).where(eq(usersTable.id, id));
   }
 }
