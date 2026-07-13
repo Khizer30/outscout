@@ -42,14 +42,14 @@ const RULES = `
   - If the business has no website, specifically mention that we can build one for them
   - If a website URL is provided, pull one concrete specific detail from it (product, service, tagline, design style) to personalise the opening — do not fabricate; if inaccessible, note that
   - End with a single soft call-to-action — invite a reply or a quick call, nothing aggressive
-  - Sign off as: OutScout Marketing Agency
+  - Sign off as: Outscout Marketing Agency
   - Do NOT use emojis
   - Do NOT mention Google Map ratings
   - Do NOT use generic filler phrases like "I hope this email finds you well" or "I came across your business"
 `;
 
 const ABOUT_OUR_BUSINESS = `
-  We are OutScout Marketing Agency — a full-service digital marketing agency specialising in:
+  We are Outscout Marketing Agency — a full-service digital marketing agency specialising in:
   - Social media marketing & management (Instagram, Facebook, TikTok, LinkedIn)
   - YouTube channel creation, branding, and growth strategy
   - Short-form video content and reels production
@@ -62,7 +62,7 @@ const ABOUT_OUR_BUSINESS = `
 `;
 
 const SYSTEM_INSTRUCTION = `
-  You are an expert cold outreach copywriter for OutScout Marketing Agency.
+  You are an expert cold outreach copywriter for Outscout Marketing Agency.
 
   Your job is to write a personalised cold outreach email to a business owner.
 

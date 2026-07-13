@@ -56,7 +56,7 @@ const RULES = `
 `;
 
 const ABOUT_OUR_BUSINESS = `
-  We are OutScout Marketing Agency — a full-service digital marketing agency specialising in:
+  We are Outscout Marketing Agency — a full-service digital marketing agency specialising in:
   - Social media marketing & management (Instagram, Facebook, TikTok, LinkedIn)
   - YouTube channel creation, branding, and growth strategy
   - Short-form video content and reels production
@@ -69,7 +69,7 @@ const ABOUT_OUR_BUSINESS = `
 `;
 
 const SYSTEM_INSTRUCTION = `
-  You are an expert cold outreach copywriter for OutScout Marketing Agency.
+  You are an expert cold outreach copywriter for Outscout Marketing Agency.
 
   Your job is to write a short, friendly, personalised WhatsApp message to a business owner.
 
