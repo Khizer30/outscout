@@ -1,3 +1,4 @@
+import { OUTSCOUT_PRIMARY_COLOR, OUTSCOUT_SECONDARY_COLOR, OUTSCOUT_LOGO_URL } from "@modules/mail/domain/mail.entity";
 import { MailRepository } from "@modules/mail/domain/mail.repository";
 import generateOtpEmail from "@modules/mail/templates/otp.html";
 import generateOtpText from "@modules/mail/templates/otp.text";
@@ -11,9 +12,6 @@ export interface CompanyMailConfig {
   secondaryColor: string;
   companyImageURL?: string | null;
 }
-
-const OUTSCOUT_PRIMARY_COLOR = "#141F2D";
-const OUTSCOUT_SECONDARY_COLOR = "#D97A3E";
 
 @Injectable()
 export class MailService {
@@ -29,6 +27,7 @@ export class MailService {
         receiverName,
         otp,
         companyName: this.sender.senderName,
+        companyImage: OUTSCOUT_LOGO_URL,
         primaryColor: OUTSCOUT_PRIMARY_COLOR,
         secondaryColor: OUTSCOUT_SECONDARY_COLOR
       })
@@ -45,6 +44,7 @@ export class MailService {
         receiverName,
         otp,
         companyName: this.sender.senderName,
+        companyImage: OUTSCOUT_LOGO_URL,
         primaryColor: OUTSCOUT_PRIMARY_COLOR,
         secondaryColor: OUTSCOUT_SECONDARY_COLOR
       })
