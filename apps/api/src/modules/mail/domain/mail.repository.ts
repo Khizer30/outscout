@@ -1,4 +1,4 @@
-import type { MailSendOptions } from "@modules/mail/domain/mail.entity";
+import type { MailSendOptions } from "@modules/mail/domain/mail.types";
 
 export interface MailSenderConfig {
   apiKey: string;

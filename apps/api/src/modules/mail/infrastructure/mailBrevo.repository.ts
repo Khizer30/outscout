@@ -1,6 +1,6 @@
 import { BrevoClient } from "@getbrevo/brevo";
-import type { MailSendOptions } from "@modules/mail/domain/mail.entity";
 import { MailRepository, MailSenderConfig } from "@modules/mail/domain/mail.repository";
+import type { MailSendOptions } from "@modules/mail/domain/mail.types";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 

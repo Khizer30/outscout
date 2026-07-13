@@ -1,4 +1,4 @@
-import type { EmailType } from "@modules/mail/domain/mail.entity";
+import type { EmailType } from "@modules/mail/domain/mail.types";
 
 interface Props {
   type: EmailType;

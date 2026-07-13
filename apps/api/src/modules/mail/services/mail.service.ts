@@ -1,5 +1,5 @@
-import { OUTSCOUT_PRIMARY_COLOR, OUTSCOUT_SECONDARY_COLOR, OUTSCOUT_LOGO_URL } from "@modules/mail/domain/mail.entity";
 import { MailRepository } from "@modules/mail/domain/mail.repository";
+import { OutscoutBranding } from "@modules/mail/domain/mail.value-objects";
 import generateOtpEmail from "@modules/mail/templates/otp.html";
 import generateOtpText from "@modules/mail/templates/otp.text";
 import { Injectable } from "@nestjs/common";
@@ -27,9 +27,9 @@ export class MailService {
         receiverName,
         otp,
         companyName: this.sender.senderName,
-        companyImage: OUTSCOUT_LOGO_URL,
-        primaryColor: OUTSCOUT_PRIMARY_COLOR,
-        secondaryColor: OUTSCOUT_SECONDARY_COLOR
+        companyImage: OutscoutBranding.LOGO_URL,
+        primaryColor: OutscoutBranding.PRIMARY_COLOR,
+        secondaryColor: OutscoutBranding.SECONDARY_COLOR
       })
     });
   }
@@ -44,9 +44,9 @@ export class MailService {
         receiverName,
         otp,
         companyName: this.sender.senderName,
-        companyImage: OUTSCOUT_LOGO_URL,
-        primaryColor: OUTSCOUT_PRIMARY_COLOR,
-        secondaryColor: OUTSCOUT_SECONDARY_COLOR
+        companyImage: OutscoutBranding.LOGO_URL,
+        primaryColor: OutscoutBranding.PRIMARY_COLOR,
+        secondaryColor: OutscoutBranding.SECONDARY_COLOR
       })
     });
   }
