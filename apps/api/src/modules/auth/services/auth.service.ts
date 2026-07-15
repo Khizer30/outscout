@@ -94,9 +94,16 @@ export class AuthService {
       throw new UserNotVerifiedError();
     }
 
-    const payload = { id: user.id };
-    const accessToken = this.jwtService.generateAccessToken(payload);
-    const refreshToken = this.jwtService.generateRefreshToken(payload);
+    const accessTokenPayload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      isSuperAdmin: user.isSuperAdmin
+    };
+    const refreshTokenPayload = { id: user.id };
+
+    const accessToken = this.jwtService.generateAccessToken(accessTokenPayload);
+    const refreshToken = this.jwtService.generateRefreshToken(refreshTokenPayload);
 
     return { accessToken, refreshToken };
   }
