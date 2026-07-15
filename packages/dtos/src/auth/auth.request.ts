@@ -24,3 +24,11 @@ export const VerifyOtpSchema = z.object({
 });
 
 export class VerifyOtpDto extends createZodDto(VerifyOtpSchema) {}
+
+// Login
+export const LoginSchema = z.object({
+  email: z.email({ error: "Enter a valid email address" }).trim(),
+  password: z.string({ error: "Password is required" })
+});
+
+export class LoginDto extends createZodDto(LoginSchema) {}

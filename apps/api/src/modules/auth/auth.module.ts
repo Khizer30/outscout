@@ -2,12 +2,14 @@ import { VerificationRepository } from "@modules/auth/domain/verification.reposi
 import { VerificationDrizzleRepository } from "@modules/auth/infrastructure/verificationDrizzle.repository";
 import { AuthController } from "@modules/auth/presentation/auth.controller";
 import { AuthService } from "@modules/auth/services/auth.service";
+import { EncryptionModule } from "@modules/encryption/encryption.module";
+import { JWTModule } from "@modules/jwt/jwt.module";
 import { MailModule } from "@modules/mail/mail.module";
 import { UserModule } from "@modules/user/user.module";
 import { Module } from "@nestjs/common";
 
 @Module({
-  imports: [UserModule, MailModule],
+  imports: [UserModule, MailModule, JWTModule, EncryptionModule],
   controllers: [AuthController],
   providers: [
     AuthService,

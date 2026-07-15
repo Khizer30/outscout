@@ -1,21 +1,25 @@
 import { randomInt } from "crypto";
-import { InvalidOtpError, ExpiredOtpError } from "@modules/auth/domain/auth.errors";
+import { InvalidOtpError, ExpiredOtpError, InvalidCredentialsError, UserNotVerifiedError } from "@modules/auth/domain/auth.errors";
 import { VerificationEntity } from "@modules/auth/domain/verification.entity";
 import { VerificationRepository } from "@modules/auth/domain/verification.repository";
 import { OtpConfig } from "@modules/auth/domain/verification.value-objects";
+import { EncryptionService } from "@modules/encryption/services/encryption.service";
+import { JWTService } from "@modules/jwt/services/jwt.service";
 import { MailService } from "@modules/mail/services/mail.service";
 import { UserEntity } from "@modules/user/domain/user.entity";
 import { UserAlreadyExistsError, UserNotFoundError } from "@modules/user/domain/user.errors";
 import { UserService } from "@modules/user/services/user.service";
 import { Injectable } from "@nestjs/common";
-import { SignupDto, VerifyOtpDto } from "@repo/dtos/auth";
+import { SignupDto, VerifyOtpDto, LoginDto } from "@repo/dtos/auth";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly verificationRepo: VerificationRepository,
-    private readonly mailService: MailService
+    private readonly mailService: MailService,
+    private readonly jwtService: JWTService,
+    private readonly encryptionService: EncryptionService
   ) {}
 
   async signup(dto: SignupDto): Promise<UserEntity> {
@@ -73,5 +77,27 @@ export class AuthService {
     await this.verificationRepo.update(updatedVerification);
 
     await this.userService.verifyUser(user);
+  }
+
+  async login(dto: LoginDto): Promise<{ accessToken: string; refreshToken: string }> {
+    const user = await this.userService.findByEmail(dto.email);
+    if (!user) {
+      throw new InvalidCredentialsError();
+    }
+
+    const isPasswordValid = await this.encryptionService.comparePasswords(dto.password, user.passwordHash);
+    if (!isPasswordValid) {
+      throw new InvalidCredentialsError();
+    }
+
+    if (!user.isVerified) {
+      throw new UserNotVerifiedError();
+    }
+
+    const payload = { id: user.id };
+    const accessToken = this.jwtService.generateAccessToken(payload);
+    const refreshToken = this.jwtService.generateRefreshToken(payload);
+
+    return { accessToken, refreshToken };
   }
 }
