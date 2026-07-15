@@ -5,8 +5,8 @@ import { ConfigService } from "@nestjs/config";
 import {
   SignupDto,
   SignupResponseDto,
-  VerifyOtpDto,
-  VerifyOtpResponseDto,
+  VerifyUserDto,
+  VerifyUserResponseDto,
   LoginDto,
   LoginResponseDto,
   ForgotPasswordDto,
@@ -32,10 +32,10 @@ export class AuthController {
     return { message: "An OTP has been sent to your email" };
   }
 
-  @Post("verify-otp")
+  @Post("verify-user")
   @HttpCode(HttpStatus.OK)
-  async verifyOtp(@Body() dto: VerifyOtpDto): Promise<VerifyOtpResponseDto> {
-    await this.authService.verifyOtp(dto);
+  async verifyUser(@Body() dto: VerifyUserDto): Promise<VerifyUserResponseDto> {
+    await this.authService.verifyUser(dto);
     return { message: "Email verified successfully" };
   }
 

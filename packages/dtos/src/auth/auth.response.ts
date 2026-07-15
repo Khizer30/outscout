@@ -8,12 +8,12 @@ export const SignupResponseSchema = z.object({
 
 export class SignupResponseDto extends createZodDto(SignupResponseSchema) {}
 
-// Verify OTP
-export const VerifyOtpResponseSchema = z.object({
+// Verify User
+export const VerifyUserResponseSchema = z.object({
   message: z.string()
 });
 
-export class VerifyOtpResponseDto extends createZodDto(VerifyOtpResponseSchema) {}
+export class VerifyUserResponseDto extends createZodDto(VerifyUserResponseSchema) {}
 
 // Login
 export const LoginResponseSchema = z.object({

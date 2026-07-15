@@ -17,13 +17,13 @@ export const SignupSchema = z.object({
 
 export class SignupDto extends createZodDto(SignupSchema) {}
 
-// Verify OTP
-export const VerifyOtpSchema = z.object({
+// Verify User
+export const VerifyUserSchema = z.object({
   email: z.email({ error: "Enter a valid email address" }).trim(),
   otp: z.string({ error: "OTP is required" }).trim().length(6, { error: "OTP must be exactly 6 characters long" })
 });
 
-export class VerifyOtpDto extends createZodDto(VerifyOtpSchema) {}
+export class VerifyUserDto extends createZodDto(VerifyUserSchema) {}
 
 // Login
 export const LoginSchema = z.object({
