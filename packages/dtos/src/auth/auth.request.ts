@@ -1,6 +1,7 @@
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
+// Signup
 export const SignupSchema = z.object({
   name: z.string({ error: "Name is required" }).trim().min(1, { error: "Name is required" }),
   email: z.email({ error: "Enter a valid email address" }).trim(),
@@ -15,3 +16,11 @@ export const SignupSchema = z.object({
 });
 
 export class SignupDto extends createZodDto(SignupSchema) {}
+
+// Verify OTP
+export const VerifyOtpSchema = z.object({
+  email: z.email({ error: "Enter a valid email address" }).trim(),
+  otp: z.string({ error: "OTP is required" }).trim().length(6, { error: "OTP must be exactly 6 characters long" })
+});
+
+export class VerifyOtpDto extends createZodDto(VerifyOtpSchema) {}

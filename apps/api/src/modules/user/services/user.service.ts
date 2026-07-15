@@ -60,4 +60,9 @@ export class UserService {
 
     return this.userRepo.update(updatedUser);
   }
+
+  async verifyUser(user: UserEntity): Promise<UserEntity> {
+    const updatedUser = user.update({ isVerified: true });
+    return this.userRepo.update(updatedUser);
+  }
 }
