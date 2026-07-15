@@ -1,5 +1,7 @@
 import { randomInt } from "crypto";
-import { InvalidOtpError, ExpiredOtpError, InvalidCredentialsError, UserNotVerifiedError } from "@modules/auth/domain/auth.errors";
+import { InvalidOtpError, ExpiredOtpError, InvalidCredentialsError, UserNotVerifiedError, InvalidSessionError } from "@modules/auth/domain/auth.errors";
+import { SessionEntity } from "@modules/auth/domain/session.entity";
+import { SessionRepository } from "@modules/auth/domain/session.repository";
 import { VerificationEntity } from "@modules/auth/domain/verification.entity";
 import { VerificationRepository } from "@modules/auth/domain/verification.repository";
 import { OtpConfig } from "@modules/auth/domain/verification.value-objects";
@@ -11,12 +13,14 @@ import { UserAlreadyExistsError, UserNotFoundError } from "@modules/user/domain/
 import { UserService } from "@modules/user/services/user.service";
 import { Injectable } from "@nestjs/common";
 import { SignupDto, VerifyUserDto, LoginDto, ForgotPasswordDto, ResetPasswordDto } from "@repo/dtos/auth";
+import { type JwtPayload } from "jsonwebtoken";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly verificationRepo: VerificationRepository,
+    private readonly sessionRepo: SessionRepository,
     private readonly mailService: MailService,
     private readonly jwtService: JWTService,
     private readonly encryptionService: EncryptionService
@@ -79,7 +83,7 @@ export class AuthService {
     await this.userService.verifyUser(user);
   }
 
-  async login(dto: LoginDto): Promise<{ accessToken: string; refreshToken: string }> {
+  async login(dto: LoginDto, ipAddress: string): Promise<{ accessToken: string; refreshToken: string }> {
     const user = await this.userService.findByEmail(dto.email);
     if (!user) {
       throw new InvalidCredentialsError();
@@ -105,7 +109,76 @@ export class AuthService {
     const accessToken = this.jwtService.generateAccessToken(accessTokenPayload);
     const refreshToken = this.jwtService.generateRefreshToken(refreshTokenPayload);
 
+    const refreshTokenHash = this.encryptionService.hashToken(refreshToken);
+    const expiryTime = new Date(Date.now() + this.jwtService.refreshTokenMaxAge);
+
+    const session = SessionEntity.create({
+      userId: user.id,
+      refreshTokenHash,
+      ipAddress,
+      expiryTime
+    });
+
+    await this.sessionRepo.create(session);
+
     return { accessToken, refreshToken };
+  }
+
+  async refresh(token: string, ipAddress: string): Promise<{ accessToken: string; refreshToken: string }> {
+    let payload: JwtPayload | string;
+    try {
+      payload = this.jwtService.verifyRefreshToken(token);
+    } catch {
+      throw new InvalidSessionError();
+    }
+
+    if (!payload || typeof payload === "string" || !payload.data || !payload.data.id) {
+      throw new InvalidSessionError();
+    }
+
+    const userId = payload.data.id;
+    const user = await this.userService.findById(userId);
+    if (!user || !user.isVerified) {
+      throw new InvalidSessionError();
+    }
+
+    const refreshTokenHash = this.encryptionService.hashToken(token);
+    const session = await this.sessionRepo.findByHash(refreshTokenHash);
+    if (!session) {
+      throw new InvalidSessionError();
+    }
+
+    if (session.expiryTime < new Date()) {
+      await this.sessionRepo.delete(session.id);
+      throw new InvalidSessionError();
+    }
+
+    const accessTokenPayload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      isSuperAdmin: user.isSuperAdmin
+    };
+    const refreshTokenPayload = { id: user.id };
+
+    const newAccessToken = this.jwtService.generateAccessToken(accessTokenPayload);
+    const newRefreshToken = this.jwtService.generateRefreshToken(refreshTokenPayload);
+
+    const newRefreshTokenHash = this.encryptionService.hashToken(newRefreshToken);
+    const newExpiryTime = new Date(Date.now() + this.jwtService.refreshTokenMaxAge);
+
+    const updatedSession = new SessionEntity(session.id, session.userId, newRefreshTokenHash, ipAddress, newExpiryTime, session.createdAt);
+    await this.sessionRepo.update(updatedSession);
+
+    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+  }
+
+  async logout(token: string): Promise<void> {
+    const refreshTokenHash = this.encryptionService.hashToken(token);
+    const session = await this.sessionRepo.findByHash(refreshTokenHash);
+    if (session) {
+      await this.sessionRepo.delete(session.id);
+    }
   }
 
   async forgotPassword(dto: ForgotPasswordDto): Promise<void> {

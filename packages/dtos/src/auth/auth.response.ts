@@ -37,3 +37,19 @@ export const ResetPasswordResponseSchema = z.object({
 });
 
 export class ResetPasswordResponseDto extends createZodDto(ResetPasswordResponseSchema) {}
+
+// Refresh
+export const RefreshResponseSchema = z.object({
+  data: z.object({
+    accessToken: z.string()
+  })
+});
+
+export class RefreshResponseDto extends createZodDto(RefreshResponseSchema) {}
+
+// Logout
+export const LogoutResponseSchema = z.object({
+  message: z.string()
+});
+
+export class LogoutResponseDto extends createZodDto(LogoutResponseSchema) {}

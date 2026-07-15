@@ -1,6 +1,6 @@
 import { AuthService } from "@modules/auth/services/auth.service";
 import { JWTService } from "@modules/jwt/services/jwt.service";
-import { Body, Controller, Post, Res, HttpCode, HttpStatus } from "@nestjs/common";
+import { Body, Controller, Post, Res, HttpCode, HttpStatus, Ip, Req, Get, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import {
   SignupDto,
@@ -12,9 +12,11 @@ import {
   ForgotPasswordDto,
   ForgotPasswordResponseDto,
   ResetPasswordDto,
-  ResetPasswordResponseDto
+  ResetPasswordResponseDto,
+  RefreshResponseDto,
+  LogoutResponseDto
 } from "@repo/dtos/auth";
-import type { Response } from "express";
+import type { Request, Response } from "express";
 
 @Controller("auth")
 export class AuthController {
@@ -43,8 +45,8 @@ export class AuthController {
 
   @Post("login")
   @HttpCode(HttpStatus.OK)
-  async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response): Promise<LoginResponseDto> {
-    const { accessToken, refreshToken } = await this.authService.login(dto);
+  async login(@Body() dto: LoginDto, @Ip() ip: string, @Res({ passthrough: true }) res: Response): Promise<LoginResponseDto> {
+    const { accessToken, refreshToken } = await this.authService.login(dto, ip);
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: this.isProduction,
@@ -55,6 +57,45 @@ export class AuthController {
     });
 
     return { data: { accessToken } };
+  }
+
+  @Get("refresh")
+  @HttpCode(HttpStatus.OK)
+  async refresh(@Req() req: Request, @Ip() ip: string, @Res({ passthrough: true }) res: Response): Promise<RefreshResponseDto> {
+    const token = req.cookies["refreshToken"];
+    if (!token) {
+      throw new UnauthorizedException("Session has expired");
+    }
+
+    try {
+      const { accessToken, refreshToken: newRefreshToken } = await this.authService.refresh(token, ip);
+
+      res.cookie("refreshToken", newRefreshToken, {
+        httpOnly: this.isProduction,
+        secure: this.isProduction,
+        sameSite: "lax",
+        maxAge: this.jwtService.refreshTokenMaxAge,
+        path: "/"
+      });
+
+      return { data: { accessToken } };
+    } catch (err) {
+      res.clearCookie("refreshToken", { path: "/" });
+      throw err;
+    }
+  }
+
+  @Post("logout")
+  @HttpCode(HttpStatus.OK)
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<LogoutResponseDto> {
+    const token = req.cookies["refreshToken"];
+    if (token) {
+      await this.authService.logout(token);
+    }
+
+    res.clearCookie("refreshToken", { path: "/" });
+
+    return { message: "Logged out successfully" };
   }
 
   @Post("forgot-password")

@@ -23,3 +23,9 @@ export class UserNotVerifiedError extends AppError {
     super("USER_NOT_VERIFIED", "Please verify your email first", details, 403);
   }
 }
+
+export class InvalidSessionError extends AppError {
+  constructor(details?: Record<string, unknown>) {
+    super("INVALID_SESSION", "Invalid or expired session", details, 401);
+  }
+}
