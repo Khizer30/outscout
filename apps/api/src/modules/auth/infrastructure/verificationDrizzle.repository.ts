@@ -4,6 +4,7 @@ import { VerificationRepository } from "@modules/auth/domain/verification.reposi
 import { VerificationMapper } from "@modules/auth/infrastructure/verification.mapper";
 import { Injectable } from "@nestjs/common";
 import { verificationsTable } from "@schema/verifications";
+import { eq } from "drizzle-orm";
 
 @Injectable()
 export class VerificationDrizzleRepository extends VerificationRepository {
@@ -14,5 +15,11 @@ export class VerificationDrizzleRepository extends VerificationRepository {
   async create(entity: VerificationEntity): Promise<VerificationEntity> {
     const [row] = await this.databaseService.db.insert(verificationsTable).values(VerificationMapper.toPersistence(entity)).returning();
     return VerificationMapper.toDomain(row);
+  }
+
+  async deleteByUserId(userId: string): Promise<void> {
+    await this.databaseService.db
+      .delete(verificationsTable)
+      .where(eq(verificationsTable.userId, userId));
   }
 }

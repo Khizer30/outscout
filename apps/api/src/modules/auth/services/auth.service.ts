@@ -4,6 +4,7 @@ import { VerificationRepository } from "@modules/auth/domain/verification.reposi
 import { OtpConfig } from "@modules/auth/domain/verification.value-objects";
 import { MailService } from "@modules/mail/services/mail.service";
 import { UserEntity } from "@modules/user/domain/user.entity";
+import { UserAlreadyExistsError } from "@modules/user/domain/user.errors";
 import { UserService } from "@modules/user/services/user.service";
 import { Injectable } from "@nestjs/common";
 import { SignupDto } from "@repo/dtos/auth";
@@ -17,7 +18,24 @@ export class AuthService {
   ) {}
 
   async signup(dto: SignupDto): Promise<UserEntity> {
-    const user = await this.userService.createUser(dto);
+    const existing = await this.userService.findByEmail(dto.email);
+    let user: UserEntity;
+
+    if (existing) {
+      if (existing.isVerified) {
+        throw new UserAlreadyExistsError({ email: dto.email });
+      }
+
+      user = await this.userService.updateUser(existing, {
+        name: dto.name,
+        password: dto.password,
+        timezone: dto.timezone
+      });
+
+      await this.verificationRepo.deleteByUserId(user.id);
+    } else {
+      user = await this.userService.createUser(dto);
+    }
 
     const otp = randomInt(100000, 1000000).toString();
 
