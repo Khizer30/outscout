@@ -36,11 +36,7 @@ export class UserDrizzleRepository extends UserRepository {
   }
 
   async update(entity: UserEntity): Promise<UserEntity> {
-    const [row] = await this.databaseService.db
-      .update(usersTable)
-      .set(UserMapper.toPersistence(entity))
-      .where(eq(usersTable.id, entity.id))
-      .returning();
+    const [row] = await this.databaseService.db.update(usersTable).set(UserMapper.toPersistence(entity)).where(eq(usersTable.id, entity.id)).returning();
     return UserMapper.toDomain(row);
   }
 }

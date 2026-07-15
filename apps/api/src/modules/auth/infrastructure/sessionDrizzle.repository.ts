@@ -13,19 +13,12 @@ export class SessionDrizzleRepository extends SessionRepository {
   }
 
   async create(entity: SessionEntity): Promise<SessionEntity> {
-    const [row] = await this.databaseService.db
-      .insert(sessionsTable)
-      .values(SessionMapper.toPersistence(entity))
-      .returning();
+    const [row] = await this.databaseService.db.insert(sessionsTable).values(SessionMapper.toPersistence(entity)).returning();
     return SessionMapper.toDomain(row);
   }
 
   async findByHash(hash: string): Promise<SessionEntity | null> {
-    const [row] = await this.databaseService.db
-      .select()
-      .from(sessionsTable)
-      .where(eq(sessionsTable.refreshTokenHash, hash))
-      .limit(1);
+    const [row] = await this.databaseService.db.select().from(sessionsTable).where(eq(sessionsTable.refreshTokenHash, hash)).limit(1);
     return row ? SessionMapper.toDomain(row) : null;
   }
 

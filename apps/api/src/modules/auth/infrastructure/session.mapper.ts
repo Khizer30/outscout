@@ -3,14 +3,7 @@ import { Session, SessionInsert } from "@schema/index";
 
 export class SessionMapper {
   static toDomain(row: Session): SessionEntity {
-    return new SessionEntity(
-      row.id,
-      row.userId,
-      row.refreshTokenHash,
-      row.ipAddress,
-      row.expiryTime,
-      row.createdAt
-    );
+    return new SessionEntity(row.id, row.userId, row.refreshTokenHash, row.ipAddress, row.expiryTime, row.createdAt);
   }
 
   static toPersistence(entity: SessionEntity): SessionInsert {
