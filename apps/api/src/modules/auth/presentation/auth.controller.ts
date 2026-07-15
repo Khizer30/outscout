@@ -41,6 +41,6 @@ export class AuthController {
       path: "/"
     });
 
-    return { accessToken };
+    return { data: { accessToken } };
   }
 }

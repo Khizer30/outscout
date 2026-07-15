@@ -17,7 +17,9 @@ export class VerifyOtpResponseDto extends createZodDto(VerifyOtpResponseSchema) 
 
 // Login
 export const LoginResponseSchema = z.object({
-  accessToken: z.string()
+  data: z.object({
+    accessToken: z.string()
+  })
 });
 
 export class LoginResponseDto extends createZodDto(LoginResponseSchema) {}
