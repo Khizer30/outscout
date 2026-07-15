@@ -1,13 +1,14 @@
 import { randomInt } from "crypto";
+import { InvalidOtpError, ExpiredOtpError } from "@modules/auth/domain/auth.errors";
 import { VerificationEntity } from "@modules/auth/domain/verification.entity";
 import { VerificationRepository } from "@modules/auth/domain/verification.repository";
 import { OtpConfig } from "@modules/auth/domain/verification.value-objects";
 import { MailService } from "@modules/mail/services/mail.service";
 import { UserEntity } from "@modules/user/domain/user.entity";
-import { UserAlreadyExistsError } from "@modules/user/domain/user.errors";
+import { UserAlreadyExistsError, UserNotFoundError } from "@modules/user/domain/user.errors";
 import { UserService } from "@modules/user/services/user.service";
 import { Injectable } from "@nestjs/common";
-import { SignupDto } from "@repo/dtos/auth";
+import { SignupDto, VerifyOtpDto } from "@repo/dtos/auth";
 
 @Injectable()
 export class AuthService {
@@ -51,5 +52,26 @@ export class AuthService {
     await this.mailService.sendVerificationEmail(user.email, user.name, otp);
 
     return user;
+  }
+
+  async verifyOtp(dto: VerifyOtpDto): Promise<void> {
+    const user = await this.userService.findByEmail(dto.email);
+    if (!user) {
+      throw new UserNotFoundError({ email: dto.email });
+    }
+
+    const verification = await this.verificationRepo.findActive(user.id, dto.otp, "VERIFY");
+    if (!verification) {
+      throw new InvalidOtpError({ email: dto.email, otp: dto.otp });
+    }
+
+    if (verification.expiresAt < new Date()) {
+      throw new ExpiredOtpError({ email: dto.email, otp: dto.otp });
+    }
+
+    const updatedVerification = verification.markAsUsed();
+    await this.verificationRepo.update(updatedVerification);
+
+    await this.userService.verifyUser(user);
   }
 }

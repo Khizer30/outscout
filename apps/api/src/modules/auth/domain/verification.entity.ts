@@ -32,4 +32,8 @@ export class VerificationEntity {
       props.createdAt ?? new Date()
     );
   }
+
+  markAsUsed(): VerificationEntity {
+    return new VerificationEntity(this.id, this.userId, this.type, this.otp, this.expiresAt, true, this.createdAt);
+  }
 }
