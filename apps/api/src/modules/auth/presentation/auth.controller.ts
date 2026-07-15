@@ -1,8 +1,17 @@
 import { AuthService } from "@modules/auth/services/auth.service";
 import { JWTService } from "@modules/jwt/services/jwt.service";
-import { Body, Controller, Post, Res } from "@nestjs/common";
+import { Body, Controller, Post, Res, HttpCode, HttpStatus } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { SignupDto, SignupResponseDto, VerifyOtpDto, VerifyOtpResponseDto, LoginDto, LoginResponseDto } from "@repo/dtos/auth";
+import {
+  SignupDto,
+  SignupResponseDto,
+  VerifyOtpDto,
+  VerifyOtpResponseDto,
+  LoginDto,
+  LoginResponseDto,
+  ForgotPasswordDto,
+  ForgotPasswordResponseDto
+} from "@repo/dtos/auth";
 import type { Response } from "express";
 
 @Controller("auth")
@@ -24,12 +33,14 @@ export class AuthController {
   }
 
   @Post("verify-otp")
+  @HttpCode(HttpStatus.OK)
   async verifyOtp(@Body() dto: VerifyOtpDto): Promise<VerifyOtpResponseDto> {
     await this.authService.verifyOtp(dto);
     return { message: "Email verified successfully" };
   }
 
   @Post("login")
+  @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response): Promise<LoginResponseDto> {
     const { accessToken, refreshToken } = await this.authService.login(dto);
 
@@ -42,5 +53,12 @@ export class AuthController {
     });
 
     return { data: { accessToken } };
+  }
+
+  @Post("forgot-password")
+  @HttpCode(HttpStatus.OK)
+  async forgotPassword(@Body() dto: ForgotPasswordDto): Promise<ForgotPasswordResponseDto> {
+    await this.authService.forgotPassword(dto);
+    return { message: "A password reset OTP has been sent to your email" };
   }
 }

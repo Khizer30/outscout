@@ -23,3 +23,10 @@ export const LoginResponseSchema = z.object({
 });
 
 export class LoginResponseDto extends createZodDto(LoginResponseSchema) {}
+
+// Forgot Password
+export const ForgotPasswordResponseSchema = z.object({
+  message: z.string()
+});
+
+export class ForgotPasswordResponseDto extends createZodDto(ForgotPasswordResponseSchema) {}

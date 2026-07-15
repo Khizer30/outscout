@@ -32,3 +32,11 @@ export const LoginSchema = z.object({
 });
 
 export class LoginDto extends createZodDto(LoginSchema) {}
+
+// Forgot Password
+export const ForgotPasswordSchema = z.object({
+  email: z.email({ error: "Enter a valid email address" }).trim()
+});
+
+export class ForgotPasswordDto extends createZodDto(ForgotPasswordSchema) {}
+
