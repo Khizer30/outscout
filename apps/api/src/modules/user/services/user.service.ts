@@ -11,6 +11,12 @@ interface CreateUser {
   timezone?: string;
 }
 
+interface UpdateUser {
+  name?: string;
+  password?: string;
+  timezone?: string;
+}
+
 @Injectable()
 export class UserService {
   constructor(
@@ -34,5 +40,24 @@ export class UserService {
     });
 
     return this.userRepo.create(user);
+  }
+
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    return this.userRepo.findByEmail(email);
+  }
+
+  async updateUser(user: UserEntity, data: UpdateUser): Promise<UserEntity> {
+    let passwordHash = user.passwordHash;
+    if (data.password) {
+      passwordHash = await this.encryptionService.hashPassword(data.password);
+    }
+
+    const updatedUser = user.update({
+      name: data.name,
+      passwordHash,
+      timezone: data.timezone
+    });
+
+    return this.userRepo.update(updatedUser);
   }
 }

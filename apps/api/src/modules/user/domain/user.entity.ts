@@ -43,6 +43,29 @@ export class UserEntity {
     );
   }
 
+  update(props: {
+    name?: string;
+    email?: string;
+    passwordHash?: string;
+    isVerified?: boolean;
+    profileImageURL?: string | null;
+    timezone?: string;
+  }): UserEntity {
+    return new UserEntity(
+      this.id,
+      props.name ?? this.name,
+      props.email ?? this.email,
+      props.passwordHash ?? this.passwordHash,
+      props.isVerified ?? this.isVerified,
+      this.isSuperAdmin,
+      props.profileImageURL !== undefined ? props.profileImageURL : this.profileImageURL,
+      props.timezone ?? this.timezone,
+      this.createdAt,
+      new Date(),
+      this.deletedAt
+    );
+  }
+
   isAdmin(): boolean {
     return this.isSuperAdmin;
   }
