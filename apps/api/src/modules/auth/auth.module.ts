@@ -2,6 +2,7 @@ import { VerificationRepository } from "@modules/auth/domain/verification.reposi
 import { VerificationDrizzleRepository } from "@modules/auth/infrastructure/verificationDrizzle.repository";
 import { AuthController } from "@modules/auth/presentation/auth.controller";
 import { AuthService } from "@modules/auth/services/auth.service";
+import { VerificationCronService } from "@modules/auth/services/verificationCron.service";
 import { EncryptionModule } from "@modules/encryption/encryption.module";
 import { JWTModule } from "@modules/jwt/jwt.module";
 import { MailModule } from "@modules/mail/mail.module";
@@ -13,6 +14,7 @@ import { Module } from "@nestjs/common";
   controllers: [AuthController],
   providers: [
     AuthService,
+    VerificationCronService,
     {
       provide: VerificationRepository,
       useClass: VerificationDrizzleRepository

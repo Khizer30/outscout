@@ -4,7 +4,7 @@ import { VerificationRepository } from "@modules/auth/domain/verification.reposi
 import { VerificationMapper } from "@modules/auth/infrastructure/verification.mapper";
 import { Injectable } from "@nestjs/common";
 import { verificationsTable } from "@schema/verifications";
-import { eq, and } from "drizzle-orm";
+import { eq, and, lt } from "drizzle-orm";
 
 @Injectable()
 export class VerificationDrizzleRepository extends VerificationRepository {
@@ -39,5 +39,9 @@ export class VerificationDrizzleRepository extends VerificationRepository {
       .returning();
 
     return VerificationMapper.toDomain(row);
+  }
+
+  async deleteExpired(before: Date): Promise<void> {
+    await this.databaseService.db.delete(verificationsTable).where(lt(verificationsTable.expiresAt, before));
   }
 }
