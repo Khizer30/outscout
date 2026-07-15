@@ -1,4 +1,4 @@
-import SuperAdmin from "@middleware/superadmin.decorator";
+import SuperAdmin from "@middleware/superAdmin.decorator";
 import { JWTService } from "@modules/jwt/services/jwt.service";
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
