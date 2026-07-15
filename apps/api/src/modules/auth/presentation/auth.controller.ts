@@ -10,7 +10,9 @@ import {
   LoginDto,
   LoginResponseDto,
   ForgotPasswordDto,
-  ForgotPasswordResponseDto
+  ForgotPasswordResponseDto,
+  ResetPasswordDto,
+  ResetPasswordResponseDto
 } from "@repo/dtos/auth";
 import type { Response } from "express";
 
@@ -60,5 +62,12 @@ export class AuthController {
   async forgotPassword(@Body() dto: ForgotPasswordDto): Promise<ForgotPasswordResponseDto> {
     await this.authService.forgotPassword(dto);
     return { message: "A password reset OTP has been sent to your email" };
+  }
+
+  @Post("reset-password")
+  @HttpCode(HttpStatus.OK)
+  async resetPassword(@Body() dto: ResetPasswordDto): Promise<ResetPasswordResponseDto> {
+    await this.authService.resetPassword(dto);
+    return { message: "Password has been reset successfully" };
   }
 }

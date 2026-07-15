@@ -10,7 +10,7 @@ import { UserEntity } from "@modules/user/domain/user.entity";
 import { UserAlreadyExistsError, UserNotFoundError } from "@modules/user/domain/user.errors";
 import { UserService } from "@modules/user/services/user.service";
 import { Injectable } from "@nestjs/common";
-import { SignupDto, VerifyUserDto, LoginDto, ForgotPasswordDto } from "@repo/dtos/auth";
+import { SignupDto, VerifyUserDto, LoginDto, ForgotPasswordDto, ResetPasswordDto } from "@repo/dtos/auth";
 
 @Injectable()
 export class AuthService {
@@ -128,5 +128,26 @@ export class AuthService {
     await this.verificationRepo.create(verification);
 
     await this.mailService.sendResetEmail(user.email, user.name, otp);
+  }
+
+  async resetPassword(dto: ResetPasswordDto): Promise<void> {
+    const user = await this.userService.findByEmail(dto.email);
+    if (!user) {
+      throw new UserNotFoundError({ email: dto.email });
+    }
+
+    const verification = await this.verificationRepo.findActive(user.id, dto.otp, "RESET");
+    if (!verification) {
+      throw new InvalidOtpError({ email: dto.email, otp: dto.otp });
+    }
+
+    if (verification.expiresAt < new Date()) {
+      throw new ExpiredOtpError({ email: dto.email, otp: dto.otp });
+    }
+
+    const updatedVerification = verification.markAsUsed();
+    await this.verificationRepo.update(updatedVerification);
+
+    await this.userService.updateUser(user, { password: dto.newPassword });
   }
 }
