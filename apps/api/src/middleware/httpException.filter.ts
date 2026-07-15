@@ -1,6 +1,8 @@
 import { AppError } from "@common/app.error";
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from "@nestjs/common";
 import { Request, Response } from "express";
+import { ZodValidationException } from "nestjs-zod";
+import { ZodError } from "zod";
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -10,6 +12,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
+
+    if (exception instanceof ZodValidationException) {
+      const zodError = exception.getZodError() as ZodError;
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        success: false,
+        code: "VALIDATION_ERROR",
+        message: "Validation failed",
+        details: zodError.issues,
+        path: request.url
+      });
+    }
 
     if (exception instanceof AppError) {
       return response.status(exception.statusCode).json({
