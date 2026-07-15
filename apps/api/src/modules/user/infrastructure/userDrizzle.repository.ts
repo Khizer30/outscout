@@ -21,6 +21,15 @@ export class UserDrizzleRepository extends UserRepository {
     return row ? UserMapper.toDomain(row) : null;
   }
 
+  async findById(id: string): Promise<UserEntity | null> {
+    const [row] = await this.databaseService.db
+      .select()
+      .from(usersTable)
+      .where(and(eq(usersTable.id, id), isNull(usersTable.deletedAt)))
+      .limit(1);
+    return row ? UserMapper.toDomain(row) : null;
+  }
+
   async create(entity: UserEntity): Promise<UserEntity> {
     const [row] = await this.databaseService.db.insert(usersTable).values(UserMapper.toPersistence(entity)).returning();
     return UserMapper.toDomain(row);

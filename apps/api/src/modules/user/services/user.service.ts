@@ -46,6 +46,10 @@ export class UserService {
     return this.userRepo.findByEmail(email);
   }
 
+  async findById(id: string): Promise<UserEntity | null> {
+    return this.userRepo.findById(id);
+  }
+
   async updateUser(user: UserEntity, data: UpdateUser): Promise<UserEntity> {
     let passwordHash = user.passwordHash;
     if (data.password) {
