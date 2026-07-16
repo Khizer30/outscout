@@ -1,6 +1,8 @@
+import { AuthGuard } from "@middleware/auth.guard";
+import { User } from "@middleware/user.decorator";
 import { AuthService } from "@modules/auth/services/auth.service";
 import { JWTService } from "@modules/jwt/services/jwt.service";
-import { Body, Controller, Post, Res, HttpCode, HttpStatus, Ip, Req, Get, UnauthorizedException } from "@nestjs/common";
+import { Body, Controller, Post, Res, HttpCode, HttpStatus, Ip, Req, Get, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import {
   SignupDto,
@@ -14,7 +16,8 @@ import {
   ResetPasswordDto,
   ResetPasswordResponseDto,
   RefreshResponseDto,
-  LogoutResponseDto
+  LogoutResponseDto,
+  MeResponseDto
 } from "@repo/dtos/auth";
 import type { Request, Response } from "express";
 
@@ -96,6 +99,12 @@ export class AuthController {
     res.clearCookie("refreshToken", { path: "/" });
 
     return { message: "Logged out successfully" };
+  }
+
+  @Get("me")
+  @UseGuards(AuthGuard)
+  async me(@User() user: AuthenticatedUser): Promise<MeResponseDto> {
+    return { data: user };
   }
 
   @Post("forgot-password")

@@ -53,3 +53,17 @@ export const LogoutResponseSchema = z.object({
 });
 
 export class LogoutResponseDto extends createZodDto(LogoutResponseSchema) {}
+
+// Me
+export const MeResponseSchema = z.object({
+  data: z.object({
+    id: z.string(),
+    name: z.string(),
+    email: z.email(),
+    isSuperAdmin: z.boolean(),
+    companyId: z.string().optional(),
+    companyRole: z.string().optional()
+  })
+});
+
+export class MeResponseDto extends createZodDto(MeResponseSchema) {}

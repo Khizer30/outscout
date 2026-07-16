@@ -37,9 +37,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
       const res = exception.getResponse();
+      const code = HttpStatus[status] || "HTTP_EXCEPTION";
       return response.status(status).json({
         success: false,
-        code: "HTTP_EXCEPTION",
+        code,
         message: typeof res === "string" ? res : ((res as Record<string, unknown>).message as string) || "HTTP Exception",
         details: null,
         path: request.url

@@ -14,11 +14,6 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const roles: CompanyMembershipRole[] = this.reflector.get(Roles, context.getHandler());
-    if (!roles) {
-      return true;
-    }
-
     const request: Request = context.switchToHttp().getRequest();
 
     const [type, token] = request.headers.authorization?.split(" ") ?? [];
@@ -28,13 +23,18 @@ export class AuthGuard implements CanActivate {
     }
 
     const payload = this.jwtService.verifyToken(accessToken) as JwtPayload;
-    if (!payload.data) {
+    if (!payload?.data) {
       throw new UnauthorizedException("Invalid token payload");
     }
 
     request.user = payload.data;
     if (!request.user) {
       throw new UnauthorizedException("Invalid token payload");
+    }
+
+    const roles: CompanyMembershipRole[] = this.reflector.get(Roles, context.getHandler());
+    if (!roles) {
+      return true;
     }
 
     if (request.user.isSuperAdmin) {
