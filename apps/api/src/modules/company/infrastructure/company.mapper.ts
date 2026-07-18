@@ -1,6 +1,6 @@
 import { CompanyEntity } from "@modules/company/domain/company.entity";
 import { CompanyMembershipEntity, CompanyMembershipRole, CompanyMembershipStatus } from "@modules/company/domain/companyMembership.entity";
-import { CompanyResponseDto } from "@repo/dtos/company";
+import { CompanyMembershipResponseDto, CompanyResponseDto } from "@repo/dtos/company";
 import { Company, CompanyInsert, CompanyMembership, CompanyMembershipInsert } from "@schema/index";
 
 export class CompanyMapper {
@@ -46,6 +46,17 @@ export class CompanyMembershipMapper {
   }
 
   static toPersistence(entity: CompanyMembershipEntity): CompanyMembershipInsert {
+    return {
+      id: entity.id,
+      companyId: entity.companyId,
+      userId: entity.userId,
+      role: entity.role,
+      status: entity.status,
+      joinedAt: entity.joinedAt
+    };
+  }
+
+  static toResponse(entity: CompanyMembershipEntity): CompanyMembershipResponseDto {
     return {
       id: entity.id,
       companyId: entity.companyId,

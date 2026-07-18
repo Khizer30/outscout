@@ -1,6 +1,6 @@
 import { AuthGuard } from "@middleware/auth.guard";
 import { User } from "@middleware/user.decorator";
-import { CompanyMapper } from "@modules/company/infrastructure/company.mapper";
+import { CompanyMapper, CompanyMembershipMapper } from "@modules/company/infrastructure/company.mapper";
 import { CompanyService } from "@modules/company/services/company.service";
 import { MediaService } from "@modules/media/services/media.service";
 import { Body, Controller, Get, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
@@ -20,7 +20,10 @@ export class CompanyController {
     const list = await this.companyService.findActiveMembershipsWithCompaniesByUserId(user.id);
 
     return {
-      data: list.map((item) => CompanyMapper.toResponse(item.company))
+      data: list.map((item) => ({
+        company: CompanyMapper.toResponse(item.company),
+        membership: CompanyMembershipMapper.toResponse(item.membership)
+      }))
     };
   }
 
