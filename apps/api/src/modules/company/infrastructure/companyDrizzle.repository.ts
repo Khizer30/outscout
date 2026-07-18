@@ -5,7 +5,7 @@ import { CompanyMembershipEntity } from "@modules/company/domain/companyMembersh
 import { CompanyMapper, CompanyMembershipMapper } from "@modules/company/infrastructure/company.mapper";
 import { Injectable } from "@nestjs/common";
 import { companyTable, companyMembershipTable } from "@schema/index";
-import { eq, and, isNull } from "drizzle-orm";
+import { eq, and, isNull, asc } from "drizzle-orm";
 
 @Injectable()
 export class CompanyDrizzleRepository extends CompanyRepository {
@@ -36,13 +36,13 @@ export class CompanyDrizzleRepository extends CompanyRepository {
     return row ? CompanyMapper.toDomain(row) : null;
   }
 
-  async findActiveMembershipByUserId(userId: string): Promise<CompanyMembershipEntity | null> {
-    const [row] = await this.databaseService.db
+  async findActiveMembershipsByUserId(userId: string): Promise<CompanyMembershipEntity[]> {
+    const rows = await this.databaseService.db
       .select()
       .from(companyMembershipTable)
       .where(and(eq(companyMembershipTable.userId, userId), eq(companyMembershipTable.status, "ACTIVE")))
-      .limit(1);
+      .orderBy(asc(companyMembershipTable.joinedAt));
 
-    return row ? CompanyMembershipMapper.toDomain(row) : null;
+    return rows.map((row) => CompanyMembershipMapper.toDomain(row));
   }
 }

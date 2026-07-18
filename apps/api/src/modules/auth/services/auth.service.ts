@@ -5,6 +5,7 @@ import { SessionRepository } from "@modules/auth/domain/session.repository";
 import { VerificationEntity } from "@modules/auth/domain/verification.entity";
 import { VerificationRepository } from "@modules/auth/domain/verification.repository";
 import { OtpConfig } from "@modules/auth/domain/verification.value-objects";
+import { CompanyRepository } from "@modules/company/domain/company.repository";
 import { EncryptionService } from "@modules/encryption/services/encryption.service";
 import { JWTService } from "@modules/jwt/services/jwt.service";
 import { MailService } from "@modules/mail/services/mail.service";
@@ -21,6 +22,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly verificationRepo: VerificationRepository,
     private readonly sessionRepo: SessionRepository,
+    private readonly companyRepo: CompanyRepository,
     private readonly mailService: MailService,
     private readonly jwtService: JWTService,
     private readonly encryptionService: EncryptionService
@@ -98,11 +100,16 @@ export class AuthService {
       throw new UserNotVerifiedError();
     }
 
+    const memberships = await this.companyRepo.findActiveMembershipsByUserId(user.id);
+    const membership = memberships[0];
+
     const accessTokenPayload = {
       id: user.id,
       name: user.name,
       email: user.email,
-      isSuperAdmin: user.isSuperAdmin
+      isSuperAdmin: user.isSuperAdmin,
+      companyId: membership?.companyId,
+      companyRole: membership?.role
     };
     const refreshTokenPayload = { id: user.id };
 
@@ -153,11 +160,16 @@ export class AuthService {
       throw new InvalidSessionError();
     }
 
+    const memberships = await this.companyRepo.findActiveMembershipsByUserId(user.id);
+    const membership = memberships[0];
+
     const accessTokenPayload = {
       id: user.id,
       name: user.name,
       email: user.email,
-      isSuperAdmin: user.isSuperAdmin
+      isSuperAdmin: user.isSuperAdmin,
+      companyId: membership?.companyId,
+      companyRole: membership?.role
     };
     const refreshTokenPayload = { id: user.id };
 

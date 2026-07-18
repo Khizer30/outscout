@@ -6,5 +6,5 @@ export abstract class CompanyRepository {
 
   abstract findById(id: string): Promise<CompanyEntity | null>;
 
-  abstract findActiveMembershipByUserId(userId: string): Promise<CompanyMembershipEntity | null>;
+  abstract findActiveMembershipsByUserId(userId: string): Promise<CompanyMembershipEntity[]>;
 }

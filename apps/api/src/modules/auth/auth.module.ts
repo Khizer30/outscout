@@ -6,6 +6,7 @@ import { AuthController } from "@modules/auth/presentation/auth.controller";
 import { AuthService } from "@modules/auth/services/auth.service";
 import { SessionCronService } from "@modules/auth/services/sessionCron.service";
 import { VerificationCronService } from "@modules/auth/services/verificationCron.service";
+import { CompanyModule } from "@modules/company/company.module";
 import { EncryptionModule } from "@modules/encryption/encryption.module";
 import { JWTModule } from "@modules/jwt/jwt.module";
 import { MailModule } from "@modules/mail/mail.module";
@@ -13,7 +14,7 @@ import { UserModule } from "@modules/user/user.module";
 import { Module } from "@nestjs/common";
 
 @Module({
-  imports: [UserModule, MailModule, JWTModule, EncryptionModule],
+  imports: [UserModule, MailModule, JWTModule, EncryptionModule, CompanyModule],
   controllers: [AuthController],
   providers: [
     AuthService,
