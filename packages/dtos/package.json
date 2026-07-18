@@ -11,6 +11,10 @@
     "./user": {
       "types": "./dist/user/index.d.ts",
       "default": "./dist/user/index.js"
+    },
+    "./company": {
+      "types": "./dist/company/index.d.ts",
+      "default": "./dist/company/index.js"
     }
   },
   "scripts": {
