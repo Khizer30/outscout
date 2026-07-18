@@ -1,10 +1,11 @@
 import { AuthGuard } from "@middleware/auth.guard";
 import { User } from "@middleware/user.decorator";
+import { CompanyMapper } from "@modules/company/infrastructure/company.mapper";
 import { CompanyService } from "@modules/company/services/company.service";
 import { MediaService } from "@modules/media/services/media.service";
-import { Body, Controller, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { CreateCompanyDto, CreateCompanyResponseDto } from "@repo/dtos/company";
+import { CreateCompanyDto, CreateCompanyResponseDto, GetUserCompaniesResponseDto } from "@repo/dtos/company";
 
 @Controller("company")
 export class CompanyController {
@@ -12,6 +13,16 @@ export class CompanyController {
     private readonly companyService: CompanyService,
     private readonly mediaService: MediaService
   ) {}
+
+  @Get()
+  @UseGuards(AuthGuard)
+  async getMyCompanies(@User() user: AuthenticatedUser): Promise<GetUserCompaniesResponseDto> {
+    const list = await this.companyService.findActiveMembershipsWithCompaniesByUserId(user.id);
+
+    return {
+      data: list.map((item) => CompanyMapper.toResponse(item.company))
+    };
+  }
 
   @Post()
   @UseGuards(AuthGuard)
@@ -27,6 +38,6 @@ export class CompanyController {
       companyImageURL
     });
 
-    return { data: company };
+    return { data: CompanyMapper.toResponse(company) };
   }
 }

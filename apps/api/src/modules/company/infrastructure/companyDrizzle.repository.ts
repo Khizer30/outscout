@@ -36,13 +36,20 @@ export class CompanyDrizzleRepository extends CompanyRepository {
     return row ? CompanyMapper.toDomain(row) : null;
   }
 
-  async findActiveMembershipsByUserId(userId: string): Promise<CompanyMembershipEntity[]> {
+  async findActiveMembershipsWithCompaniesByUserId(userId: string): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }[]> {
     const rows = await this.databaseService.db
-      .select()
-      .from(companyMembershipTable)
-      .where(and(eq(companyMembershipTable.userId, userId), eq(companyMembershipTable.status, "ACTIVE")))
+      .select({
+        company: companyTable,
+        membership: companyMembershipTable
+      })
+      .from(companyTable)
+      .innerJoin(companyMembershipTable, eq(companyTable.id, companyMembershipTable.companyId))
+      .where(and(eq(companyMembershipTable.userId, userId), eq(companyMembershipTable.status, "ACTIVE"), isNull(companyTable.deletedAt)))
       .orderBy(asc(companyMembershipTable.joinedAt));
 
-    return rows.map((row) => CompanyMembershipMapper.toDomain(row));
+    return rows.map((row) => ({
+      company: CompanyMapper.toDomain(row.company),
+      membership: CompanyMembershipMapper.toDomain(row.membership)
+    }));
   }
 }

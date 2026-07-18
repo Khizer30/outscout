@@ -100,16 +100,16 @@ export class AuthService {
       throw new UserNotVerifiedError();
     }
 
-    const memberships = await this.companyRepo.findActiveMembershipsByUserId(user.id);
-    const membership = memberships[0];
+    const activeMemberships = await this.companyRepo.findActiveMembershipsWithCompaniesByUserId(user.id);
+    const active = activeMemberships[0];
 
     const accessTokenPayload = {
       id: user.id,
       name: user.name,
       email: user.email,
       isSuperAdmin: user.isSuperAdmin,
-      companyId: membership?.companyId,
-      companyRole: membership?.role
+      companyId: active?.company.id,
+      companyRole: active?.membership.role
     };
     const refreshTokenPayload = { id: user.id };
 
@@ -160,16 +160,16 @@ export class AuthService {
       throw new InvalidSessionError();
     }
 
-    const memberships = await this.companyRepo.findActiveMembershipsByUserId(user.id);
-    const membership = memberships[0];
+    const activeMemberships = await this.companyRepo.findActiveMembershipsWithCompaniesByUserId(user.id);
+    const active = activeMemberships[0];
 
     const accessTokenPayload = {
       id: user.id,
       name: user.name,
       email: user.email,
       isSuperAdmin: user.isSuperAdmin,
-      companyId: membership?.companyId,
-      companyRole: membership?.role
+      companyId: active?.company.id,
+      companyRole: active?.membership.role
     };
     const refreshTokenPayload = { id: user.id };
 

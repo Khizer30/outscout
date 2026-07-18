@@ -20,3 +20,10 @@ export const CreateCompanyResponseSchema = z.object({
 });
 
 export class CreateCompanyResponseDto extends createZodDto(CreateCompanyResponseSchema) {}
+
+// Get User Companies
+export const GetUserCompaniesResponseSchema = z.object({
+  data: z.array(CompanyResponseSchema)
+});
+
+export class GetUserCompaniesResponseDto extends createZodDto(GetUserCompaniesResponseSchema) {}
