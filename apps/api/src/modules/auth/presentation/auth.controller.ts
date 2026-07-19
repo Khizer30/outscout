@@ -17,7 +17,9 @@ import {
   ResetPasswordResponseDto,
   RefreshResponseDto,
   LogoutResponseDto,
-  MeResponseDto
+  MeResponseDto,
+  SwitchCompanyDto,
+  SwitchCompanyResponseDto
 } from "@repo/dtos/auth";
 import type { Request, Response } from "express";
 
@@ -105,6 +107,28 @@ export class AuthController {
   @UseGuards(AuthGuard)
   async me(@User() user: AuthenticatedUser): Promise<MeResponseDto> {
     return { data: user };
+  }
+
+  @Post("switch-company")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  async switchCompany(
+    @User() user: AuthenticatedUser,
+    @Body() dto: SwitchCompanyDto,
+    @Ip() ip: string,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<SwitchCompanyResponseDto> {
+    const { accessToken, refreshToken: newRefreshToken } = await this.authService.switchCompany(user.id, ip, dto);
+
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: this.isProduction,
+      secure: this.isProduction,
+      sameSite: "lax",
+      maxAge: this.jwtService.refreshTokenMaxAge,
+      path: "/"
+    });
+
+    return { data: { accessToken } };
   }
 
   @Post("forgot-password")

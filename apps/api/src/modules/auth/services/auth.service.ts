@@ -5,7 +5,10 @@ import { SessionRepository } from "@modules/auth/domain/session.repository";
 import { VerificationEntity } from "@modules/auth/domain/verification.entity";
 import { VerificationRepository } from "@modules/auth/domain/verification.repository";
 import { OtpConfig } from "@modules/auth/domain/verification.value-objects";
+import { CompanyEntity } from "@modules/company/domain/company.entity";
+import { CompanyMembershipNotFoundError } from "@modules/company/domain/company.errors";
 import { CompanyRepository } from "@modules/company/domain/company.repository";
+import { CompanyMembershipEntity } from "@modules/company/domain/companyMembership.entity";
 import { EncryptionService } from "@modules/encryption/services/encryption.service";
 import { JWTService } from "@modules/jwt/services/jwt.service";
 import { MailService } from "@modules/mail/services/mail.service";
@@ -13,7 +16,7 @@ import { UserEntity } from "@modules/user/domain/user.entity";
 import { UserAlreadyExistsError, UserNotFoundError } from "@modules/user/domain/user.errors";
 import { UserService } from "@modules/user/services/user.service";
 import { Injectable } from "@nestjs/common";
-import { SignupDto, VerifyUserDto, LoginDto, ForgotPasswordDto, ResetPasswordDto } from "@repo/dtos/auth";
+import { SignupDto, VerifyUserDto, LoginDto, ForgotPasswordDto, ResetPasswordDto, SwitchCompanyDto } from "@repo/dtos/auth";
 import { type JwtPayload } from "jsonwebtoken";
 
 @Injectable()
@@ -27,6 +30,17 @@ export class AuthService {
     private readonly jwtService: JWTService,
     private readonly encryptionService: EncryptionService
   ) {}
+
+  private buildAccessTokenPayload(user: UserEntity, active?: { company: CompanyEntity; membership: CompanyMembershipEntity }) {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      isSuperAdmin: user.isSuperAdmin,
+      companyId: active?.company.id,
+      companyRole: active?.membership.role
+    };
+  }
 
   async signup(dto: SignupDto): Promise<UserEntity> {
     const existing = await this.userService.findByEmail(dto.email);
@@ -103,18 +117,8 @@ export class AuthService {
     const activeMemberships = await this.companyRepo.findActiveMembershipsWithCompaniesByUserId(user.id);
     const active = activeMemberships[0];
 
-    const accessTokenPayload = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      isSuperAdmin: user.isSuperAdmin,
-      companyId: active?.company.id,
-      companyRole: active?.membership.role
-    };
-    const refreshTokenPayload = { id: user.id };
-
-    const accessToken = this.jwtService.generateAccessToken(accessTokenPayload);
-    const refreshToken = this.jwtService.generateRefreshToken(refreshTokenPayload);
+    const accessToken = this.jwtService.generateAccessToken(this.buildAccessTokenPayload(user, active));
+    const refreshToken = this.jwtService.generateRefreshToken({ id: user.id });
 
     const refreshTokenHash = this.encryptionService.hashToken(refreshToken);
     const expiryTime = new Date(Date.now() + this.jwtService.refreshTokenMaxAge);
@@ -163,18 +167,8 @@ export class AuthService {
     const activeMemberships = await this.companyRepo.findActiveMembershipsWithCompaniesByUserId(user.id);
     const active = activeMemberships[0];
 
-    const accessTokenPayload = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      isSuperAdmin: user.isSuperAdmin,
-      companyId: active?.company.id,
-      companyRole: active?.membership.role
-    };
-    const refreshTokenPayload = { id: user.id };
-
-    const newAccessToken = this.jwtService.generateAccessToken(accessTokenPayload);
-    const newRefreshToken = this.jwtService.generateRefreshToken(refreshTokenPayload);
+    const newAccessToken = this.jwtService.generateAccessToken(this.buildAccessTokenPayload(user, active));
+    const newRefreshToken = this.jwtService.generateRefreshToken({ id: user.id });
 
     const newRefreshTokenHash = this.encryptionService.hashToken(newRefreshToken);
     const newExpiryTime = new Date(Date.now() + this.jwtService.refreshTokenMaxAge);
@@ -191,6 +185,36 @@ export class AuthService {
     if (session) {
       await this.sessionRepo.delete(session.id);
     }
+  }
+
+  async switchCompany(userId: string, ipAddress: string, dto: SwitchCompanyDto): Promise<{ accessToken: string; refreshToken: string }> {
+    const user = await this.userService.findById(userId);
+    if (!user || !user.isVerified) {
+      throw new InvalidSessionError();
+    }
+
+    const active = await this.companyRepo.findActiveMembershipForUser(userId, dto.membershipId);
+    if (!active) {
+      throw new CompanyMembershipNotFoundError({ membershipId: dto.membershipId });
+    }
+
+    const newAccessToken = this.jwtService.generateAccessToken(this.buildAccessTokenPayload(user, active));
+    const newRefreshToken = this.jwtService.generateRefreshToken({ id: user.id });
+
+    const refreshTokenHash = this.encryptionService.hashToken(newRefreshToken);
+    const expiryTime = new Date(Date.now() + this.jwtService.refreshTokenMaxAge);
+
+    const session = SessionEntity.create({
+      userId: user.id,
+      refreshTokenHash,
+      ipAddress,
+      expiryTime
+    });
+
+    await this.sessionRepo.deleteByUserId(user.id);
+    await this.sessionRepo.create(session);
+
+    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
   }
 
   async forgotPassword(dto: ForgotPasswordDto): Promise<void> {
