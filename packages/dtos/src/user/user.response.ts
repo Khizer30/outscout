@@ -1,6 +1,7 @@
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
+// User
 export const UserResponseSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -15,3 +16,10 @@ export const UserResponseSchema = z.object({
 });
 
 export class UserResponseDto extends createZodDto(UserResponseSchema) {}
+
+// Update User
+export const UpdateUserResponseSchema = z.object({
+  data: UserResponseSchema
+});
+
+export class UpdateUserResponseDto extends createZodDto(UpdateUserResponseSchema) {}

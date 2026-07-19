@@ -1,6 +1,6 @@
 import { EncryptionService } from "@modules/encryption/services/encryption.service";
 import { UserEntity } from "@modules/user/domain/user.entity";
-import { UserAlreadyExistsError } from "@modules/user/domain/user.errors";
+import { UserAlreadyExistsError, UserNotFoundError } from "@modules/user/domain/user.errors";
 import { UserRepository } from "@modules/user/domain/user.repository";
 import { Injectable } from "@nestjs/common";
 
@@ -15,6 +15,7 @@ interface UpdateUser {
   name?: string;
   password?: string;
   timezone?: string;
+  profileImageURL?: string | null;
 }
 
 @Injectable()
@@ -50,7 +51,7 @@ export class UserService {
     return this.userRepo.findById(id);
   }
 
-  async updateUser(user: UserEntity, data: UpdateUser): Promise<UserEntity> {
+  async updateUserEntity(user: UserEntity, data: UpdateUser): Promise<UserEntity> {
     let passwordHash = user.passwordHash;
     if (data.password) {
       passwordHash = await this.encryptionService.hashPassword(data.password);
@@ -59,10 +60,20 @@ export class UserService {
     const updatedUser = user.update({
       name: data.name,
       passwordHash,
-      timezone: data.timezone
+      timezone: data.timezone,
+      profileImageURL: data.profileImageURL
     });
 
     return this.userRepo.update(updatedUser);
+  }
+
+  async updateUserById(userId: string, data: UpdateUser): Promise<UserEntity> {
+    const user = await this.userRepo.findById(userId);
+    if (!user) {
+      throw new UserNotFoundError({ userId });
+    }
+
+    return this.updateUserEntity(user, data);
   }
 
   async verifyUser(user: UserEntity): Promise<UserEntity> {

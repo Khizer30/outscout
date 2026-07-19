@@ -51,7 +51,7 @@ export class AuthService {
         throw new UserAlreadyExistsError({ email: dto.email });
       }
 
-      user = await this.userService.updateUser(existing, {
+      user = await this.userService.updateUserEntity(existing, {
         name: dto.name,
         password: dto.password,
         timezone: dto.timezone
@@ -258,6 +258,6 @@ export class AuthService {
     const updatedVerification = verification.markAsUsed();
     await this.verificationRepo.update(updatedVerification);
 
-    await this.userService.updateUser(user, { password: dto.newPassword });
+    await this.userService.updateUserEntity(user, { password: dto.newPassword });
   }
 }

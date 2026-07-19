@@ -1,18 +1,18 @@
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-export const CreateUserSchema = z.object({
-  name: z.string().trim(),
-  email: z.email().trim(),
-  password: z.string().min(8),
-  age: z.number().int().min(13).max(120)
-});
-
-export class CreateUserDto extends createZodDto(CreateUserSchema) {}
-
+// Update User
 export const UpdateUserSchema = z.object({
-  name: z.string().trim().optional(),
-  age: z.number().int().min(13).max(120).optional()
+  name: z.string().trim().min(1, { error: "Name is required" }).optional(),
+  password: z
+    .string()
+    .min(8, { error: "Password must be at least 8 characters long" })
+    .regex(/[a-z]/, { error: "Password must contain at least 1 lowercase letter" })
+    .regex(/[A-Z]/, { error: "Password must contain at least 1 uppercase letter" })
+    .regex(/[0-9]/, { error: "Password must contain at least 1 digit" })
+    .regex(/[^a-zA-Z0-9]/, { error: "Password must contain at least 1 special character" })
+    .optional(),
+  timezone: z.string().trim().min(1, { error: "Timezone is required" }).optional()
 });
 
 export class UpdateUserDto extends createZodDto(UpdateUserSchema) {}
