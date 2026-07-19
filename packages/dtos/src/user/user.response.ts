@@ -17,6 +17,13 @@ export const UserResponseSchema = z.object({
 
 export class UserResponseDto extends createZodDto(UserResponseSchema) {}
 
+// Get User
+export const GetUserResponseSchema = z.object({
+  data: UserResponseSchema
+});
+
+export class GetUserResponseDto extends createZodDto(GetUserResponseSchema) {}
+
 // Update User
 export const UpdateUserResponseSchema = z.object({
   data: UserResponseSchema

@@ -3,9 +3,9 @@ import { User } from "@middleware/user.decorator";
 import { MediaService } from "@modules/media/services/media.service";
 import { UserMapper } from "@modules/user/infrastructure/user.mapper";
 import { UserService } from "@modules/user/services/user.service";
-import { Body, Controller, Patch, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Patch, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { UpdateUserDto, UpdateUserResponseDto } from "@repo/dtos/user";
+import { GetUserResponseDto, UpdateUserDto, UpdateUserResponseDto } from "@repo/dtos/user";
 
 @Controller("user")
 export class UserController {
@@ -13,6 +13,13 @@ export class UserController {
     private readonly userService: UserService,
     private readonly mediaService: MediaService
   ) {}
+
+  @Get("me")
+  @UseGuards(AuthGuard)
+  async getMe(@User() user: AuthenticatedUser): Promise<GetUserResponseDto> {
+    const existing = await this.userService.getUserById(user.id);
+    return { data: UserMapper.toResponse(existing) };
+  }
 
   @Patch("me")
   @UseGuards(AuthGuard)

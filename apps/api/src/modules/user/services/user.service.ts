@@ -67,6 +67,15 @@ export class UserService {
     return this.userRepo.update(updatedUser);
   }
 
+  async getUserById(userId: string): Promise<UserEntity> {
+    const user = await this.userRepo.findById(userId);
+    if (!user) {
+      throw new UserNotFoundError({ userId });
+    }
+
+    return user;
+  }
+
   async updateUserById(userId: string, data: UpdateUser): Promise<UserEntity> {
     const user = await this.userRepo.findById(userId);
     if (!user) {
