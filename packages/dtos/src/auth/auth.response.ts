@@ -67,3 +67,12 @@ export const MeResponseSchema = z.object({
 });
 
 export class MeResponseDto extends createZodDto(MeResponseSchema) {}
+
+// Switch Company
+export const SwitchCompanyResponseSchema = z.object({
+  data: z.object({
+    accessToken: z.string()
+  })
+});
+
+export class SwitchCompanyResponseDto extends createZodDto(SwitchCompanyResponseSchema) {}

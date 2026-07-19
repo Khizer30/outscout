@@ -11,3 +11,9 @@ export class UserAlreadyHasCompanyError extends AppError {
     super("USER_ALREADY_HAS_COMPANY", "User is already associated with a company", details, 400);
   }
 }
+
+export class CompanyMembershipNotFoundError extends AppError {
+  constructor(details?: Record<string, unknown>) {
+    super("COMPANY_MEMBERSHIP_NOT_FOUND", "Active company membership not found", details, 404);
+  }
+}

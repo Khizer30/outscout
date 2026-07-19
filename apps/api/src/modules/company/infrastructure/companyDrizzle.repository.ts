@@ -52,4 +52,30 @@ export class CompanyDrizzleRepository extends CompanyRepository {
       membership: CompanyMembershipMapper.toDomain(row.membership)
     }));
   }
+
+  async findActiveMembershipForUser(userId: string, membershipId: string): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity } | null> {
+    const [row] = await this.databaseService.db
+      .select({
+        company: companyTable,
+        membership: companyMembershipTable
+      })
+      .from(companyTable)
+      .innerJoin(companyMembershipTable, eq(companyTable.id, companyMembershipTable.companyId))
+      .where(
+        and(
+          eq(companyMembershipTable.id, membershipId),
+          eq(companyMembershipTable.userId, userId),
+          eq(companyMembershipTable.status, "ACTIVE"),
+          isNull(companyTable.deletedAt)
+        )
+      )
+      .limit(1);
+
+    return row
+      ? {
+          company: CompanyMapper.toDomain(row.company),
+          membership: CompanyMembershipMapper.toDomain(row.membership)
+        }
+      : null;
+  }
 }

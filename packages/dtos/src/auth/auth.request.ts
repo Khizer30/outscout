@@ -54,3 +54,10 @@ export const ResetPasswordSchema = z.object({
 });
 
 export class ResetPasswordDto extends createZodDto(ResetPasswordSchema) {}
+
+// Switch Company
+export const SwitchCompanySchema = z.object({
+  membershipId: z.string({ error: "Membership ID is required" }).trim().min(1, { error: "Membership ID is required" })
+});
+
+export class SwitchCompanyDto extends createZodDto(SwitchCompanySchema) {}
