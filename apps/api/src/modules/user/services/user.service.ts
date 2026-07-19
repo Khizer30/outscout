@@ -98,4 +98,13 @@ export class UserService {
     const updatedUser = user.update({ isVerified: true });
     return this.userRepo.update(updatedUser);
   }
+
+  async deleteUserById(userId: string): Promise<void> {
+    const user = await this.userRepo.findById(userId);
+    if (!user) {
+      throw new UserNotFoundError({ userId });
+    }
+
+    await this.userRepo.update(user.delete());
+  }
 }

@@ -188,6 +188,11 @@ export class AuthService {
     }
   }
 
+  async deleteAccount(userId: string): Promise<void> {
+    await this.userService.deleteUserById(userId);
+    await this.sessionRepo.deleteByUserId(userId);
+  }
+
   async switchCompany(userId: string, ipAddress: string, dto: SwitchCompanyDto): Promise<{ accessToken: string; refreshToken: string }> {
     const user = await this.userService.findById(userId);
     if (!user || !user.isVerified) {

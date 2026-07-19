@@ -2,7 +2,7 @@ import { AuthGuard } from "@middleware/auth.guard";
 import { User } from "@middleware/user.decorator";
 import { AuthService } from "@modules/auth/services/auth.service";
 import { JWTService } from "@modules/jwt/services/jwt.service";
-import { Body, Controller, Post, Res, HttpCode, HttpStatus, Ip, Req, Get, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, Res, HttpCode, HttpStatus, Ip, Req, Get, Delete, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import {
   SignupDto,
@@ -19,7 +19,8 @@ import {
   LogoutResponseDto,
   MeResponseDto,
   SwitchCompanyDto,
-  SwitchCompanyResponseDto
+  SwitchCompanyResponseDto,
+  DeleteAccountResponseDto
 } from "@repo/dtos/auth";
 import type { Request, Response } from "express";
 
@@ -129,6 +130,17 @@ export class AuthController {
     });
 
     return { data: { accessToken } };
+  }
+
+  @Delete("me")
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  async deleteMe(@User() user: AuthenticatedUser, @Res({ passthrough: true }) res: Response): Promise<DeleteAccountResponseDto> {
+    await this.authService.deleteAccount(user.id);
+
+    res.clearCookie("refreshToken", { path: "/" });
+
+    return { message: "Account deleted successfully" };
   }
 
   @Post("forgot-password")

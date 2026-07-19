@@ -66,6 +66,22 @@ export class UserEntity {
     );
   }
 
+  delete(): UserEntity {
+    return new UserEntity(
+      this.id,
+      this.name,
+      this.email,
+      this.passwordHash,
+      this.isVerified,
+      this.isSuperAdmin,
+      this.profileImageURL,
+      this.timezone,
+      this.createdAt,
+      new Date(),
+      new Date()
+    );
+  }
+
   isAdmin(): boolean {
     return this.isSuperAdmin;
   }
