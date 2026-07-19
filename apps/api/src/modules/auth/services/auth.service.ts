@@ -114,7 +114,7 @@ export class AuthService {
       throw new UserNotVerifiedError();
     }
 
-    const activeMemberships = await this.companyRepo.findActiveMembershipsWithCompaniesByUserId(user.id);
+    const activeMemberships = await this.companyRepo.findActiveMembershipsByUserId(user.id);
     const active = activeMemberships[0];
 
     const accessToken = this.jwtService.generateAccessToken(this.buildAccessTokenPayload(user, active));
@@ -164,7 +164,7 @@ export class AuthService {
       throw new InvalidSessionError();
     }
 
-    const activeMemberships = await this.companyRepo.findActiveMembershipsWithCompaniesByUserId(user.id);
+    const activeMemberships = await this.companyRepo.findActiveMembershipsByUserId(user.id);
     const active = activeMemberships[0];
 
     const newAccessToken = this.jwtService.generateAccessToken(this.buildAccessTokenPayload(user, active));
@@ -193,7 +193,7 @@ export class AuthService {
       throw new InvalidSessionError();
     }
 
-    const active = await this.companyRepo.findActiveMembershipForUser(userId, dto.membershipId);
+    const [active] = await this.companyRepo.findActiveMembershipsByUserId(userId, dto.membershipId);
     if (!active) {
       throw new CompanyMembershipNotFoundError({ membershipId: dto.membershipId });
     }

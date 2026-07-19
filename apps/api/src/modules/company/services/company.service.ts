@@ -36,7 +36,7 @@ export class CompanyService {
     return this.companyRepo.findById(id);
   }
 
-  async findActiveMembershipsWithCompaniesByUserId(userId: string): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }[]> {
-    return this.companyRepo.findActiveMembershipsWithCompaniesByUserId(userId);
+  async findActiveMembershipsByUserId(userId: string): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }[]> {
+    return this.companyRepo.findActiveMembershipsByUserId(userId);
   }
 }
