@@ -1,4 +1,5 @@
 import { EncryptionService } from "@modules/encryption/services/encryption.service";
+import { MediaService } from "@modules/media/services/media.service";
 import { UserEntity } from "@modules/user/domain/user.entity";
 import { UserAlreadyExistsError, UserNotFoundError } from "@modules/user/domain/user.errors";
 import { UserRepository } from "@modules/user/domain/user.repository";
@@ -22,7 +23,8 @@ interface UpdateUser {
 export class UserService {
   constructor(
     private readonly userRepo: UserRepository,
-    private readonly encryptionService: EncryptionService
+    private readonly encryptionService: EncryptionService,
+    private readonly mediaService: MediaService
   ) {}
 
   async createUser(data: CreateUser): Promise<UserEntity> {
@@ -82,7 +84,14 @@ export class UserService {
       throw new UserNotFoundError({ userId });
     }
 
-    return this.updateUserEntity(user, data);
+    const previousProfileImageURL = user.profileImageURL;
+    const updatedUser = await this.updateUserEntity(user, data);
+
+    if (data.profileImageURL && previousProfileImageURL && previousProfileImageURL !== updatedUser.profileImageURL) {
+      await this.mediaService.deleteImage(previousProfileImageURL);
+    }
+
+    return updatedUser;
   }
 
   async verifyUser(user: UserEntity): Promise<UserEntity> {
