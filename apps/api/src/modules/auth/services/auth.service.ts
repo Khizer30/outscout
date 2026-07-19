@@ -130,6 +130,7 @@ export class AuthService {
       expiryTime
     });
 
+    await this.sessionRepo.deleteByUserId(user.id);
     await this.sessionRepo.create(session);
 
     return { accessToken, refreshToken };
