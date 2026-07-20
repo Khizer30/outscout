@@ -24,14 +24,10 @@ export class UserController {
   @Patch("me")
   @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor("profileImage"))
-  async updateMe(
-    @User() user: AuthenticatedUser,
-    @Body() dto: UpdateUserDto,
-    @UploadedFile() file?: Express.Multer.File
-  ): Promise<UpdateUserResponseDto> {
+  async updateMe(@User() user: AuthenticatedUser, @Body() dto: UpdateUserDto, @UploadedFile() file?: Express.Multer.File): Promise<UpdateUserResponseDto> {
     let profileImageURL: string | undefined;
     if (file) {
-      profileImageURL = await this.mediaService.uploadImage(file, "users");
+      profileImageURL = await this.mediaService.uploadImage(file, "outscout/users");
     }
 
     const updatedUser = await this.userService.updateUserById(user.id, {

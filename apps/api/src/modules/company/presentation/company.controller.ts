@@ -34,7 +34,7 @@ export class CompanyController {
   async create(@User() user: AuthenticatedUser, @Body() dto: CreateCompanyDto, @UploadedFile() file?: Express.Multer.File): Promise<CreateCompanyResponseDto> {
     let companyImageURL: string | null = null;
     if (file) {
-      companyImageURL = await this.mediaService.uploadImage(file, "companies");
+      companyImageURL = await this.mediaService.uploadImage(file, "outscout/companies");
     }
 
     const { company } = await this.companyService.createCompany(user.id, {
@@ -58,7 +58,7 @@ export class CompanyController {
     let companyImageURL: string | undefined = undefined;
 
     if (file) {
-      companyImageURL = await this.mediaService.uploadImage(file, "companies");
+      companyImageURL = await this.mediaService.uploadImage(file, "outscout/companies");
     }
 
     const updated = await this.companyService.updateCompany(id, {
