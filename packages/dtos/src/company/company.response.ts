@@ -51,3 +51,23 @@ export const UpdateCompanyResponseSchema = z.object({
 });
 
 export class UpdateCompanyResponseDto extends createZodDto(UpdateCompanyResponseSchema) {}
+
+// Company Email Settings
+export const CompanyEmailSettingsResponseSchema = z.object({
+  companyId: z.string(),
+  fromEmail: z.string().nullable(),
+  emailSignature: z.string().nullable(),
+  primaryColor: z.string().nullable(),
+  secondaryColor: z.string().nullable(),
+  hasBrevoApiKey: z.boolean(),
+  updatedAt: z.date()
+});
+
+export class CompanyEmailSettingsResponseDto extends createZodDto(CompanyEmailSettingsResponseSchema) {}
+
+// Update Company Email Settings
+export const UpdateCompanyEmailSettingsResponseSchema = z.object({
+  data: CompanyEmailSettingsResponseSchema
+});
+
+export class UpdateCompanyEmailSettingsResponseDto extends createZodDto(UpdateCompanyEmailSettingsResponseSchema) {}

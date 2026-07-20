@@ -16,3 +16,14 @@ export const UpdateCompanySchema = z.object({
 });
 
 export class UpdateCompanyDto extends createZodDto(UpdateCompanySchema) {}
+
+// Update Company Email Settings
+export const UpdateCompanyEmailSettingsSchema = z.object({
+  brevoApiKey: z.string().trim().min(1, "Brevo API key is required").optional(),
+  fromEmail: z.string().trim().email("Invalid email address").optional().nullable(),
+  emailSignature: z.string().trim().max(2000, "Email signature is too long").optional().nullable(),
+  primaryColor: z.string().trim().max(20, "Primary color is too long").optional().nullable(),
+  secondaryColor: z.string().trim().max(20, "Secondary color is too long").optional().nullable()
+});
+
+export class UpdateCompanyEmailSettingsDto extends createZodDto(UpdateCompanyEmailSettingsSchema) {}
