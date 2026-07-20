@@ -17,3 +17,9 @@ export class CompanyMembershipNotFoundError extends AppError {
     super("COMPANY_MEMBERSHIP_NOT_FOUND", "Active company membership not found", details, 404);
   }
 }
+
+export class CompanyUpdateConflictError extends AppError {
+  constructor(details?: Record<string, unknown>) {
+    super("COMPANY_UPDATE_CONFLICT", "Company was deleted or modified before the update could be applied", details, 409);
+  }
+}

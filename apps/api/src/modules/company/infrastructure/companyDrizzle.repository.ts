@@ -59,4 +59,14 @@ export class CompanyDrizzleRepository extends CompanyRepository {
       membership: CompanyMembershipMapper.toDomain(row.membership)
     }));
   }
+
+  async update(company: CompanyEntity): Promise<CompanyEntity | null> {
+    const [row] = await this.databaseService.db
+      .update(companyTable)
+      .set(CompanyMapper.toPersistence(company))
+      .where(eq(companyTable.id, company.id))
+      .returning();
+
+    return row ? CompanyMapper.toDomain(row) : null;
+  }
 }

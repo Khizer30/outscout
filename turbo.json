@@ -3,6 +3,7 @@
   "ui": "tui",
   "globalEnv": [
     "CI",
+
     "PORT",
     "NODE_ENV",
     "CORS_ORIGINS",

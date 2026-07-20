@@ -44,3 +44,10 @@ export const GetUserCompaniesResponseSchema = z.object({
 });
 
 export class GetUserCompaniesResponseDto extends createZodDto(GetUserCompaniesResponseSchema) {}
+
+// Update Company
+export const UpdateCompanyResponseSchema = z.object({
+  data: CompanyResponseSchema
+});
+
+export class UpdateCompanyResponseDto extends createZodDto(UpdateCompanyResponseSchema) {}

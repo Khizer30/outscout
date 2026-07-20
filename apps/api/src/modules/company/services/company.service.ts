@@ -1,7 +1,9 @@
 import { CompanyEntity } from "@modules/company/domain/company.entity";
+import { CompanyNotFoundError, CompanyUpdateConflictError } from "@modules/company/domain/company.errors";
 import { CompanyRepository } from "@modules/company/domain/company.repository";
 import { CompanyMembershipEntity } from "@modules/company/domain/companyMembership.entity";
-import { Injectable } from "@nestjs/common";
+import { MediaService } from "@modules/media/services/media.service";
+import { Injectable, Logger } from "@nestjs/common";
 
 interface CreateCompanyData {
   name: string;
@@ -11,7 +13,12 @@ interface CreateCompanyData {
 
 @Injectable()
 export class CompanyService {
-  constructor(private readonly companyRepo: CompanyRepository) {}
+  private readonly logger = new Logger(CompanyService.name);
+
+  constructor(
+    private readonly companyRepo: CompanyRepository,
+    private readonly mediaService: MediaService
+  ) {}
 
   async createCompany(userId: string, data: CreateCompanyData): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }> {
     // Create the plain domain entities
@@ -38,5 +45,30 @@ export class CompanyService {
 
   async findActiveMembershipsByUserId(userId: string): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }[]> {
     return this.companyRepo.findActiveMembershipsByUserId(userId);
+  }
+
+  async updateCompany(id: string, data: { name?: string; about?: string | null; companyImageURL?: string }): Promise<CompanyEntity> {
+    const company = await this.companyRepo.findById(id);
+    if (!company) {
+      throw new CompanyNotFoundError({ id });
+    }
+
+    const oldImageURL = company.companyImageURL;
+    const updatedCompany = company.update(data);
+    const saved = await this.companyRepo.update(updatedCompany);
+
+    if (!saved) {
+      throw new CompanyUpdateConflictError({ id });
+    }
+
+    if (data.companyImageURL !== undefined && oldImageURL) {
+      try {
+        await this.mediaService.deleteImage(oldImageURL);
+      } catch (error) {
+        this.logger.error("Failed to delete old company image", error);
+      }
+    }
+
+    return saved;
   }
 }
