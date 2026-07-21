@@ -1,0 +1,602 @@
+{
+  "info": {
+    "_postman_id": "4dcc5f23-a906-4f69-9625-12c53c48d181",
+    "name": "Outscout",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "28609001",
+    "_collection_link": "https://go.postman.co/collection/28609001-4dcc5f23-a906-4f69-9625-12c53c48d181?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Sign Up",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "Syed Muhammad Khizer",
+                  "type": "text",
+                  "uuid": "5377cafb-aed0-44ee-bf1d-8ca159b0a61c"
+                },
+                {
+                  "key": "email",
+                  "value": "syed.khizer30@gmail.com",
+                  "type": "text",
+                  "uuid": "f8386007-f7fc-47d3-bd60-1c629ac5c306"
+                },
+                {
+                  "key": "password",
+                  "value": "Shaheer30=",
+                  "type": "text",
+                  "uuid": "272bf5f2-fc4f-47f6-aaf3-876b9980c394"
+                },
+                {
+                  "key": "timezone",
+                  "value": "Asia/Karachi",
+                  "type": "text",
+                  "uuid": "b93d6e33-d9ef-4ec2-8cbe-f8c38bbb6a59"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/auth/signup",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "syed.khizer30@gmail.com",
+                  "type": "text",
+                  "uuid": "dd114c20-fba3-476d-adae-2ff2f5b10c71"
+                },
+                {
+                  "key": "otp",
+                  "value": "974359",
+                  "type": "text",
+                  "uuid": "57c194fa-c4c2-440a-b3b3-ae2d67c1483a"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/auth/verify-user",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "verify-user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "if (jsonData.success && jsonData.data?.accessToken) {\r",
+                  "    pm.collectionVariables.set(\"accessToken\", jsonData.data.accessToken);\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "syed.khizer30@gmail.com",
+                  "type": "text",
+                  "uuid": "08214f43-0a63-4283-8a09-08da39b10064"
+                },
+                {
+                  "key": "password",
+                  "value": "Shaheer30=",
+                  "type": "text",
+                  "uuid": "bd1ed9a3-53df-459d-b559-02fe4e938f34"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "syed.khizer30@gmail.com",
+                  "type": "text",
+                  "uuid": "da00af3c-1edf-4352-83ac-68fd51d2f699"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/auth/forgot-password",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "syed.khizer30@gmail.com",
+                  "type": "text",
+                  "uuid": "d45fa3b2-58db-451d-8409-f1a7a3442e16"
+                },
+                {
+                  "key": "otp",
+                  "value": "210978",
+                  "type": "text",
+                  "uuid": "3ed52cdd-e9e8-452a-a19f-20ebe8f0f6f6"
+                },
+                {
+                  "key": "newPassword",
+                  "value": "Shaheer30=",
+                  "type": "text",
+                  "uuid": "9f484089-1392-42a8-9045-8558f997e5cf"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/auth/reset-password",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Session",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "if (jsonData.success && jsonData.data?.accessToken) {\r",
+                  "    pm.collectionVariables.set(\"accessToken\", jsonData.data.accessToken);\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/auth/refresh",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Logged In User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/auth/me",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Switch Company",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "if (jsonData.success && jsonData.data?.accessToken) {\r",
+                  "    pm.collectionVariables.set(\"accessToken\", jsonData.data.accessToken);\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "membershipId",
+                  "value": "{{membershipId}}",
+                  "type": "text",
+                  "uuid": "b3f346fc-d81d-44fa-83d7-f7ea90b20e06"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/auth/switch-company",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "switch-company"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "if (jsonData.success) {\r",
+                  "    pm.collectionVariables.set(\"accessToken\", \"\");\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/auth/me",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/user/me",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "user",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Muhammad Khizer",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "Shaheer30=",
+                  "type": "text"
+                },
+                {
+                  "key": "timezone",
+                  "value": "Asia/Karachi",
+                  "type": "text"
+                },
+                {
+                  "key": "profileImage",
+                  "type": "file",
+                  "uuid": "2af96d38-983d-4093-bef0-8ebf76bfe6eb",
+                  "src": "postman-cloud:///1f06d876-8aa0-41f0-94dd-17dcfb18a164"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/user/me",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "user",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Company",
+      "item": [
+        {
+          "name": "Get User's Companies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/company",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "company"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Company",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Microsoft",
+                  "type": "text",
+                  "uuid": "e854a671-cc18-447f-a0bf-47efad891b28"
+                },
+                {
+                  "key": "about",
+                  "value": "IT Company",
+                  "type": "text",
+                  "uuid": "d2b77b02-435d-4cbb-812c-c7b847ed54a3"
+                },
+                {
+                  "key": "companyImage",
+                  "type": "file",
+                  "uuid": "08b9993c-54e4-47af-be6d-b4f44ab544c4",
+                  "src": "postman-cloud:///1f06d87d-9569-4cb0-baaa-3ce7c1332523"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/company",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "company"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Company",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Microsoft",
+                  "type": "text",
+                  "uuid": "e854a671-cc18-447f-a0bf-47efad891b28"
+                },
+                {
+                  "key": "about",
+                  "value": "IT Company",
+                  "type": "text",
+                  "uuid": "d2b77b02-435d-4cbb-812c-c7b847ed54a3"
+                },
+                {
+                  "key": "companyImage",
+                  "type": "file",
+                  "uuid": "08b9993c-54e4-47af-be6d-b4f44ab544c4",
+                  "src": "postman-cloud:///1f06d87d-9569-4cb0-baaa-3ce7c1332523"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/company",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "company"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Company Email Settings",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"brevoApiKey\": \"ABCDE\",\r\n    \"fromEmail\": \"noreply@stackpk.com\",\r\n    \"emailSignature\": \"\",\r\n    \"primaryColor\": \"\",\r\n    \"secondaryColor\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/company/email-settings",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "company",
+                "email-settings"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "url",
+      "value": ""
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "membershipId",
+      "value": ""
+    }
+  ]
+}
