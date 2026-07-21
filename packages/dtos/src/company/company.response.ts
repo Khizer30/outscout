@@ -71,3 +71,23 @@ export const UpdateCompanyEmailSettingsResponseSchema = z.object({
 });
 
 export class UpdateCompanyEmailSettingsResponseDto extends createZodDto(UpdateCompanyEmailSettingsResponseSchema) {}
+
+// Company Message Rules
+export const CompanyMessageRulesResponseSchema = z.object({
+  id: z.string(),
+  companyId: z.string(),
+  channel: z.enum(["WHATSAPP", "EMAIL"]),
+  rules: z.string().nullable(),
+  greeting: z.string().nullable(),
+  version: z.number(),
+  updatedAt: z.date()
+});
+
+export class CompanyMessageRulesResponseDto extends createZodDto(CompanyMessageRulesResponseSchema) {}
+
+// Update Company Message Rules
+export const UpdateCompanyMessageRulesResponseSchema = z.object({
+  data: CompanyMessageRulesResponseSchema
+});
+
+export class UpdateCompanyMessageRulesResponseDto extends createZodDto(UpdateCompanyMessageRulesResponseSchema) {}

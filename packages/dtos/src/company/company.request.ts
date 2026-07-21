@@ -27,3 +27,12 @@ export const UpdateCompanyEmailSettingsSchema = z.object({
 });
 
 export class UpdateCompanyEmailSettingsDto extends createZodDto(UpdateCompanyEmailSettingsSchema) {}
+
+// Update Company Message Rules
+export const UpdateCompanyMessageRulesSchema = z.object({
+  channel: z.enum(["WHATSAPP", "EMAIL"]),
+  rules: z.string().trim().max(2000, "Rules text is too long").optional().nullable(),
+  greeting: z.string().trim().max(500, "Greeting is too long").optional().nullable()
+});
+
+export class UpdateCompanyMessageRulesDto extends createZodDto(UpdateCompanyMessageRulesSchema) {}

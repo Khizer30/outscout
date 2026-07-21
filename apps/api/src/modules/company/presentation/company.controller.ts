@@ -3,8 +3,10 @@ import Roles from "@middleware/roles.decorator";
 import { User } from "@middleware/user.decorator";
 import { CompanyMapper, CompanyMembershipMapper } from "@modules/company/infrastructure/company.mapper";
 import { CompanyEmailSettingsMapper } from "@modules/company/infrastructure/companyEmailSettings.mapper";
+import { CompanyMessageRulesMapper } from "@modules/company/infrastructure/companyMessageRules.mapper";
 import { CompanyService } from "@modules/company/services/company.service";
 import { CompanyEmailSettingsService } from "@modules/company/services/companyEmailSettings.service";
+import { CompanyMessageRulesService } from "@modules/company/services/companyMessageRules.service";
 import { MediaService } from "@modules/media/services/media.service";
 import { Body, Controller, ForbiddenException, Get, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -15,6 +17,8 @@ import {
   UpdateCompanyDto,
   UpdateCompanyEmailSettingsDto,
   UpdateCompanyEmailSettingsResponseDto,
+  UpdateCompanyMessageRulesDto,
+  UpdateCompanyMessageRulesResponseDto,
   UpdateCompanyResponseDto
 } from "@repo/dtos/company";
 
@@ -23,6 +27,7 @@ export class CompanyController {
   constructor(
     private readonly companyService: CompanyService,
     private readonly companyEmailSettingsService: CompanyEmailSettingsService,
+    private readonly companyMessageRulesService: CompanyMessageRulesService,
     private readonly mediaService: MediaService
   ) {}
 
@@ -93,5 +98,20 @@ export class CompanyController {
     const updated = await this.companyEmailSettingsService.updateSettings(id, dto);
 
     return { data: CompanyEmailSettingsMapper.toResponse(updated) };
+  }
+
+  @Patch("message-rules")
+  @UseGuards(AuthGuard)
+  @Roles(["COMPANY_ADMIN"])
+  async updateMessageRules(@User() user: AuthenticatedUser, @Body() dto: UpdateCompanyMessageRulesDto): Promise<UpdateCompanyMessageRulesResponseDto> {
+    const id = user.companyId;
+    if (!id) {
+      throw new ForbiddenException("You do not belong to a company");
+    }
+
+    const { channel, ...data } = dto;
+    const updated = await this.companyMessageRulesService.updateRules(id, channel, data, user.id);
+
+    return { data: CompanyMessageRulesMapper.toResponse(updated) };
   }
 }
