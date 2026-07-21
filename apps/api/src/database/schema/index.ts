@@ -1,6 +1,7 @@
 export * from "@schema/auditLogs";
 export * from "@schema/company";
 export * from "@schema/companyEmailSettings";
+export * from "@schema/companyInvitation";
 export * from "@schema/companyMembership";
 export * from "@schema/companyMessageRules";
 export * from "@schema/companyMessageRulesHistory";
