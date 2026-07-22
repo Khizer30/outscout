@@ -10,11 +10,12 @@ import { CompanyModule } from "@modules/company/company.module";
 import { EncryptionModule } from "@modules/encryption/encryption.module";
 import { JWTModule } from "@modules/jwt/jwt.module";
 import { MailModule } from "@modules/mail/mail.module";
+import { TeamModule } from "@modules/team/team.module";
 import { UserModule } from "@modules/user/user.module";
 import { Module } from "@nestjs/common";
 
 @Module({
-  imports: [UserModule, MailModule, JWTModule, EncryptionModule, CompanyModule],
+  imports: [UserModule, MailModule, JWTModule, EncryptionModule, CompanyModule, TeamModule],
   controllers: [AuthController],
   providers: [
     AuthService,

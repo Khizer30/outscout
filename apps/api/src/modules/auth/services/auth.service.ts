@@ -12,6 +12,8 @@ import { CompanyMembershipEntity } from "@modules/company/domain/companyMembersh
 import { EncryptionService } from "@modules/encryption/services/encryption.service";
 import { JWTService } from "@modules/jwt/services/jwt.service";
 import { MailService } from "@modules/mail/services/mail.service";
+import { InvitationEmailMismatchError } from "@modules/team/domain/invitation.errors";
+import { TeamService } from "@modules/team/services/team.service";
 import { UserEntity } from "@modules/user/domain/user.entity";
 import { UserAlreadyExistsError, UserNotFoundError } from "@modules/user/domain/user.errors";
 import { UserService } from "@modules/user/services/user.service";
@@ -28,7 +30,8 @@ export class AuthService {
     private readonly companyRepo: CompanyRepository,
     private readonly mailService: MailService,
     private readonly jwtService: JWTService,
-    private readonly encryptionService: EncryptionService
+    private readonly encryptionService: EncryptionService,
+    private readonly teamService: TeamService
   ) {}
 
   private buildAccessTokenPayload(user: UserEntity, active?: { company: CompanyEntity; membership: CompanyMembershipEntity }): AuthenticatedUser {
@@ -44,6 +47,13 @@ export class AuthService {
   }
 
   async signup(dto: SignupDto): Promise<UserEntity> {
+    if (dto.invitationToken) {
+      const invitation = await this.teamService.validateToken(dto.invitationToken);
+      if (invitation.email.toLowerCase() !== dto.email.toLowerCase()) {
+        throw new InvitationEmailMismatchError({ expected: invitation.email });
+      }
+    }
+
     const existing = await this.userService.findByEmail(dto.email);
     let user: UserEntity;
 
@@ -98,6 +108,10 @@ export class AuthService {
     await this.verificationRepo.update(updatedVerification);
 
     await this.userService.verifyUser(user);
+
+    if (dto.invitationToken) {
+      await this.teamService.acceptInvitation(dto.invitationToken, user.id, user.email);
+    }
   }
 
   async login(dto: LoginDto, ipAddress: string): Promise<{ accessToken: string; refreshToken: string }> {
@@ -265,5 +279,29 @@ export class AuthService {
     await this.verificationRepo.update(updatedVerification);
 
     await this.userService.updateUserEntity(user, { password: dto.newPassword });
+  }
+
+  async acceptInvitation(userId: string, token: string, ipAddress: string): Promise<{ accessToken: string; refreshToken: string }> {
+    const user = await this.userService.getUserById(userId);
+
+    const { company, membership } = await this.teamService.acceptInvitation(token, user.id, user.email);
+
+    const newAccessToken = this.jwtService.generateAccessToken(this.buildAccessTokenPayload(user, { company, membership }));
+    const newRefreshToken = this.jwtService.generateRefreshToken({ id: user.id });
+
+    const refreshTokenHash = this.encryptionService.hashToken(newRefreshToken);
+    const expiryTime = new Date(Date.now() + this.jwtService.refreshTokenMaxAge);
+
+    const session = SessionEntity.create({
+      userId: user.id,
+      refreshTokenHash,
+      ipAddress,
+      expiryTime
+    });
+
+    await this.sessionRepo.deleteByUserId(user.id);
+    await this.sessionRepo.create(session);
+
+    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
   }
 }
