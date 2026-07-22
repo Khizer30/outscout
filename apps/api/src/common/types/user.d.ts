@@ -1,8 +1,9 @@
 interface AuthenticatedUser {
   id: string;
   name: string;
-  email: string;
+  profileImage?: string;
   isSuperAdmin: boolean;
   companyId?: string;
+  companyName?: string;
   companyRole?: string;
 }

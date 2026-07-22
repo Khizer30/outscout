@@ -31,13 +31,14 @@ export class AuthService {
     private readonly encryptionService: EncryptionService
   ) {}
 
-  private buildAccessTokenPayload(user: UserEntity, active?: { company: CompanyEntity; membership: CompanyMembershipEntity }) {
+  private buildAccessTokenPayload(user: UserEntity, active?: { company: CompanyEntity; membership: CompanyMembershipEntity }): AuthenticatedUser {
     return {
       id: user.id,
       name: user.name,
-      email: user.email,
+      profileImage: user.profileImageURL ?? undefined,
       isSuperAdmin: user.isSuperAdmin,
       companyId: active?.company.id,
+      companyName: active?.company.name,
       companyRole: active?.membership.role
     };
   }

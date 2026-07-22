@@ -59,9 +59,10 @@ export const MeResponseSchema = z.object({
   data: z.object({
     id: z.string(),
     name: z.string(),
-    email: z.email(),
+    profileImage: z.string().optional(),
     isSuperAdmin: z.boolean(),
     companyId: z.string().optional(),
+    companyName: z.string().optional(),
     companyRole: z.string().optional()
   })
 });
