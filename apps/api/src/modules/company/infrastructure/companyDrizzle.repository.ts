@@ -36,7 +36,11 @@ export class CompanyDrizzleRepository extends CompanyRepository {
     return row ? CompanyMapper.toDomain(row) : null;
   }
 
-  async findActiveMembershipsByUserId(userId: string, membershipId?: string): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }[]> {
+  async findActiveMembershipsByUserId(
+    userId: string,
+    membershipId?: string,
+    companyId?: string
+  ): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }[]> {
     const rows = await this.databaseService.db
       .select({
         company: companyTable,
@@ -49,7 +53,8 @@ export class CompanyDrizzleRepository extends CompanyRepository {
           eq(companyMembershipTable.userId, userId),
           eq(companyMembershipTable.status, "ACTIVE"),
           isNull(companyTable.deletedAt),
-          membershipId ? eq(companyMembershipTable.id, membershipId) : undefined
+          membershipId ? eq(companyMembershipTable.id, membershipId) : undefined,
+          companyId ? eq(companyMembershipTable.companyId, companyId) : undefined
         )
       )
       .orderBy(asc(companyMembershipTable.joinedAt));
@@ -58,6 +63,12 @@ export class CompanyDrizzleRepository extends CompanyRepository {
       company: CompanyMapper.toDomain(row.company),
       membership: CompanyMembershipMapper.toDomain(row.membership)
     }));
+  }
+
+  async addMembership(membership: CompanyMembershipEntity): Promise<CompanyMembershipEntity> {
+    const [row] = await this.databaseService.db.insert(companyMembershipTable).values(CompanyMembershipMapper.toPersistence(membership)).returning();
+
+    return CompanyMembershipMapper.toDomain(row);
   }
 
   async update(company: CompanyEntity): Promise<CompanyEntity | null> {

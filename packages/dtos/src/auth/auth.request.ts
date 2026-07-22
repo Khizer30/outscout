@@ -12,7 +12,8 @@ export const SignupSchema = z.object({
     .regex(/[A-Z]/, { error: "Password must contain at least 1 uppercase letter" })
     .regex(/[0-9]/, { error: "Password must contain at least 1 digit" })
     .regex(/[^a-zA-Z0-9]/, { error: "Password must contain at least 1 special character" }),
-  timezone: z.string({ error: "Timezone must be a string" }).trim().optional()
+  timezone: z.string({ error: "Timezone must be a string" }).trim().optional(),
+  invitationToken: z.string({ error: "Invitation token must be a string" }).trim().min(1).optional()
 });
 
 export class SignupDto extends createZodDto(SignupSchema) {}
@@ -20,7 +21,8 @@ export class SignupDto extends createZodDto(SignupSchema) {}
 // Verify User
 export const VerifyUserSchema = z.object({
   email: z.email({ error: "Enter a valid email address" }).trim(),
-  otp: z.string({ error: "OTP is required" }).trim().length(6, { error: "OTP must be exactly 6 characters long" })
+  otp: z.string({ error: "OTP is required" }).trim().length(6, { error: "OTP must be exactly 6 characters long" }),
+  invitationToken: z.string({ error: "Invitation token must be a string" }).trim().min(1).optional()
 });
 
 export class VerifyUserDto extends createZodDto(VerifyUserSchema) {}
