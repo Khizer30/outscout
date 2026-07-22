@@ -13,3 +13,9 @@ export interface CompanyInvitationRecord {
   acceptedAt: Date | null;
   createdAt: Date;
 }
+
+export interface InvitationTokenPayload {
+  invitationId: string;
+  email: string;
+  companyId: string;
+}
