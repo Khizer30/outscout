@@ -71,4 +71,18 @@ export class CompanyService {
 
     return saved;
   }
+
+  async deleteCompany(id: string): Promise<void> {
+    const company = await this.companyRepo.findById(id);
+    if (!company) {
+      throw new CompanyNotFoundError({ id });
+    }
+
+    const deletedCompany = company.delete();
+    const saved = await this.companyRepo.update(deletedCompany);
+
+    if (!saved) {
+      throw new CompanyUpdateConflictError({ id });
+    }
+  }
 }

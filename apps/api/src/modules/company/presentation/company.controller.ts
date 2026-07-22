@@ -8,11 +8,12 @@ import { CompanyService } from "@modules/company/services/company.service";
 import { CompanyEmailSettingsService } from "@modules/company/services/companyEmailSettings.service";
 import { CompanyMessageRulesService } from "@modules/company/services/companyMessageRules.service";
 import { MediaService } from "@modules/media/services/media.service";
-import { Body, Controller, ForbiddenException, Get, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, ForbiddenException, Get, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import {
   CreateCompanyDto,
   CreateCompanyResponseDto,
+  DeleteCompanyResponseDto,
   GetUserCompaniesResponseDto,
   UpdateCompanyDto,
   UpdateCompanyEmailSettingsDto,
@@ -84,6 +85,20 @@ export class CompanyController {
     });
 
     return { data: CompanyMapper.toResponse(updated) };
+  }
+
+  @Delete()
+  @UseGuards(AuthGuard)
+  @Roles(["COMPANY_ADMIN"])
+  async deleteCompany(@User() user: AuthenticatedUser): Promise<DeleteCompanyResponseDto> {
+    const id = user.companyId;
+    if (!id) {
+      throw new ForbiddenException("You do not belong to a company");
+    }
+
+    await this.companyService.deleteCompany(id);
+
+    return { message: "Company deleted successfully" };
   }
 
   @Patch("email-settings")

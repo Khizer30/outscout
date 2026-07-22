@@ -91,3 +91,11 @@ export const UpdateCompanyMessageRulesResponseSchema = z.object({
 });
 
 export class UpdateCompanyMessageRulesResponseDto extends createZodDto(UpdateCompanyMessageRulesResponseSchema) {}
+
+// Delete Company
+export const DeleteCompanyResponseSchema = z.object({
+  message: z.string()
+});
+
+export class DeleteCompanyResponseDto extends createZodDto(DeleteCompanyResponseSchema) {}
+

@@ -8,6 +8,13 @@
       "when": 1783760608026,
       "tag": "0000_happy_hardball",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1784702228771,
+      "tag": "0001_odd_banshee",
+      "breakpoints": true
     }
   ]
 }
