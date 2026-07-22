@@ -81,4 +81,28 @@ export class JWTService {
   decodeToken(token: string): Jwt | null {
     return decode(token, { complete: true });
   }
+
+  generateInvitationToken(data: object, expiresIn: string): string {
+    return sign({ data, purpose: "invitation" }, this.secret, {
+      expiresIn
+    } as SignOptions);
+  }
+
+  verifyInvitationToken<T = JwtPayload>(token: string): T {
+    let payload: JwtPayload | string;
+    try {
+      payload = verify(token, this.secret);
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        throw new UnauthorizedException("Invitation link has expired");
+      }
+      throw new UnauthorizedException("Invalid invitation link");
+    }
+
+    if (typeof payload === "string" || payload.purpose !== "invitation" || !payload.data) {
+      throw new UnauthorizedException("Invalid invitation link");
+    }
+
+    return payload.data as T;
+  }
 }

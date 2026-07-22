@@ -7,6 +7,7 @@
     "PORT",
     "NODE_ENV",
     "CORS_ORIGINS",
+    "FRONTEND_URL",
     "ENCRYPTION_KEY",
     "JWT_SECRET",
     "JWT_EXPIRE_TIME",

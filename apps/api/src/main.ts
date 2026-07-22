@@ -15,7 +15,7 @@ import { ZodValidationPipe } from "nestjs-zod";
   const configService = app.get(ConfigService);
   const port = configService.get<number>("PORT", 5000);
   const isProduction = configService.get<string>("NODE_ENV") === "production";
-  const corsOrigins = configService.get<string>("CORS_ORIGINS")?.split(", ");
+  const corsOrigins = configService.get<string>("CORS_ORIGINS")?.split(" ");
 
   app.set("trust proxy", "loopback");
   app.setGlobalPrefix("api");

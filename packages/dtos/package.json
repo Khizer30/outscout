@@ -15,6 +15,10 @@
     "./company": {
       "types": "./dist/company/index.d.ts",
       "default": "./dist/company/index.js"
+    },
+    "./team": {
+      "types": "./dist/team/index.d.ts",
+      "default": "./dist/team/index.js"
     }
   },
   "scripts": {
