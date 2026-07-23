@@ -47,6 +47,12 @@ export class AuthService {
   }
 
   async signup(dto: SignupDto): Promise<UserEntity> {
+    const existing = await this.userService.findByEmail(dto.email);
+
+    if (existing?.isVerified) {
+      throw new UserAlreadyExistsError({ email: dto.email });
+    }
+
     if (dto.invitationToken) {
       const invitation = await this.teamService.validateToken(dto.invitationToken);
       if (invitation.email.toLowerCase() !== dto.email.toLowerCase()) {
@@ -54,14 +60,9 @@ export class AuthService {
       }
     }
 
-    const existing = await this.userService.findByEmail(dto.email);
     let user: UserEntity;
 
     if (existing) {
-      if (existing.isVerified) {
-        throw new UserAlreadyExistsError({ email: dto.email });
-      }
-
       user = await this.userService.updateUserEntity(existing, {
         name: dto.name,
         password: dto.password,
