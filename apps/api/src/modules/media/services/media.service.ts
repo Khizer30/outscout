@@ -1,4 +1,5 @@
 import { MediaRepository } from "@modules/media/domain/media.repository";
+import type { UploadImageSignature } from "@modules/media/domain/media.types";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
@@ -11,5 +12,9 @@ export class MediaService {
 
   async deleteImage(url: string): Promise<void> {
     return this.mediaRepository.deleteImage(url);
+  }
+
+  generateUploadImageSignature(folder: string, width?: number, height?: number): UploadImageSignature {
+    return this.mediaRepository.generateUploadImageSignature(folder, width, height);
   }
 }

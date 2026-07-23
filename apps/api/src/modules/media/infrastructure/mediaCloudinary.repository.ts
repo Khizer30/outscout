@@ -1,5 +1,6 @@
 import { Readable } from "stream";
 import { MediaRepository } from "@modules/media/domain/media.repository";
+import type { UploadImageSignature } from "@modules/media/domain/media.types";
 import { Injectable } from "@nestjs/common";
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import sharp from "sharp";
@@ -30,6 +31,23 @@ export class MediaCloudinaryRepository implements MediaRepository {
   async deleteImage(url: string): Promise<void> {
     const publicId = this.urlToPublicId(url);
     await cloudinary.uploader.destroy(publicId);
+  }
+
+  generateUploadImageSignature(folder: string, width = 256, height = 256): UploadImageSignature {
+    const config = cloudinary.config();
+    const timestamp = Math.round(Date.now() / 1000);
+    const eager = `c_fill,w_${width},h_${height}/f_png`;
+
+    const signature = cloudinary.utils.api_sign_request({ eager, folder, timestamp }, config.api_secret as string);
+
+    return {
+      signature,
+      timestamp,
+      apiKey: config.api_key as string,
+      cloudName: config.cloud_name as string,
+      eager,
+      folder
+    };
   }
 
   private urlToPublicId(url: string): string {
