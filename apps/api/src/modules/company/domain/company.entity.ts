@@ -44,15 +44,7 @@ export class CompanyEntity {
   }
 
   delete(): CompanyEntity {
-    return new CompanyEntity(
-      this.id,
-      this.name,
-      this.about,
-      this.companyImageURL,
-      this.createdAt,
-      new Date(),
-      new Date()
-    );
+    return new CompanyEntity(this.id, this.name, this.about, this.companyImageURL, this.createdAt, new Date(), new Date());
   }
 
   isDeleted(): boolean {

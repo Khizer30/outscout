@@ -1,10 +1,9 @@
 {
   "info": {
-    "_postman_id": "4dcc5f23-a906-4f69-9625-12c53c48d181",
+    "_postman_id": "a47d2258-9e8f-48d5-8b68-64c05a4b0588",
     "name": "Outscout",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "28609001",
-    "_collection_link": "https://go.postman.co/collection/28609001-4dcc5f23-a906-4f69-9625-12c53c48d181?source=collection_link"
+    "_exporter_id": "28609001"
   },
   "item": [
     {
@@ -41,6 +40,13 @@
                   "value": "Asia/Karachi",
                   "type": "text",
                   "uuid": "b93d6e33-d9ef-4ec2-8cbe-f8c38bbb6a59"
+                },
+                {
+                  "key": "invitationToken",
+                  "value": "{{invitationToken}}",
+                  "type": "text",
+                  "uuid": "773397a0-4da8-4692-974c-a3e7bdf84e92",
+                  "disabled": true
                 }
               ]
             },
@@ -73,9 +79,16 @@
                 },
                 {
                   "key": "otp",
-                  "value": "974359",
+                  "value": "512690",
                   "type": "text",
                   "uuid": "57c194fa-c4c2-440a-b3b3-ae2d67c1483a"
+                },
+                {
+                  "key": "invitationToken",
+                  "value": "{{invitationToken}}",
+                  "type": "text",
+                  "uuid": "f803a9ca-6ad4-4007-8be1-05826c1d2fff",
+                  "disabled": true
                 }
               ]
             },
@@ -216,6 +229,24 @@
           "response": []
         },
         {
+          "name": "Get Logged In User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/auth/me",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Refresh Session",
           "event": [
             {
@@ -252,18 +283,36 @@
           "response": []
         },
         {
-          "name": "Get Logged In User",
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();\r",
+                  "\r",
+                  "if (jsonData.success) {\r",
+                  "    pm.collectionVariables.set(\"accessToken\", \"\");\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
-            "method": "GET",
+            "method": "POST",
             "header": [],
             "url": {
-              "raw": "{{url}}/auth/me",
+              "raw": "{{url}}/auth/logout",
               "host": [
                 "{{url}}"
               ],
               "path": [
                 "auth",
-                "me"
+                "logout"
               ]
             }
           },
@@ -528,7 +577,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"brevoApiKey\": \"ABCDE\",\r\n    \"fromEmail\": \"noreply@stackpk.com\",\r\n    \"emailSignature\": \"\",\r\n    \"primaryColor\": \"\",\r\n    \"secondaryColor\": \"\"\r\n}",
+              "raw": "{\r\n    \"brevoApiKey\": \"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\",\r\n    \"fromEmail\": \"noreply@outscout.stackpk.com\",\r\n    \"emailSignature\": \"From Company's Email Signature\",\r\n    \"primaryColor\": \"#FFFFFF\",\r\n    \"secondaryColor\": \"#38BDF8\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -543,6 +592,213 @@
               "path": [
                 "company",
                 "email-settings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Company Message Rules",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"channel\": \"WHATSAPP\",\r\n    // \"channel\": \"EMAIL\",\r\n    \"rules\": \"- Language: English - Write a cold outreach EMAIL — it must have a subject line and a proper email body - Address the recipient as the business owner/team, not by a personal name - Keep the body under 200 words - Tone: professional, human, and warm — not salesy, not pushy, not spammy - Subject line: concise, curiosity-driven, relevant to their business type — no clickbait - Opening line: a genuine, specific observation about their business (from their website if available, otherwise from their business type/location) - Mention 1-2 services most relevant to their specific business type - If the business has no website, specifically mention that we can build one for them - If a website URL is provided, pull one concrete specific detail from it (product, service, tagline, design style) to personalise the opening — do not fabricate; if inaccessible, note that - End with a single soft call-to-action — invite a reply or a quick call, nothing aggressive - Sign off as: Outscout Marketing Agency - Do NOT use emojis - Do NOT mention Google Map ratings - Do NOT use generic filler phrases like 'I hope this email finds you well' or 'I came across your business'\",\r\n    \"greeting\": \"Assalam Wallikum\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/company/message-rules",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "company",
+                "message-rules"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Company",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/company",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "company"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Team",
+      "item": [
+        {
+          "name": "Send Invitation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "syed.khizer30+1@gmail.com",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/team/invitations",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "invitations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Invitation's Email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/team/invitations/{{invitationToken}}/email",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "invitations",
+                "{{invitationToken}}",
+                "email"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Company's Invitations",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": [\r\n        // \"PENDING\",\r\n        // \"ACCEPTED\",\r\n        // \"REJECTED\",\r\n        // \"REVOKED\",\r\n        // \"EXPIRED\"\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/team/invitations/list",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "invitations",
+                "list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Revoke Company's Invitation",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": []
+            },
+            "url": {
+              "raw": "{{url}}/team/invitations/{{invitationToken}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "invitations",
+                "{{invitationToken}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Invitations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/team/invitations/me",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "invitations",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Accept Invitation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/team/invitations/{{invitationToken}}/accept",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "invitations",
+                "{{invitationToken}}",
+                "accept"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Invitation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/team/invitations/{{invitationToken}}/reject",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "invitations",
+                "{{invitationToken}}",
+                "reject"
               ]
             }
           },
@@ -596,6 +852,14 @@
     },
     {
       "key": "membershipId",
+      "value": ""
+    },
+    {
+      "key": "invitationId",
+      "value": ""
+    },
+    {
+      "key": "invitationToken",
       "value": ""
     }
   ]

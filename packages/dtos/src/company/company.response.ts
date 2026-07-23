@@ -98,4 +98,3 @@ export const DeleteCompanyResponseSchema = z.object({
 });
 
 export class DeleteCompanyResponseDto extends createZodDto(DeleteCompanyResponseSchema) {}
-
