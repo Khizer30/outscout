@@ -135,7 +135,7 @@ export class AuthService {
     const accessToken = this.jwtService.generateAccessToken(this.buildAccessTokenPayload(user, active));
     const refreshToken = this.jwtService.generateRefreshToken({ id: user.id });
 
-    const refreshTokenHash = this.encryptionService.hashToken(refreshToken);
+    const refreshTokenHash = await this.encryptionService.hashToken(refreshToken);
     const expiryTime = new Date(Date.now() + this.jwtService.refreshTokenMaxAge);
 
     const session = SessionEntity.create({
@@ -169,7 +169,7 @@ export class AuthService {
       throw new InvalidSessionError();
     }
 
-    const refreshTokenHash = this.encryptionService.hashToken(token);
+    const refreshTokenHash = await this.encryptionService.hashToken(token);
     const session = await this.sessionRepo.findByHash(refreshTokenHash);
     if (!session) {
       throw new InvalidSessionError();
@@ -186,7 +186,7 @@ export class AuthService {
     const newAccessToken = this.jwtService.generateAccessToken(this.buildAccessTokenPayload(user, active));
     const newRefreshToken = this.jwtService.generateRefreshToken({ id: user.id });
 
-    const newRefreshTokenHash = this.encryptionService.hashToken(newRefreshToken);
+    const newRefreshTokenHash = await this.encryptionService.hashToken(newRefreshToken);
     const newExpiryTime = new Date(Date.now() + this.jwtService.refreshTokenMaxAge);
 
     const updatedSession = new SessionEntity(session.id, session.userId, newRefreshTokenHash, ipAddress, newExpiryTime, session.createdAt);
@@ -196,7 +196,7 @@ export class AuthService {
   }
 
   async logout(token: string): Promise<void> {
-    const refreshTokenHash = this.encryptionService.hashToken(token);
+    const refreshTokenHash = await this.encryptionService.hashToken(token);
     const session = await this.sessionRepo.findByHash(refreshTokenHash);
     if (session) {
       await this.sessionRepo.delete(session.id);
@@ -222,7 +222,7 @@ export class AuthService {
     const newAccessToken = this.jwtService.generateAccessToken(this.buildAccessTokenPayload(user, active));
     const newRefreshToken = this.jwtService.generateRefreshToken({ id: user.id });
 
-    const refreshTokenHash = this.encryptionService.hashToken(newRefreshToken);
+    const refreshTokenHash = await this.encryptionService.hashToken(newRefreshToken);
     const expiryTime = new Date(Date.now() + this.jwtService.refreshTokenMaxAge);
 
     const session = SessionEntity.create({
@@ -289,7 +289,7 @@ export class AuthService {
     const newAccessToken = this.jwtService.generateAccessToken(this.buildAccessTokenPayload(user, { company, membership }));
     const newRefreshToken = this.jwtService.generateRefreshToken({ id: user.id });
 
-    const refreshTokenHash = this.encryptionService.hashToken(newRefreshToken);
+    const refreshTokenHash = await this.encryptionService.hashToken(newRefreshToken);
     const expiryTime = new Date(Date.now() + this.jwtService.refreshTokenMaxAge);
 
     const session = SessionEntity.create({
