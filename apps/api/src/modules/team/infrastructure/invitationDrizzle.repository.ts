@@ -1,10 +1,11 @@
 import { DatabaseService } from "@database/services/database.service";
 import { CompanyInvitationEntity } from "@modules/team/domain/invitation.entity";
 import { InvitationRepository } from "@modules/team/domain/invitation.repository";
+import { CompanyInvitationStatus } from "@modules/team/domain/invitation.types";
 import { InvitationMapper } from "@modules/team/infrastructure/invitation.mapper";
 import { Injectable } from "@nestjs/common";
 import { companyInvitationTable, usersTable } from "@schema/index";
-import { eq, and, ilike } from "drizzle-orm";
+import { eq, and, ilike, inArray } from "drizzle-orm";
 
 @Injectable()
 export class InvitationDrizzleRepository extends InvitationRepository {
@@ -45,7 +46,7 @@ export class InvitationDrizzleRepository extends InvitationRepository {
     });
   }
 
-  async findPendingByCompany(companyId: string, email?: string): Promise<CompanyInvitationEntity[]> {
+  async findByCompany(companyId: string, filters?: { email?: string; status?: CompanyInvitationStatus[] }): Promise<CompanyInvitationEntity[]> {
     const rows = await this.databaseService.db
       .select({
         invitation: companyInvitationTable,
@@ -61,8 +62,8 @@ export class InvitationDrizzleRepository extends InvitationRepository {
       .where(
         and(
           eq(companyInvitationTable.companyId, companyId),
-          eq(companyInvitationTable.status, "PENDING"),
-          email ? eq(companyInvitationTable.email, email) : undefined
+          inArray(companyInvitationTable.status, filters?.status ?? ["PENDING"]),
+          filters?.email ? eq(companyInvitationTable.email, filters.email) : undefined
         )
       );
 
@@ -74,7 +75,7 @@ export class InvitationDrizzleRepository extends InvitationRepository {
     );
   }
 
-  async findPendingByEmail(email: string): Promise<CompanyInvitationEntity[]> {
+  async findByEmail(email: string, filters?: { status?: CompanyInvitationStatus[] }): Promise<CompanyInvitationEntity[]> {
     const rows = await this.databaseService.db
       .select({
         invitation: companyInvitationTable,
@@ -87,7 +88,7 @@ export class InvitationDrizzleRepository extends InvitationRepository {
       })
       .from(companyInvitationTable)
       .leftJoin(usersTable, eq(companyInvitationTable.invitedBy, usersTable.id))
-      .where(and(eq(companyInvitationTable.status, "PENDING"), ilike(companyInvitationTable.email, email)));
+      .where(and(inArray(companyInvitationTable.status, filters?.status ?? ["PENDING"]), ilike(companyInvitationTable.email, email)));
 
     return rows.map((row) =>
       InvitationMapper.toDomain({

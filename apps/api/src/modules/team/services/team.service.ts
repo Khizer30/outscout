@@ -61,7 +61,7 @@ export class TeamService {
       : null;
 
     const expiresAt = new Date(Date.now() + InvitationConfig.EXPIRY_MS);
-    const [pending] = await this.invitationRepo.findPendingByCompany(companyId, email);
+    const [pending] = await this.invitationRepo.findByCompany(companyId, { email, status: ["PENDING"] });
 
     let invitation: CompanyInvitationEntity;
 
@@ -90,12 +90,12 @@ export class TeamService {
   }
 
   async listPendingForCompany(companyId: string): Promise<CompanyInvitationEntity[]> {
-    return this.invitationRepo.findPendingByCompany(companyId);
+    return this.invitationRepo.findByCompany(companyId, { status: ["PENDING"] });
   }
 
   async listMyInvitations(userId: string): Promise<CompanyInvitationEntity[]> {
     const user = await this.userService.getUserById(userId);
-    const invitations = await this.invitationRepo.findPendingByEmail(user.email);
+    const invitations = await this.invitationRepo.findByEmail(user.email, { status: ["PENDING"] });
 
     return invitations.filter((invitation) => !invitation.isExpired());
   }
