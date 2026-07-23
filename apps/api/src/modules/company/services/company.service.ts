@@ -44,7 +44,7 @@ export class CompanyService {
   }
 
   async findActiveMembershipsByUserId(userId: string): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }[]> {
-    return this.companyRepo.findActiveMembershipsByUserId(userId);
+    return this.companyRepo.findMembershipsByUserId(userId, { status: ["ACTIVE"] });
   }
 
   async updateCompany(id: string, data: { name?: string; about?: string | null; companyImageURL?: string }): Promise<CompanyEntity> {

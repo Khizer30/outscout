@@ -1,11 +1,11 @@
 import { DatabaseService } from "@database/services/database.service";
 import { CompanyEntity } from "@modules/company/domain/company.entity";
 import { CompanyRepository } from "@modules/company/domain/company.repository";
-import { CompanyMembershipEntity } from "@modules/company/domain/companyMembership.entity";
+import { CompanyMembershipEntity, CompanyMembershipStatus } from "@modules/company/domain/companyMembership.entity";
 import { CompanyMapper, CompanyMembershipMapper } from "@modules/company/infrastructure/company.mapper";
 import { Injectable } from "@nestjs/common";
 import { companyTable, companyMembershipTable } from "@schema/index";
-import { eq, and, isNull, asc } from "drizzle-orm";
+import { eq, and, isNull, asc, inArray } from "drizzle-orm";
 
 @Injectable()
 export class CompanyDrizzleRepository extends CompanyRepository {
@@ -36,10 +36,9 @@ export class CompanyDrizzleRepository extends CompanyRepository {
     return row ? CompanyMapper.toDomain(row) : null;
   }
 
-  async findActiveMembershipsByUserId(
+  async findMembershipsByUserId(
     userId: string,
-    membershipId?: string,
-    companyId?: string
+    filters?: { membershipId?: string; companyId?: string; status?: CompanyMembershipStatus[] }
   ): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }[]> {
     const rows = await this.databaseService.db
       .select({
@@ -51,10 +50,10 @@ export class CompanyDrizzleRepository extends CompanyRepository {
       .where(
         and(
           eq(companyMembershipTable.userId, userId),
-          eq(companyMembershipTable.status, "ACTIVE"),
+          inArray(companyMembershipTable.status, filters?.status ?? ["ACTIVE"]),
           isNull(companyTable.deletedAt),
-          membershipId ? eq(companyMembershipTable.id, membershipId) : undefined,
-          companyId ? eq(companyMembershipTable.companyId, companyId) : undefined
+          filters?.membershipId ? eq(companyMembershipTable.id, filters.membershipId) : undefined,
+          filters?.companyId ? eq(companyMembershipTable.companyId, filters.companyId) : undefined
         )
       )
       .orderBy(asc(companyMembershipTable.joinedAt));

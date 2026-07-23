@@ -44,7 +44,7 @@ export class TeamService {
 
     const existingUser = await this.userService.findByEmail(email);
     if (existingUser) {
-      const [existingMembership] = await this.companyRepo.findActiveMembershipsByUserId(existingUser.id, undefined, companyId);
+      const [existingMembership] = await this.companyRepo.findMembershipsByUserId(existingUser.id, { companyId });
       if (existingMembership) {
         throw new UserAlreadyCompanyMemberError({ email });
       }
@@ -203,7 +203,7 @@ export class TeamService {
       throw new CompanyNotFoundError({ companyId: invitation.companyId });
     }
 
-    const [existingMembership] = await this.companyRepo.findActiveMembershipsByUserId(userId, undefined, invitation.companyId);
+    const [existingMembership] = await this.companyRepo.findMembershipsByUserId(userId, { companyId: invitation.companyId, status: ["ACTIVE", "INACTIVE"] });
     const membership =
       existingMembership?.membership ??
       (await this.companyRepo.addMembership(
