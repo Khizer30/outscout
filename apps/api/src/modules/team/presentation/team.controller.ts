@@ -3,12 +3,13 @@ import Roles from "@middleware/roles.decorator";
 import { User } from "@middleware/user.decorator";
 import { InvitationMapper } from "@modules/team/infrastructure/invitation.mapper";
 import { TeamService } from "@modules/team/services/team.service";
-import { Body, Controller, Delete, ForbiddenException, Get, Param, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, HttpStatus, Param, Post, UseGuards } from "@nestjs/common";
 import {
   AcceptMyInvitationResponseDto,
   InvitationEmailResponseDto,
   InviteUserDto,
   InviteUserResponseDto,
+  ListInvitationsDto,
   ListInvitationsResponseDto,
   MyInvitationsResponseDto,
   RejectInvitationResponseDto,
@@ -32,15 +33,16 @@ export class TeamController {
     return { data: InvitationMapper.toResponse(invitation) };
   }
 
-  @Get("invitations")
+  @Post("invitations/list")
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)
   @Roles(["COMPANY_ADMIN"])
-  async list(@User() user: AuthenticatedUser): Promise<ListInvitationsResponseDto> {
+  async list(@User() user: AuthenticatedUser, @Body() dto: ListInvitationsDto): Promise<ListInvitationsResponseDto> {
     if (!user.companyId) {
       throw new ForbiddenException("You do not belong to a company");
     }
 
-    const invitations = await this.teamService.listPendingForCompany(user.companyId);
+    const invitations = await this.teamService.listForCompany(user.companyId, dto.status);
 
     return { data: invitations.map(InvitationMapper.toResponse) };
   }

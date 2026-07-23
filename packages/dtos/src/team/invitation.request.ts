@@ -7,3 +7,10 @@ export const InviteUserSchema = z.object({
 });
 
 export class InviteUserDto extends createZodDto(InviteUserSchema) {}
+
+// List Invitations
+export const ListInvitationsSchema = z.object({
+  status: z.array(z.enum(["PENDING", "ACCEPTED", "REJECTED", "REVOKED", "EXPIRED"])).min(1, { error: "Select at least one status" })
+});
+
+export class ListInvitationsDto extends createZodDto(ListInvitationsSchema) {}

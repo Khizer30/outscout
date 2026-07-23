@@ -17,7 +17,7 @@ import {
   UserAlreadyCompanyMemberError
 } from "@modules/team/domain/invitation.errors";
 import { InvitationRepository } from "@modules/team/domain/invitation.repository";
-import { InvitationTokenPayload, InvitedByUserSummary } from "@modules/team/domain/invitation.types";
+import { CompanyInvitationStatus, InvitationTokenPayload, InvitedByUserSummary } from "@modules/team/domain/invitation.types";
 import { InvitationConfig } from "@modules/team/domain/invitation.value-objects";
 import { UserService } from "@modules/user/services/user.service";
 import { Injectable } from "@nestjs/common";
@@ -89,8 +89,8 @@ export class TeamService {
     return invitation;
   }
 
-  async listPendingForCompany(companyId: string): Promise<CompanyInvitationEntity[]> {
-    return this.invitationRepo.findByCompany(companyId, { status: ["PENDING"] });
+  async listForCompany(companyId: string, status: CompanyInvitationStatus[]): Promise<CompanyInvitationEntity[]> {
+    return this.invitationRepo.findByCompany(companyId, { status });
   }
 
   async listMyInvitations(userId: string): Promise<CompanyInvitationEntity[]> {
