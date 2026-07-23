@@ -10,8 +10,8 @@ export class MediaService {
     return this.mediaRepository.uploadImage(file, folder);
   }
 
-  async deleteImage(url: string): Promise<void> {
-    return this.mediaRepository.deleteImage(url);
+  async deleteImage(url: string, checkTimestamp = false): Promise<void> {
+    return this.mediaRepository.deleteImage(url, checkTimestamp);
   }
 
   generateUploadImageSignature(folder: string, width?: number, height?: number): UploadImageSignature {

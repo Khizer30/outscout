@@ -1,7 +1,7 @@
 import { Readable } from "stream";
 import { MediaRepository } from "@modules/media/domain/media.repository";
 import type { UploadImageSignature } from "@modules/media/domain/media.types";
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import sharp from "sharp";
 
@@ -28,12 +28,32 @@ export class MediaCloudinaryRepository implements MediaRepository {
     return result.secure_url;
   }
 
-  async deleteImage(url: string): Promise<void> {
+  async deleteImage(url: string, checkTimestamp = false): Promise<void> {
     const publicId = this.urlToPublicId(url);
+
+    if (checkTimestamp) {
+      let resource: { created_at?: string } | undefined;
+      try {
+        resource = await cloudinary.api.resource(publicId);
+      } catch {
+        throw new NotFoundException("Image not found");
+      }
+
+      if (resource?.created_at) {
+        const createdAtMs = new Date(resource.created_at).getTime();
+        const ageInMs = Date.now() - createdAtMs;
+        const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
+
+        if (ageInMs > FIVE_MINUTES_IN_MS || ageInMs < 0) {
+          throw new BadRequestException("Image can only be deleted within 5 minutes of creation");
+        }
+      }
+    }
+
     await cloudinary.uploader.destroy(publicId);
   }
 
-  generateUploadImageSignature(folder: string, width = 256, height = 256): UploadImageSignature {
+  generateUploadImageSignature(folder: string, width = 250, height = 250): UploadImageSignature {
     const config = cloudinary.config();
     const timestamp = Math.round(Date.now() / 1000);
     const eager = `c_fill,w_${width},h_${height}/f_png`;
