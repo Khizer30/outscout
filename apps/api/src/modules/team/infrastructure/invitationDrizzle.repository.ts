@@ -4,7 +4,7 @@ import { InvitationRepository } from "@modules/team/domain/invitation.repository
 import { InvitationMapper } from "@modules/team/infrastructure/invitation.mapper";
 import { Injectable } from "@nestjs/common";
 import { companyInvitationTable, usersTable } from "@schema/index";
-import { eq, and } from "drizzle-orm";
+import { eq, and, ilike } from "drizzle-orm";
 
 @Injectable()
 export class InvitationDrizzleRepository extends InvitationRepository {
@@ -65,6 +65,29 @@ export class InvitationDrizzleRepository extends InvitationRepository {
           email ? eq(companyInvitationTable.email, email) : undefined
         )
       );
+
+    return rows.map((row) =>
+      InvitationMapper.toDomain({
+        ...row.invitation,
+        invitedBy: row.invitedBy && row.invitedBy.id ? row.invitedBy : null
+      })
+    );
+  }
+
+  async findPendingByEmail(email: string): Promise<CompanyInvitationEntity[]> {
+    const rows = await this.databaseService.db
+      .select({
+        invitation: companyInvitationTable,
+        invitedBy: {
+          id: usersTable.id,
+          name: usersTable.name,
+          email: usersTable.email,
+          profileImage: usersTable.profileImageURL
+        }
+      })
+      .from(companyInvitationTable)
+      .leftJoin(usersTable, eq(companyInvitationTable.invitedBy, usersTable.id))
+      .where(and(eq(companyInvitationTable.status, "PENDING"), ilike(companyInvitationTable.email, email)));
 
     return rows.map((row) =>
       InvitationMapper.toDomain({

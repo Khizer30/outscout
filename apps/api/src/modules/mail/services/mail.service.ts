@@ -45,7 +45,7 @@ export class MailService {
     });
   }
 
-  async sendInvitationEmail(to: string, acceptUrl: string, companyConfig: CompanyMailConfig): Promise<void> {
+  async sendInvitationEmail(to: string, acceptUrl: string | null, companyConfig: CompanyMailConfig): Promise<void> {
     const primaryColor = companyConfig.primaryColor ?? OutscoutBranding.PRIMARY_COLOR;
     const secondaryColor = companyConfig.secondaryColor ?? OutscoutBranding.SECONDARY_COLOR;
     const companyImage = companyConfig.companyImageURL ?? OutscoutBranding.LOGO_URL;

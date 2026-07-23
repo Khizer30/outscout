@@ -1,8 +1,6 @@
 import { CompanyMembershipRole } from "@modules/company/domain/companyMembership.entity";
-import { InvitedByUserSummary } from "@modules/team/domain/invitation.types";
+import { CompanyInvitationStatus, InvitedByUserSummary } from "@modules/team/domain/invitation.types";
 import { createId } from "@paralleldrive/cuid2";
-
-export type CompanyInvitationStatus = "PENDING" | "ACCEPTED" | "REVOKED" | "EXPIRED";
 
 export class CompanyInvitationEntity {
   constructor(
@@ -78,6 +76,21 @@ export class CompanyInvitationEntity {
       this.invitedBy,
       this.expiresAt,
       new Date(),
+      this.createdAt
+    );
+  }
+
+  reject(): CompanyInvitationEntity {
+    return new CompanyInvitationEntity(
+      this.id,
+      this.companyId,
+      this.email,
+      this.role,
+      "REJECTED",
+      this.token,
+      this.invitedBy,
+      this.expiresAt,
+      this.acceptedAt,
       this.createdAt
     );
   }

@@ -1,5 +1,6 @@
 import { CompanyMembershipRole } from "@modules/company/domain/companyMembership.entity";
-import { CompanyInvitationStatus } from "@modules/team/domain/invitation.entity";
+
+export type CompanyInvitationStatus = "PENDING" | "ACCEPTED" | "REJECTED" | "REVOKED" | "EXPIRED";
 
 export interface InvitedByUserSummary {
   id: string;
