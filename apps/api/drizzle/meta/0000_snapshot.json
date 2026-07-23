@@ -1,5 +1,5 @@
 {
-  "id": "376bfc40-af98-4ee2-bad1-568f1ed0dd2d",
+  "id": "dfd4de77-d0b6-46fe-b612-38fa9cc20225",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1088,6 +1088,7 @@
       "values": [
         "PENDING",
         "ACCEPTED",
+        "REJECTED",
         "REVOKED",
         "EXPIRED"
       ]

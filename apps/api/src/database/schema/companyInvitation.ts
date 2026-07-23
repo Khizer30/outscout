@@ -5,7 +5,7 @@ import { usersTable } from "@schema/users";
 import { eq, sql } from "drizzle-orm";
 import { pgTable, text, pgEnum, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 
-export const companyInvitationStatusEnum = pgEnum("company_invitation_status", ["PENDING", "ACCEPTED", "REVOKED", "EXPIRED"]);
+export const companyInvitationStatusEnum = pgEnum("company_invitation_status", ["PENDING", "ACCEPTED", "REJECTED", "REVOKED", "EXPIRED"]);
 export type CompanyInvitationStatus = (typeof companyInvitationStatusEnum.enumValues)[number];
 
 export const companyInvitationTable = pgTable(
@@ -25,7 +25,9 @@ export const companyInvitationTable = pgTable(
     createdAt: timestamp().defaultNow().notNull()
   },
   (table) => [
-    uniqueIndex("company_invitation_company_email_pending_unique").on(table.companyId, table.email).where(eq(table.status, sql.raw("'PENDING'"))),
+    uniqueIndex("company_invitation_company_email_pending_unique")
+      .on(table.companyId, table.email)
+      .where(eq(table.status, sql.raw("'PENDING'"))),
     uniqueIndex("company_invitation_token_unique").on(table.token)
   ]
 );

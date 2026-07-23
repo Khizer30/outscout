@@ -1,6 +1,6 @@
 interface Props {
   companyName: string;
-  acceptUrl: string;
+  acceptUrl: string | null;
   companyImage?: string | null;
   primaryColor: string;
   secondaryColor: string;
@@ -43,10 +43,16 @@ export default function generateInvitationEmail({ companyName, acceptUrl, compan
               <tr>
                 <td style="padding: 0 40px 40px 40px;">
                   <p style="margin: 0 0 30px 0; color: #C9D3E610; font-size: 16px; line-height: 1.7;">
-                    You've been invited to join <strong>${companyName}</strong> on Outscout. Click the button below to accept the invitation and get started.
+                    ${
+                      acceptUrl
+                        ? `You've been invited to join <strong>${companyName}</strong> on Outscout. Click the button below to accept the invitation and get started.`
+                        : `You've been invited to join <strong>${companyName}</strong> on Outscout. Log in to your Outscout account and accept the invitation from your dashboard to get started.`
+                    }
                   </p>
 
-                  <!-- CTA Button -->
+                  ${
+                    acceptUrl
+                      ? `<!-- CTA Button -->
                   <table role="presentation" style="width: 100%; border-collapse: collapse; margin: 0 0 30px 0;">
                     <tr>
                       <td align="center">
@@ -55,10 +61,12 @@ export default function generateInvitationEmail({ companyName, acceptUrl, compan
                         </a>
                       </td>
                     </tr>
-                  </table>
+                  </table>`
+                      : ""
+                  }
 
                   <p style="margin: 0 0 18px 0; color: #1F2937E5; font-size: 14px; line-height: 1.6; text-align: center;">
-                    This invitation link will expire in 7 days.
+                    This invitation will expire in 7 days.
                   </p>
                   <p style="margin: 0; color: #C9D3E610; font-size: 14px; line-height: 1.6; text-align: center;">
                     If you were not expecting this invitation, simply ignore this message.

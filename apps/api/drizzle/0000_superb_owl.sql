@@ -1,5 +1,5 @@
 CREATE TYPE "public"."audit_action" AS ENUM('USER_CREATED', 'USER_UPDATED', 'USER_DELETED', 'COMPANY_CREATED', 'COMPANY_UPDATED', 'COMPANY_DELETED', 'EMAIL_SETTINGS_UPDATED', 'RULE_CREATED', 'RULE_UPDATED', 'RULE_DELETED');--> statement-breakpoint
-CREATE TYPE "public"."company_invitation_status" AS ENUM('PENDING', 'ACCEPTED', 'REVOKED', 'EXPIRED');--> statement-breakpoint
+CREATE TYPE "public"."company_invitation_status" AS ENUM('PENDING', 'ACCEPTED', 'REJECTED', 'REVOKED', 'EXPIRED');--> statement-breakpoint
 CREATE TYPE "public"."company_membership_role" AS ENUM('COMPANY_ADMIN', 'COMPANY_USER');--> statement-breakpoint
 CREATE TYPE "public"."company_membership_status" AS ENUM('ACTIVE', 'INACTIVE');--> statement-breakpoint
 CREATE TYPE "public"."message_channel" AS ENUM('WHATSAPP', 'EMAIL');--> statement-breakpoint

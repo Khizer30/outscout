@@ -18,12 +18,12 @@ export class EncryptionService {
     return hash(password, salt);
   }
 
-  hashToken(token: string): string {
-    return createHash("sha256").update(token).digest("hex");
-  }
-
   async comparePasswords(text: string, hash: string): Promise<boolean> {
     return compare(text, hash);
+  }
+
+  async hashToken(token: string): Promise<string> {
+    return createHash("sha256").update(token).digest("hex");
   }
 
   encrypt(text: string): string {
