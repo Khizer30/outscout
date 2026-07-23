@@ -1,5 +1,5 @@
 import { CompanyInvitationEntity } from "@modules/team/domain/invitation.entity";
-import { CompanyInvitationRecord } from "@modules/team/domain/invitation.types";
+import { CompanyInvitationPersistenceRecord, CompanyInvitationRecord } from "@modules/team/domain/invitation.types";
 import { CompanyInvitationResponseDto } from "@repo/dtos/team";
 
 export class InvitationMapper {
@@ -18,7 +18,7 @@ export class InvitationMapper {
     );
   }
 
-  static toPersistence(entity: CompanyInvitationEntity): CompanyInvitationRecord {
+  static toPersistence(entity: CompanyInvitationEntity): CompanyInvitationPersistenceRecord {
     return {
       id: entity.id,
       companyId: entity.companyId,
@@ -26,7 +26,7 @@ export class InvitationMapper {
       role: entity.role,
       status: entity.status,
       token: entity.token,
-      invitedBy: entity.invitedBy,
+      invitedBy: entity.invitedBy?.id ?? null,
       expiresAt: entity.expiresAt,
       acceptedAt: entity.acceptedAt,
       createdAt: entity.createdAt

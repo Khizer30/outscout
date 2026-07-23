@@ -1,4 +1,5 @@
 import { CompanyMembershipRole } from "@modules/company/domain/companyMembership.entity";
+import { InvitedByUserSummary } from "@modules/team/domain/invitation.types";
 import { createId } from "@paralleldrive/cuid2";
 
 export type CompanyInvitationStatus = "PENDING" | "ACCEPTED" | "REVOKED" | "EXPIRED";
@@ -11,7 +12,7 @@ export class CompanyInvitationEntity {
     public readonly role: CompanyMembershipRole,
     public readonly status: CompanyInvitationStatus,
     public readonly token: string,
-    public readonly invitedBy: string | null,
+    public readonly invitedBy: InvitedByUserSummary | null,
     public readonly expiresAt: Date,
     public readonly acceptedAt: Date | null,
     public readonly createdAt: Date
@@ -24,7 +25,7 @@ export class CompanyInvitationEntity {
     role?: CompanyMembershipRole;
     status?: CompanyInvitationStatus;
     token: string;
-    invitedBy?: string | null;
+    invitedBy?: InvitedByUserSummary | null;
     expiresAt: Date;
     acceptedAt?: Date | null;
     createdAt?: Date;

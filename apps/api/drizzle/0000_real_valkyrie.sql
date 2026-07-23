@@ -1,4 +1,5 @@
 CREATE TYPE "public"."audit_action" AS ENUM('USER_CREATED', 'USER_UPDATED', 'USER_DELETED', 'COMPANY_CREATED', 'COMPANY_UPDATED', 'COMPANY_DELETED', 'EMAIL_SETTINGS_UPDATED', 'RULE_CREATED', 'RULE_UPDATED', 'RULE_DELETED');--> statement-breakpoint
+CREATE TYPE "public"."company_invitation_status" AS ENUM('PENDING', 'ACCEPTED', 'REVOKED', 'EXPIRED');--> statement-breakpoint
 CREATE TYPE "public"."company_membership_role" AS ENUM('COMPANY_ADMIN', 'COMPANY_USER');--> statement-breakpoint
 CREATE TYPE "public"."company_membership_status" AS ENUM('ACTIVE', 'INACTIVE');--> statement-breakpoint
 CREATE TYPE "public"."message_channel" AS ENUM('WHATSAPP', 'EMAIL');--> statement-breakpoint
@@ -29,6 +30,19 @@ CREATE TABLE "company_email_settings" (
 	"primaryColor" text,
 	"secondaryColor" text,
 	"updatedAt" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "company_invitation" (
+	"id" text PRIMARY KEY NOT NULL,
+	"companyId" text NOT NULL,
+	"email" text NOT NULL,
+	"role" "company_membership_role" DEFAULT 'COMPANY_USER' NOT NULL,
+	"status" "company_invitation_status" DEFAULT 'PENDING' NOT NULL,
+	"token" text NOT NULL,
+	"invitedBy" text,
+	"expiresAt" timestamp NOT NULL,
+	"acceptedAt" timestamp,
+	"createdAt" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "company_membership" (
@@ -99,6 +113,8 @@ CREATE TABLE "verifications" (
 ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_actorId_users_id_fk" FOREIGN KEY ("actorId") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "company_email_settings" ADD CONSTRAINT "company_email_settings_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "company_invitation" ADD CONSTRAINT "company_invitation_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "company_invitation" ADD CONSTRAINT "company_invitation_invitedBy_users_id_fk" FOREIGN KEY ("invitedBy") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "company_membership" ADD CONSTRAINT "company_membership_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "company_membership" ADD CONSTRAINT "company_membership_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "company_message_rules" ADD CONSTRAINT "company_message_rules_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -111,6 +127,8 @@ CREATE INDEX "audit_logs_actor_id_idx" ON "audit_logs" USING btree ("actorId");-
 CREATE INDEX "audit_logs_company_id_idx" ON "audit_logs" USING btree ("companyId");--> statement-breakpoint
 CREATE INDEX "audit_logs_action_idx" ON "audit_logs" USING btree ("action");--> statement-breakpoint
 CREATE INDEX "audit_logs_created_at_idx" ON "audit_logs" USING btree ("createdAt");--> statement-breakpoint
+CREATE UNIQUE INDEX "company_invitation_company_email_pending_unique" ON "company_invitation" USING btree ("companyId","email") WHERE "company_invitation"."status" = 'PENDING';--> statement-breakpoint
+CREATE UNIQUE INDEX "company_invitation_token_unique" ON "company_invitation" USING btree ("token");--> statement-breakpoint
 CREATE UNIQUE INDEX "company_membership_company_user_unique" ON "company_membership" USING btree ("companyId","userId");--> statement-breakpoint
 CREATE UNIQUE INDEX "company_message_rules_company_channel_unique" ON "company_message_rules" USING btree ("companyId","channel");--> statement-breakpoint
 CREATE INDEX "sessions_user_id_idx" ON "sessions" USING btree ("userId");--> statement-breakpoint

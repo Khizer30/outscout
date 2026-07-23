@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1783760608026,
-      "tag": "0000_happy_hardball",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1784702228771,
-      "tag": "0001_odd_banshee",
+      "when": 1784798205936,
+      "tag": "0000_real_valkyrie",
       "breakpoints": true
     }
   ]

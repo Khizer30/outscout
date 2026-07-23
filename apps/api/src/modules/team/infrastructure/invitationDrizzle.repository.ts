@@ -3,7 +3,7 @@ import { CompanyInvitationEntity } from "@modules/team/domain/invitation.entity"
 import { InvitationRepository } from "@modules/team/domain/invitation.repository";
 import { InvitationMapper } from "@modules/team/infrastructure/invitation.mapper";
 import { Injectable } from "@nestjs/common";
-import { companyInvitationTable } from "@schema/index";
+import { companyInvitationTable, usersTable } from "@schema/index";
 import { eq, and } from "drizzle-orm";
 
 @Injectable()
@@ -15,19 +15,49 @@ export class InvitationDrizzleRepository extends InvitationRepository {
   async create(invitation: CompanyInvitationEntity): Promise<CompanyInvitationEntity> {
     const [row] = await this.databaseService.db.insert(companyInvitationTable).values(InvitationMapper.toPersistence(invitation)).returning();
 
-    return InvitationMapper.toDomain(row);
+    const created = await this.findById(row.id);
+    return created!;
   }
 
   async findById(id: string): Promise<CompanyInvitationEntity | null> {
-    const [row] = await this.databaseService.db.select().from(companyInvitationTable).where(eq(companyInvitationTable.id, id)).limit(1);
+    const [row] = await this.databaseService.db
+      .select({
+        invitation: companyInvitationTable,
+        invitedBy: {
+          id: usersTable.id,
+          name: usersTable.name,
+          email: usersTable.email,
+          profileImage: usersTable.profileImageURL
+        }
+      })
+      .from(companyInvitationTable)
+      .leftJoin(usersTable, eq(companyInvitationTable.invitedBy, usersTable.id))
+      .where(eq(companyInvitationTable.id, id))
+      .limit(1);
 
-    return row ? InvitationMapper.toDomain(row) : null;
+    if (!row) {
+      return null;
+    }
+
+    return InvitationMapper.toDomain({
+      ...row.invitation,
+      invitedBy: row.invitedBy && row.invitedBy.id ? row.invitedBy : null
+    });
   }
 
   async findPendingByCompany(companyId: string, email?: string): Promise<CompanyInvitationEntity[]> {
     const rows = await this.databaseService.db
-      .select()
+      .select({
+        invitation: companyInvitationTable,
+        invitedBy: {
+          id: usersTable.id,
+          name: usersTable.name,
+          email: usersTable.email,
+          profileImage: usersTable.profileImageURL
+        }
+      })
       .from(companyInvitationTable)
+      .leftJoin(usersTable, eq(companyInvitationTable.invitedBy, usersTable.id))
       .where(
         and(
           eq(companyInvitationTable.companyId, companyId),
@@ -36,7 +66,12 @@ export class InvitationDrizzleRepository extends InvitationRepository {
         )
       );
 
-    return rows.map(InvitationMapper.toDomain);
+    return rows.map((row) =>
+      InvitationMapper.toDomain({
+        ...row.invitation,
+        invitedBy: row.invitedBy && row.invitedBy.id ? row.invitedBy : null
+      })
+    );
   }
 
   async update(invitation: CompanyInvitationEntity): Promise<CompanyInvitationEntity | null> {
@@ -46,6 +81,6 @@ export class InvitationDrizzleRepository extends InvitationRepository {
       .where(eq(companyInvitationTable.id, invitation.id))
       .returning();
 
-    return row ? InvitationMapper.toDomain(row) : null;
+    return row ? this.findById(row.id) : null;
   }
 }

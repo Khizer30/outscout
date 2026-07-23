@@ -1,5 +1,5 @@
 {
-  "id": "af161fbb-4166-4b27-a39f-13bb0a15b516",
+  "id": "376bfc40-af98-4ee2-bad1-568f1ed0dd2d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -108,8 +108,12 @@
           "name": "audit_logs_actorId_users_id_fk",
           "tableFrom": "audit_logs",
           "tableTo": "users",
-          "columnsFrom": ["actorId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "actorId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -117,8 +121,12 @@
           "name": "audit_logs_companyId_company_id_fk",
           "tableFrom": "audit_logs",
           "tableTo": "company",
-          "columnsFrom": ["companyId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "companyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -240,9 +248,156 @@
           "name": "company_email_settings_companyId_company_id_fk",
           "tableFrom": "company_email_settings",
           "tableTo": "company",
-          "columnsFrom": ["companyId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "companyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.company_invitation": {
+      "name": "company_invitation",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "companyId": {
+          "name": "companyId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "company_membership_role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'COMPANY_USER'"
+        },
+        "status": {
+          "name": "status",
+          "type": "company_invitation_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PENDING'"
+        },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "invitedBy": {
+          "name": "invitedBy",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "acceptedAt": {
+          "name": "acceptedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "company_invitation_company_email_pending_unique": {
+          "name": "company_invitation_company_email_pending_unique",
+          "columns": [
+            {
+              "expression": "companyId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "email",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"company_invitation\".\"status\" = 'PENDING'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "company_invitation_token_unique": {
+          "name": "company_invitation_token_unique",
+          "columns": [
+            {
+              "expression": "token",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "company_invitation_companyId_company_id_fk": {
+          "name": "company_invitation_companyId_company_id_fk",
+          "tableFrom": "company_invitation",
+          "tableTo": "company",
+          "columnsFrom": [
+            "companyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "company_invitation_invitedBy_users_id_fk": {
+          "name": "company_invitation_invitedBy_users_id_fk",
+          "tableFrom": "company_invitation",
+          "tableTo": "users",
+          "columnsFrom": [
+            "invitedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -326,8 +481,12 @@
           "name": "company_membership_companyId_company_id_fk",
           "tableFrom": "company_membership",
           "tableTo": "company",
-          "columnsFrom": ["companyId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "companyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -335,8 +494,12 @@
           "name": "company_membership_userId_users_id_fk",
           "tableFrom": "company_membership",
           "tableTo": "users",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -438,8 +601,12 @@
           "name": "company_message_rules_companyId_company_id_fk",
           "tableFrom": "company_message_rules",
           "tableTo": "company",
-          "columnsFrom": ["companyId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "companyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -447,8 +614,12 @@
           "name": "company_message_rules_updatedBy_users_id_fk",
           "tableFrom": "company_message_rules",
           "tableTo": "users",
-          "columnsFrom": ["updatedBy"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "updatedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -520,8 +691,12 @@
           "name": "company_message_rules_history_companyMessageRulesId_company_message_rules_id_fk",
           "tableFrom": "company_message_rules_history",
           "tableTo": "company_message_rules",
-          "columnsFrom": ["companyMessageRulesId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "companyMessageRulesId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -529,8 +704,12 @@
           "name": "company_message_rules_history_companyId_company_id_fk",
           "tableFrom": "company_message_rules_history",
           "tableTo": "company",
-          "columnsFrom": ["companyId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "companyId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -635,8 +814,12 @@
           "name": "sessions_userId_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -865,8 +1048,12 @@
           "name": "verifications_userId_users_id_fk",
           "tableFrom": "verifications",
           "tableTo": "users",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -895,25 +1082,47 @@
         "RULE_DELETED"
       ]
     },
+    "public.company_invitation_status": {
+      "name": "company_invitation_status",
+      "schema": "public",
+      "values": [
+        "PENDING",
+        "ACCEPTED",
+        "REVOKED",
+        "EXPIRED"
+      ]
+    },
     "public.company_membership_role": {
       "name": "company_membership_role",
       "schema": "public",
-      "values": ["COMPANY_ADMIN", "COMPANY_USER"]
+      "values": [
+        "COMPANY_ADMIN",
+        "COMPANY_USER"
+      ]
     },
     "public.company_membership_status": {
       "name": "company_membership_status",
       "schema": "public",
-      "values": ["ACTIVE", "INACTIVE"]
+      "values": [
+        "ACTIVE",
+        "INACTIVE"
+      ]
     },
     "public.message_channel": {
       "name": "message_channel",
       "schema": "public",
-      "values": ["WHATSAPP", "EMAIL"]
+      "values": [
+        "WHATSAPP",
+        "EMAIL"
+      ]
     },
     "public.verification_type": {
       "name": "verification_type",
       "schema": "public",
-      "values": ["VERIFY", "RESET"]
+      "values": [
+        "VERIFY",
+        "RESET"
+      ]
     }
   },
   "schemas": {},
