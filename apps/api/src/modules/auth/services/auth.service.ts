@@ -110,7 +110,8 @@ export class AuthService {
     await this.userService.verifyUser(user);
 
     if (dto.invitationToken) {
-      await this.teamService.acceptInvitation(dto.invitationToken, user.id, user.email);
+      const invitation = await this.teamService.validateToken(dto.invitationToken);
+      await this.teamService.acceptInvitationById(invitation.id, user.id);
     }
   }
 
@@ -279,29 +280,5 @@ export class AuthService {
     await this.verificationRepo.update(updatedVerification);
 
     await this.userService.updateUserEntity(user, { password: dto.newPassword });
-  }
-
-  async acceptInvitation(userId: string, token: string, ipAddress: string): Promise<{ accessToken: string; refreshToken: string }> {
-    const user = await this.userService.getUserById(userId);
-
-    const { company, membership } = await this.teamService.acceptInvitation(token, user.id, user.email);
-
-    const newAccessToken = this.jwtService.generateAccessToken(this.buildAccessTokenPayload(user, { company, membership }));
-    const newRefreshToken = this.jwtService.generateRefreshToken({ id: user.id });
-
-    const refreshTokenHash = await this.encryptionService.hashToken(newRefreshToken);
-    const expiryTime = new Date(Date.now() + this.jwtService.refreshTokenMaxAge);
-
-    const session = SessionEntity.create({
-      userId: user.id,
-      refreshTokenHash,
-      ipAddress,
-      expiryTime
-    });
-
-    await this.sessionRepo.deleteByUserId(user.id);
-    await this.sessionRepo.create(session);
-
-    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
   }
 }

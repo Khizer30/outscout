@@ -22,7 +22,6 @@ import {
   SwitchCompanyResponseDto,
   DeleteAccountResponseDto
 } from "@repo/dtos/auth";
-import { AcceptInvitationDto, AcceptInvitationResponseDto } from "@repo/dtos/team";
 import type { Request, Response } from "express";
 
 @Controller("auth")
@@ -156,27 +155,5 @@ export class AuthController {
   async resetPassword(@Body() dto: ResetPasswordDto): Promise<ResetPasswordResponseDto> {
     await this.authService.resetPassword(dto);
     return { message: "Password has been reset successfully" };
-  }
-
-  @Post("accept-invitation")
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
-  async acceptInvitation(
-    @User() user: AuthenticatedUser,
-    @Body() dto: AcceptInvitationDto,
-    @Ip() ip: string,
-    @Res({ passthrough: true }) res: Response
-  ): Promise<AcceptInvitationResponseDto> {
-    const { accessToken, refreshToken: newRefreshToken } = await this.authService.acceptInvitation(user.id, dto.token, ip);
-
-    res.cookie("refreshToken", newRefreshToken, {
-      httpOnly: this.isProduction,
-      secure: this.isProduction,
-      sameSite: "lax",
-      maxAge: this.jwtService.refreshTokenMaxAge,
-      path: "/"
-    });
-
-    return { data: { accessToken } };
   }
 }
