@@ -60,11 +60,7 @@ export class UserService {
     }
 
     const profileImagePublicId =
-      data.profileImageURL !== undefined
-        ? data.profileImageURL
-          ? this.mediaService.urlToPublicId(data.profileImageURL)
-          : null
-        : undefined;
+      data.profileImageURL !== undefined ? (data.profileImageURL ? this.mediaService.urlToPublicId(data.profileImageURL) : null) : undefined;
 
     const updatedUser = user.update({
       name: data.name,

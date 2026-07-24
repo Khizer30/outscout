@@ -55,11 +55,7 @@ export class CompanyService {
     const oldPublicId = company.companyImagePublicId;
 
     const companyImagePublicId =
-      data.companyImageURL !== undefined
-        ? data.companyImageURL
-          ? this.mediaService.urlToPublicId(data.companyImageURL)
-          : null
-        : undefined;
+      data.companyImageURL !== undefined ? (data.companyImageURL ? this.mediaService.urlToPublicId(data.companyImageURL) : null) : undefined;
 
     const updatedCompany = company.update({ ...data, companyImagePublicId });
     const saved = await this.companyRepo.update(updatedCompany);

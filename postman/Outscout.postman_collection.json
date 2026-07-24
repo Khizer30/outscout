@@ -7,6 +7,188 @@
   },
   "item": [
     {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Check Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}",
+              "host": [
+                "{{baseURL}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Media",
+      "item": [
+        {
+          "name": "Get Image Upload Signed URL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const { data } = pm.response.json();\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"cloudinaryTimestamp\", data.timestamp);\r",
+                  "pm.collectionVariables.set(\"cloudinarySignature\", data.signature);\r",
+                  "pm.collectionVariables.set(\"cloudinaryFolder\", data.folder);\r",
+                  "pm.collectionVariables.set(\"cloudinaryEager\", data.eager);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    // \"folder\": \"outscout/users\",\r\n    // \"width\": 250,\r\n    // \"height\": 250\r\n    \"folder\": \"outscout/companies\",\r\n    \"width\": 600,\r\n    \"height\": 250\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/media/image/signed-url",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "media",
+                "image",
+                "signed-url"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload To Cloudinary",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"cloudinaryFilePublicID\", res.public_id);\r",
+                  "pm.collectionVariables.set(\"cloudinaryFileURL\", res.url);\r",
+                  "pm.collectionVariables.set(\"cloudinaryFileEagerURL\", res.eager[0].url);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "062da4f6-55b8-47d1-bb33-d5d7a4a77a76",
+                  "src": "postman-cloud:///1f06d79f-de46-4700-a261-2711521f36f4"
+                },
+                {
+                  "key": "api_key",
+                  "value": "{{cloudinaryAPIKey}}",
+                  "type": "text",
+                  "uuid": "60de951c-d9a1-4092-9f3a-83dcaf21efd2"
+                },
+                {
+                  "key": "timestamp",
+                  "value": "{{cloudinaryTimestamp}}",
+                  "type": "text",
+                  "uuid": "c2d8144f-6393-48ad-b09a-08aa76c8843f"
+                },
+                {
+                  "key": "signature",
+                  "value": "{{cloudinarySignature}}",
+                  "type": "text",
+                  "uuid": "ce8660b0-e020-47fa-953e-c4b2bc667ebf"
+                },
+                {
+                  "key": "folder",
+                  "value": "{{cloudinaryFolder}}",
+                  "type": "text",
+                  "uuid": "0de3d671-12c3-4c27-be4e-50173ec0e9c6"
+                },
+                {
+                  "key": "eager",
+                  "value": "{{cloudinaryEager}}",
+                  "type": "text",
+                  "uuid": "7dc53fcc-11b5-443f-87a1-93640dba7bea"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://api.cloudinary.com/v1_1/{{cloudinaryCloudName}}/image/upload",
+              "protocol": "https",
+              "host": [
+                "api",
+                "cloudinary",
+                "com"
+              ],
+              "path": [
+                "v1_1",
+                "{{cloudinaryCloudName}}",
+                "image",
+                "upload"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Image",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "url",
+                  "value": "{{cloudinaryFileURL}}",
+                  "type": "text",
+                  "uuid": "fcdf1559-9a47-4417-ad32-ab7848b6236b"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/media/image",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "media",
+                "image"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Auth",
       "item": [
         {
@@ -79,7 +261,7 @@
                 },
                 {
                   "key": "otp",
-                  "value": "512690",
+                  "value": "555793",
                   "type": "text",
                   "uuid": "57c194fa-c4c2-440a-b3b3-ae2d67c1483a"
                 },
@@ -430,8 +612,8 @@
             "method": "PATCH",
             "header": [],
             "body": {
-              "mode": "formdata",
-              "formdata": [
+              "mode": "urlencoded",
+              "urlencoded": [
                 {
                   "key": "name",
                   "value": "Muhammad Khizer",
@@ -448,10 +630,9 @@
                   "type": "text"
                 },
                 {
-                  "key": "profileImage",
-                  "type": "file",
-                  "uuid": "2af96d38-983d-4093-bef0-8ebf76bfe6eb",
-                  "src": "postman-cloud:///1f06d876-8aa0-41f0-94dd-17dcfb18a164"
+                  "key": "profileImageURL",
+                  "value": "{{cloudinaryFileEagerURL}}",
+                  "type": "text"
                 }
               ]
             },
@@ -496,25 +677,22 @@
             "method": "POST",
             "header": [],
             "body": {
-              "mode": "formdata",
-              "formdata": [
+              "mode": "urlencoded",
+              "urlencoded": [
                 {
                   "key": "name",
-                  "value": "Microsoft",
-                  "type": "text",
-                  "uuid": "e854a671-cc18-447f-a0bf-47efad891b28"
+                  "value": "Google",
+                  "type": "text"
                 },
                 {
                   "key": "about",
-                  "value": "IT Company",
-                  "type": "text",
-                  "uuid": "d2b77b02-435d-4cbb-812c-c7b847ed54a3"
+                  "value": "Great Company!",
+                  "type": "text"
                 },
                 {
-                  "key": "companyImage",
-                  "type": "file",
-                  "uuid": "08b9993c-54e4-47af-be6d-b4f44ab544c4",
-                  "src": "postman-cloud:///1f06d87d-9569-4cb0-baaa-3ce7c1332523"
+                  "key": "companyImageURL",
+                  "value": "{{cloudinaryFileEagerURL}}",
+                  "type": "text"
                 }
               ]
             },
@@ -536,25 +714,22 @@
             "method": "PATCH",
             "header": [],
             "body": {
-              "mode": "formdata",
-              "formdata": [
+              "mode": "urlencoded",
+              "urlencoded": [
                 {
                   "key": "name",
-                  "value": "Microsoft",
-                  "type": "text",
-                  "uuid": "e854a671-cc18-447f-a0bf-47efad891b28"
+                  "value": "Google",
+                  "type": "text"
                 },
                 {
                   "key": "about",
-                  "value": "IT Company",
-                  "type": "text",
-                  "uuid": "d2b77b02-435d-4cbb-812c-c7b847ed54a3"
+                  "value": "Great Company!",
+                  "type": "text"
                 },
                 {
-                  "key": "companyImage",
-                  "type": "file",
-                  "uuid": "08b9993c-54e4-47af-be6d-b4f44ab544c4",
-                  "src": "postman-cloud:///1f06d87d-9569-4cb0-baaa-3ce7c1332523"
+                  "key": "companyImageURL",
+                  "value": "{{cloudinaryFileEagerURL}}",
+                  "type": "text"
                 }
               ]
             },
@@ -844,6 +1019,46 @@
   "variable": [
     {
       "key": "url",
+      "value": ""
+    },
+    {
+      "key": "baseURL",
+      "value": ""
+    },
+    {
+      "key": "cloudinaryCloudName",
+      "value": ""
+    },
+    {
+      "key": "cloudinaryAPIKey",
+      "value": ""
+    },
+    {
+      "key": "cloudinaryTimestamp",
+      "value": ""
+    },
+    {
+      "key": "cloudinarySignature",
+      "value": ""
+    },
+    {
+      "key": "cloudinaryFolder",
+      "value": ""
+    },
+    {
+      "key": "cloudinaryEager",
+      "value": ""
+    },
+    {
+      "key": "cloudinaryFilePublicID",
+      "value": ""
+    },
+    {
+      "key": "cloudinaryFileURL",
+      "value": ""
+    },
+    {
+      "key": "cloudinaryFileEagerURL",
       "value": ""
     },
     {
