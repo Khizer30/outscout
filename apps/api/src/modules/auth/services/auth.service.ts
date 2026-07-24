@@ -212,7 +212,11 @@ export class AuthService {
     await this.sessionRepo.deleteByUserId(userId);
   }
 
-  async switchCompany(userId: string, ipAddress: string, dto: SwitchCompanyDto): Promise<{ user: AuthenticatedUser; accessToken: string; refreshToken: string }> {
+  async switchCompany(
+    userId: string,
+    ipAddress: string,
+    dto: SwitchCompanyDto
+  ): Promise<{ user: AuthenticatedUser; accessToken: string; refreshToken: string }> {
     const user = await this.userService.findById(userId);
     if (!user || !user.isVerified) {
       throw new InvalidSessionError();

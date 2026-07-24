@@ -54,7 +54,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    // \"folder\": \"outscout/users\",\r\n    // \"width\": 250,\r\n    // \"height\": 250\r\n    \"folder\": \"outscout/companies\",\r\n    \"width\": 600,\r\n    \"height\": 250\r\n}",
+              "raw": "{\r\n    \"folder\": \"outscout/users\",\r\n    \"width\": 250,\r\n    \"height\": 250\r\n    // \"folder\": \"outscout/companies\",\r\n    // \"width\": 600,\r\n    // \"height\": 250\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -105,7 +105,7 @@
                   "key": "file",
                   "type": "file",
                   "uuid": "062da4f6-55b8-47d1-bb33-d5d7a4a77a76",
-                  "src": "postman-cloud:///1f06d79f-de46-4700-a261-2711521f36f4"
+                  "src": "/C:/Users/khizer/Pictures/My Camera/Logo/Syed Muhammad Khizer.png"
                 },
                 {
                   "key": "api_key",
@@ -876,7 +876,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"status\": [\r\n        // \"PENDING\",\r\n        // \"ACCEPTED\",\r\n        // \"REJECTED\",\r\n        // \"REVOKED\",\r\n        // \"EXPIRED\"\r\n    ]\r\n}",
+              "raw": "{\r\n    \"status\": [\r\n        \"PENDING\"\r\n        // \"ACCEPTED\",\r\n        // \"REJECTED\",\r\n        // \"REVOKED\",\r\n        // \"EXPIRED\"\r\n    ]\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1027,11 +1027,11 @@
     },
     {
       "key": "cloudinaryCloudName",
-      "value": ""
+      "secret": true
     },
     {
       "key": "cloudinaryAPIKey",
-      "value": ""
+      "secret": true
     },
     {
       "key": "cloudinaryTimestamp",
@@ -1071,7 +1071,7 @@
     },
     {
       "key": "brevoAPIKey",
-      "value": ""
+      "secret": true
     },
     {
       "key": "invitationId",
