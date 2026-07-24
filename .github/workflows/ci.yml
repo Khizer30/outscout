@@ -44,8 +44,8 @@ jobs:
       - name: Format Check
         run: pnpm format
 
-      - name: TypeScript Check
-        run: pnpm typecheck
-
       - name: Build Check
         run: pnpm build
+
+      - name: TypeScript Check
+        run: pnpm typecheck
