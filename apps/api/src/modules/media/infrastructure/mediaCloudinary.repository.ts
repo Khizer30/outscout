@@ -1,6 +1,7 @@
 import { Readable } from "stream";
 import { MediaRepository } from "@modules/media/domain/media.repository";
 import type { UploadImageSignature } from "@modules/media/domain/media.types";
+import { MediaConfig } from "@modules/media/domain/media.value-objects";
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import sharp from "sharp";
@@ -42,10 +43,9 @@ export class MediaCloudinaryRepository implements MediaRepository {
       if (resource?.created_at) {
         const createdAtMs = new Date(resource.created_at).getTime();
         const ageInMs = Date.now() - createdAtMs;
-        const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 
-        if (ageInMs > FIVE_MINUTES_IN_MS || ageInMs < 0) {
-          throw new BadRequestException("Image can only be deleted within 5 minutes of creation");
+        if (ageInMs > MediaConfig.TIME_TO_DELETE || ageInMs < 0) {
+          throw new BadRequestException("Image can only be deleted within few minutes of creation");
         }
       }
     }
