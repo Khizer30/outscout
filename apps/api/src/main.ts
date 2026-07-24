@@ -1,5 +1,6 @@
 import { HttpExceptionFilter } from "@middleware/httpException.filter";
 import { ResponseInterceptor } from "@middleware/response.interceptor";
+import { RequestMethod } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { type NestExpressApplication } from "@nestjs/platform-express";
@@ -18,7 +19,9 @@ import { ZodValidationPipe } from "nestjs-zod";
   const corsOrigins = configService.get<string>("CORS_ORIGINS")?.split(" ");
 
   app.set("trust proxy", "loopback");
-  app.setGlobalPrefix("api");
+  app.setGlobalPrefix("api", {
+    exclude: [{ path: "/", method: RequestMethod.GET }]
+  });
   app.use(cookieParser());
   app.use(helmet());
   app.enableCors({

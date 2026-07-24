@@ -8,11 +8,12 @@ import { MailModule } from "@modules/mail/mail.module";
 import { MediaModule } from "@modules/media/media.module";
 import { TeamModule } from "@modules/team/team.module";
 import { UserModule } from "@modules/user/user.module";
-import { Module, NestModule, MiddlewareConsumer } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { ScheduleModule } from "@nestjs/schedule";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
+import { AppController } from "@src/app.controller";
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
     TeamModule,
     AuthModule
   ],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
