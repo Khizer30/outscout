@@ -1,6 +1,9 @@
 export interface User {
   id: string;
   name: string;
-  email: string;
-  role: string;
+  profileImage?: string;
+  isSuperAdmin: boolean;
+  companyId?: string;
+  companyName?: string;
+  companyRole?: string;
 }
