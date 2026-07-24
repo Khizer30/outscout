@@ -752,7 +752,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"brevoApiKey\": \"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\",\r\n    \"fromEmail\": \"noreply@outscout.stackpk.com\",\r\n    \"emailSignature\": \"From Company's Email Signature\",\r\n    \"primaryColor\": \"#FFFFFF\",\r\n    \"secondaryColor\": \"#38BDF8\"\r\n}",
+              "raw": "{\r\n    \"brevoApiKey\": \"{{brevoAPIKey}}\",\r\n    \"fromEmail\": \"noreply@outscout.stackpk.com\",\r\n    \"emailSignature\": \"From Company's Email Signature\",\r\n    \"primaryColor\": \"#FFFFFF\",\r\n    \"secondaryColor\": \"#38BDF8\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1067,6 +1067,10 @@
     },
     {
       "key": "membershipId",
+      "value": ""
+    },
+    {
+      "key": "brevoAPIKey",
       "value": ""
     },
     {
