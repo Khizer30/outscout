@@ -1,34 +1,41 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
-  "globalEnv": [
-    "CI",
-
-    "PORT",
-    "NODE_ENV",
-    "CORS_ORIGINS",
-    "FRONTEND_URL",
-    "ENCRYPTION_KEY",
-    "JWT_SECRET",
-    "JWT_EXPIRE_TIME",
-    "JWT_REFRESH_SECRET",
-    "JWT_REFRESH_EXPIRE_TIME",
-    "DATABASE_URL",
-    "GOOGLE_PLACES_API_KEY",
-    "GEMINI_API_KEY",
-    "BREVO_SENDER_NAME",
-    "BREVO_SENDER_EMAIL",
-    "BREVO_API_KEY",
-    "CLOUDINARY_CLOUD",
-    "CLOUDINARY_API_KEY",
-    "CLOUDINARY_API_SECRET",
-
-    "NEXT_PUBLIC_BACKEND_URL",
-    "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY"
-  ],
+  "globalEnv": ["CI"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**"]
+    },
+    "nestjs#build": {
+      "dependsOn": ["^build"],
+      "env": [
+        "PORT",
+        "NODE_ENV",
+        "CORS_ORIGINS",
+        "FRONTEND_URL",
+        "ENCRYPTION_KEY",
+        "JWT_SECRET",
+        "JWT_EXPIRE_TIME",
+        "JWT_REFRESH_SECRET",
+        "JWT_REFRESH_EXPIRE_TIME",
+        "DATABASE_URL",
+        "GOOGLE_PLACES_API_KEY",
+        "GEMINI_API_KEY",
+        "BREVO_SENDER_NAME",
+        "BREVO_SENDER_EMAIL",
+        "BREVO_API_KEY",
+        "CLOUDINARY_CLOUD",
+        "CLOUDINARY_API_KEY",
+        "CLOUDINARY_API_SECRET"
+      ],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**", "drizzle/**"]
+    },
+    "nextjs#build": {
+      "dependsOn": ["^build"],
+      "env": ["NEXT_PUBLIC_BACKEND_URL", "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**"]
     },
