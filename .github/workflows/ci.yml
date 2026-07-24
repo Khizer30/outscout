@@ -10,10 +10,6 @@ jobs:
   validate:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [24]
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -24,7 +20,7 @@ jobs:
       - name: Setup Node.JS
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 24
           cache: pnpm
 
       - name: Install Root Dependencies
