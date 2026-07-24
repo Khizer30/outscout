@@ -15,3 +15,9 @@ export interface CompanyMailConfig {
   secondaryColor?: string | null;
   companyImageURL?: string | null;
 }
+
+export interface MailSenderConfig {
+  apiKey: string;
+  senderEmail: string;
+  senderName: string;
+}

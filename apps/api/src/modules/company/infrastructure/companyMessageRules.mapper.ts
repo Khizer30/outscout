@@ -1,4 +1,5 @@
-import { CompanyMessageRulesEntity, CompanyMessageRulesRecord } from "@modules/company/domain/companyMessageRules.entity";
+import { CompanyMessageRulesEntity } from "@modules/company/domain/companyMessageRules.entity";
+import { CompanyMessageRulesRecord } from "@modules/company/domain/companyMessageRules.types";
 import { CompanyMessageRulesResponseDto } from "@repo/dtos/company";
 
 export class CompanyMessageRulesMapper {

@@ -1,5 +1,6 @@
-import { CompanyMessageRulesEntity, MessageChannel } from "@modules/company/domain/companyMessageRules.entity";
+import { CompanyMessageRulesEntity } from "@modules/company/domain/companyMessageRules.entity";
 import { CompanyMessageRulesRepository } from "@modules/company/domain/companyMessageRules.repository";
+import { MessageChannel } from "@modules/company/domain/companyMessageRules.types";
 import { Injectable } from "@nestjs/common";
 
 interface UpdateCompanyMessageRulesData {

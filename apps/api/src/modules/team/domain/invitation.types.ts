@@ -1,4 +1,4 @@
-import { CompanyMembershipRole } from "@modules/company/domain/companyMembership.entity";
+import { CompanyMembershipRole } from "@modules/company/domain/companyMembership.types";
 
 export type CompanyInvitationStatus = "PENDING" | "ACCEPTED" | "REJECTED" | "REVOKED" | "EXPIRED";
 

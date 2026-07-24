@@ -1,6 +1,7 @@
 import { DatabaseService } from "@database/services/database.service";
-import { CompanyMessageRulesEntity, MessageChannel } from "@modules/company/domain/companyMessageRules.entity";
+import { CompanyMessageRulesEntity } from "@modules/company/domain/companyMessageRules.entity";
 import { CompanyMessageRulesRepository } from "@modules/company/domain/companyMessageRules.repository";
+import { MessageChannel } from "@modules/company/domain/companyMessageRules.types";
 import { CompanyMessageRulesMapper } from "@modules/company/infrastructure/companyMessageRules.mapper";
 import { Injectable } from "@nestjs/common";
 import { companyMessageRulesHistoryTable, companyMessageRulesTable } from "@schema/index";

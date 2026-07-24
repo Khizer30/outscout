@@ -1,5 +1,6 @@
 import { CompanyEntity } from "@modules/company/domain/company.entity";
-import { CompanyMembershipEntity, CompanyMembershipStatus } from "@modules/company/domain/companyMembership.entity";
+import { CompanyMembershipEntity } from "@modules/company/domain/companyMembership.entity";
+import { CompanyMembershipStatus } from "@modules/company/domain/companyMembership.types";
 
 export abstract class CompanyRepository {
   abstract create(company: CompanyEntity, membership: CompanyMembershipEntity): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }>;

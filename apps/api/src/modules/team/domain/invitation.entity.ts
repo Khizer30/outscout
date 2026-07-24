@@ -1,4 +1,4 @@
-import { CompanyMembershipRole } from "@modules/company/domain/companyMembership.entity";
+import { CompanyMembershipRole } from "@modules/company/domain/companyMembership.types";
 import { CompanyInvitationStatus, InvitedByUserSummary } from "@modules/team/domain/invitation.types";
 import { createId } from "@paralleldrive/cuid2";
 

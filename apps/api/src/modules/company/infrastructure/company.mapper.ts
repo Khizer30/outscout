@@ -1,5 +1,6 @@
 import { CompanyEntity } from "@modules/company/domain/company.entity";
-import { CompanyMembershipEntity, CompanyMembershipRole, CompanyMembershipStatus } from "@modules/company/domain/companyMembership.entity";
+import { CompanyMembershipEntity } from "@modules/company/domain/companyMembership.entity";
+import { CompanyMembershipRole, CompanyMembershipStatus } from "@modules/company/domain/companyMembership.types";
 import { CompanyMembershipResponseDto, CompanyResponseDto } from "@repo/dtos/company";
 import { Company, CompanyInsert, CompanyMembership, CompanyMembershipInsert } from "@schema/index";
 

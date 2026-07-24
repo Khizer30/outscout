@@ -1,10 +1,4 @@
-import type { MailSendOptions } from "@modules/mail/domain/mail.types";
-
-export interface MailSenderConfig {
-  apiKey: string;
-  senderEmail: string;
-  senderName: string;
-}
+import type { MailSendOptions, MailSenderConfig } from "@modules/mail/domain/mail.types";
 
 export abstract class MailRepository {
   abstract readonly senderName: string;

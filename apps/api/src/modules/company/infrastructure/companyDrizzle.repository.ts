@@ -1,7 +1,8 @@
 import { DatabaseService } from "@database/services/database.service";
 import { CompanyEntity } from "@modules/company/domain/company.entity";
 import { CompanyRepository } from "@modules/company/domain/company.repository";
-import { CompanyMembershipEntity, CompanyMembershipStatus } from "@modules/company/domain/companyMembership.entity";
+import { CompanyMembershipEntity } from "@modules/company/domain/companyMembership.entity";
+import { CompanyMembershipStatus } from "@modules/company/domain/companyMembership.types";
 import { CompanyMapper, CompanyMembershipMapper } from "@modules/company/infrastructure/company.mapper";
 import { Injectable } from "@nestjs/common";
 import { companyTable, companyMembershipTable } from "@schema/index";

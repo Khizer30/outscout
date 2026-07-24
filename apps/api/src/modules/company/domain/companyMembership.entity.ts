@@ -1,7 +1,5 @@
+import { CompanyMembershipRole, CompanyMembershipStatus } from "@modules/company/domain/companyMembership.types";
 import { createId } from "@paralleldrive/cuid2";
-
-export type CompanyMembershipRole = "COMPANY_ADMIN" | "COMPANY_USER";
-export type CompanyMembershipStatus = "ACTIVE" | "INACTIVE";
 
 export class CompanyMembershipEntity {
   constructor(
