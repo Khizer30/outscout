@@ -1,13 +1,3 @@
-export interface CompanyEmailSettingsRecord {
-  companyId: string;
-  brevoApiKeyCipher: string | null;
-  fromEmail: string | null;
-  emailSignature: string | null;
-  primaryColor: string | null;
-  secondaryColor: string | null;
-  updatedAt: Date;
-}
-
 export class CompanyEmailSettingsEntity {
   constructor(
     public readonly companyId: string,

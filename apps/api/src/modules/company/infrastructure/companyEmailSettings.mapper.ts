@@ -1,4 +1,5 @@
-import { CompanyEmailSettingsEntity, CompanyEmailSettingsRecord } from "@modules/company/domain/companyEmailSettings.entity";
+import { CompanyEmailSettingsEntity } from "@modules/company/domain/companyEmailSettings.entity";
+import { CompanyEmailSettingsRecord } from "@modules/company/domain/companyEmailSettings.types";
 import { CompanyEmailSettingsResponseDto } from "@repo/dtos/company";
 
 export class CompanyEmailSettingsMapper {
