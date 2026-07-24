@@ -1,5 +1,6 @@
 import { HttpExceptionFilter } from "@middleware/httpException.filter";
 import { ResponseInterceptor } from "@middleware/response.interceptor";
+import { RequestMethod } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { type NestExpressApplication } from "@nestjs/platform-express";
@@ -15,10 +16,12 @@ import { ZodValidationPipe } from "nestjs-zod";
   const configService = app.get(ConfigService);
   const port = configService.get<number>("PORT", 5000);
   const isProduction = configService.get<string>("NODE_ENV") === "production";
-  const corsOrigins = configService.get<string>("CORS_ORIGINS")?.split(", ");
+  const corsOrigins = configService.get<string>("CORS_ORIGINS")?.split(" ");
 
   app.set("trust proxy", "loopback");
-  app.setGlobalPrefix("api");
+  app.setGlobalPrefix("api", {
+    exclude: [{ path: "/", method: RequestMethod.GET }]
+  });
   app.use(cookieParser());
   app.use(helmet());
   app.enableCors({

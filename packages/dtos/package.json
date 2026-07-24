@@ -4,9 +4,25 @@
   "type": "module",
   "private": true,
   "exports": {
+    "./media": {
+      "types": "./dist/media/index.d.ts",
+      "default": "./dist/media/index.js"
+    },
+    "./auth": {
+      "types": "./dist/auth/index.d.ts",
+      "default": "./dist/auth/index.js"
+    },
     "./user": {
       "types": "./dist/user/index.d.ts",
       "default": "./dist/user/index.js"
+    },
+    "./company": {
+      "types": "./dist/company/index.d.ts",
+      "default": "./dist/company/index.js"
+    },
+    "./team": {
+      "types": "./dist/team/index.d.ts",
+      "default": "./dist/team/index.js"
     }
   },
   "scripts": {

@@ -1,4 +1,6 @@
-import { HashModule } from "@modules/hash/hash.module";
+import { EncryptionModule } from "@modules/encryption/encryption.module";
+import { JWTModule } from "@modules/jwt/jwt.module";
+import { MediaModule } from "@modules/media/media.module";
 import { UserRepository } from "@modules/user/domain/user.repository";
 import { UserDrizzleRepository } from "@modules/user/infrastructure/userDrizzle.repository";
 import { UserController } from "@modules/user/presentation/user.controller";
@@ -6,7 +8,7 @@ import { UserService } from "@modules/user/services/user.service";
 import { Module } from "@nestjs/common";
 
 @Module({
-  imports: [HashModule],
+  imports: [EncryptionModule, JWTModule, MediaModule],
   controllers: [UserController],
   providers: [
     UserService,

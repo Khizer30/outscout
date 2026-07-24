@@ -1,4 +1,4 @@
-import { DatabaseService } from "@database/database.service";
+import { DatabaseService } from "@database/services/database.service";
 import { UserEntity } from "@modules/user/domain/user.entity";
 import { UserRepository } from "@modules/user/domain/user.repository";
 import { UserMapper } from "@modules/user/infrastructure/user.mapper";
@@ -12,15 +12,6 @@ export class UserDrizzleRepository extends UserRepository {
     super();
   }
 
-  async findById(id: string): Promise<UserEntity | null> {
-    const [row] = await this.databaseService.db
-      .select()
-      .from(usersTable)
-      .where(and(eq(usersTable.id, id), isNull(usersTable.deletedAt)))
-      .limit(1);
-    return row ? UserMapper.toDomain(row) : null;
-  }
-
   async findByEmail(email: string): Promise<UserEntity | null> {
     const [row] = await this.databaseService.db
       .select()
@@ -30,17 +21,22 @@ export class UserDrizzleRepository extends UserRepository {
     return row ? UserMapper.toDomain(row) : null;
   }
 
+  async findById(id: string): Promise<UserEntity | null> {
+    const [row] = await this.databaseService.db
+      .select()
+      .from(usersTable)
+      .where(and(eq(usersTable.id, id), isNull(usersTable.deletedAt)))
+      .limit(1);
+    return row ? UserMapper.toDomain(row) : null;
+  }
+
   async create(entity: UserEntity): Promise<UserEntity> {
     const [row] = await this.databaseService.db.insert(usersTable).values(UserMapper.toPersistence(entity)).returning();
     return UserMapper.toDomain(row);
   }
 
-  async update(id: string, data: Partial<UserEntity>): Promise<UserEntity> {
-    const [row] = await this.databaseService.db.update(usersTable).set(data).where(eq(usersTable.id, id)).returning();
+  async update(entity: UserEntity): Promise<UserEntity> {
+    const [row] = await this.databaseService.db.update(usersTable).set(UserMapper.toPersistence(entity)).where(eq(usersTable.id, entity.id)).returning();
     return UserMapper.toDomain(row);
-  }
-
-  async softDelete(id: string): Promise<void> {
-    await this.databaseService.db.update(usersTable).set({ deletedAt: new Date() }).where(eq(usersTable.id, id));
   }
 }

@@ -1,4 +1,4 @@
-# OutScout
+# Outscout
 
 A geo-targeted B2B lead generation and outreach platform. Find local businesses via Google Maps, enrich them with contact details, and reach out via WhatsApp, email, or cold call — all from one dashboard.
 

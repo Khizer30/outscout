@@ -5,10 +5,10 @@
 node_modules
 
 # Compiled
+.next
 dists
 dist
 build
-.next
 out
 
 # TypeScript
@@ -22,13 +22,18 @@ next-env.d.ts
 
 # Developer Directories
 .Extras
-.claude
 .vscode
+.claude
+copilot-instructions.md
+CLAUDE.md
 
 # Playwright
+test-results
+blob-report
 playwright
 playwright-report
-test-results
+playwright/.cache
+playwright/.auth
 
 # Turbo
 .turbo

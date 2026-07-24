@@ -1,13 +1,19 @@
 import { DatabaseModule } from "@database/database.module";
 import { LoggerMiddleware } from "@middleware/logger.middleware";
-import { HashModule } from "@modules/hash/hash.module";
+import { AuthModule } from "@modules/auth/auth.module";
+import { CompanyModule } from "@modules/company/company.module";
+import { EncryptionModule } from "@modules/encryption/encryption.module";
 import { JWTModule } from "@modules/jwt/jwt.module";
+import { MailModule } from "@modules/mail/mail.module";
+import { MediaModule } from "@modules/media/media.module";
+import { TeamModule } from "@modules/team/team.module";
 import { UserModule } from "@modules/user/user.module";
-import { Module, NestModule, MiddlewareConsumer } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { ScheduleModule } from "@nestjs/schedule";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
+import { AppController } from "@src/app.controller";
 
 @Module({
   imports: [
@@ -20,10 +26,16 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
     }),
     ScheduleModule.forRoot({}),
     JWTModule,
-    HashModule,
+    EncryptionModule,
     DatabaseModule,
-    UserModule
+    MailModule,
+    MediaModule,
+    UserModule,
+    CompanyModule,
+    TeamModule,
+    AuthModule
   ],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,

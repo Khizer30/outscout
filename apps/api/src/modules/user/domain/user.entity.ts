@@ -1,14 +1,16 @@
 import { createId } from "@paralleldrive/cuid2";
 
-export type Role = "USER" | "ADMIN";
-
 export class UserEntity {
   constructor(
     public readonly id: string,
     public readonly name: string,
     public readonly email: string,
-    public readonly password: string,
-    public readonly role: Role,
+    public readonly passwordHash: string,
+    public readonly isVerified: boolean,
+    public readonly isSuperAdmin: boolean,
+    public readonly profileImageURL: string | null,
+    public readonly profileImagePublicId: string | null,
+    public readonly timezone: string,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     public readonly deletedAt: Date | null
@@ -18,8 +20,12 @@ export class UserEntity {
     id?: string;
     name: string;
     email: string;
-    password: string;
-    role?: Role;
+    passwordHash: string;
+    isVerified?: boolean;
+    isSuperAdmin?: boolean;
+    profileImageURL?: string | null;
+    profileImagePublicId?: string | null;
+    timezone?: string;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date | null;
@@ -28,24 +34,70 @@ export class UserEntity {
       props.id ?? createId(),
       props.name,
       props.email,
-      props.password,
-      props.role ?? "USER",
+      props.passwordHash,
+      props.isVerified ?? false,
+      props.isSuperAdmin ?? false,
+      props.profileImageURL ?? null,
+      props.profileImagePublicId ?? null,
+      props.timezone ?? "UTC",
       props.createdAt ?? new Date(),
       props.updatedAt ?? new Date(),
       props.deletedAt ?? null
     );
   }
 
+  update(props: {
+    name?: string;
+    email?: string;
+    passwordHash?: string;
+    isVerified?: boolean;
+    profileImageURL?: string | null;
+    profileImagePublicId?: string | null;
+    timezone?: string;
+  }): UserEntity {
+    return new UserEntity(
+      this.id,
+      props.name ?? this.name,
+      props.email ?? this.email,
+      props.passwordHash ?? this.passwordHash,
+      props.isVerified ?? this.isVerified,
+      this.isSuperAdmin,
+      props.profileImageURL !== undefined ? props.profileImageURL : this.profileImageURL,
+      props.profileImagePublicId !== undefined ? props.profileImagePublicId : this.profileImagePublicId,
+      props.timezone ?? this.timezone,
+      this.createdAt,
+      new Date(),
+      this.deletedAt
+    );
+  }
+
+  delete(): UserEntity {
+    return new UserEntity(
+      this.id,
+      this.name,
+      this.email,
+      this.passwordHash,
+      this.isVerified,
+      this.isSuperAdmin,
+      this.profileImageURL,
+      this.profileImagePublicId,
+      this.timezone,
+      this.createdAt,
+      new Date(),
+      new Date()
+    );
+  }
+
   isAdmin(): boolean {
-    return this.role === "ADMIN";
+    return this.isSuperAdmin;
   }
 
   isDeleted(): boolean {
     return this.deletedAt !== null;
   }
 
-  toSafe(): Omit<UserEntity, "password"> {
-    const { password: _, ...safe } = this;
-    return safe as Omit<UserEntity, "password">;
+  toSafe(): Omit<UserEntity, "passwordHash"> {
+    const { passwordHash: _, ...safe } = this;
+    return safe as Omit<UserEntity, "passwordHash">;
   }
 }

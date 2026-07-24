@@ -1,32 +1,31 @@
+﻿import { AuthGuard } from "@middleware/auth.guard";
+import { User } from "@middleware/user.decorator";
 import { UserMapper } from "@modules/user/infrastructure/user.mapper";
 import { UserService } from "@modules/user/services/user.service";
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
-import { CreateUserDto, UpdateUserDto, UserResponseDto } from "@repo/dtos/user";
+import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
+import { GetUserResponseDto, UpdateUserDto, UpdateUserResponseDto } from "@repo/dtos/user";
 
 @Controller("user")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get(":id")
-  async findById(@Param("id") id: string): Promise<{ user: UserResponseDto }> {
-    const user = await this.userService.findById(id);
-    return { user: UserMapper.toResponse(user) };
+  @Get("me")
+  @UseGuards(AuthGuard)
+  async getMe(@User() user: AuthenticatedUser): Promise<GetUserResponseDto> {
+    const existing = await this.userService.getUserById(user.id);
+    return { data: UserMapper.toResponse(existing) };
   }
 
-  @Post()
-  async create(@Body() dto: CreateUserDto): Promise<{ user: UserResponseDto }> {
-    const user = await this.userService.create(dto);
-    return { user: UserMapper.toResponse(user) };
-  }
+  @Patch("me")
+  @UseGuards(AuthGuard)
+  async updateMe(@User() user: AuthenticatedUser, @Body() dto: UpdateUserDto): Promise<UpdateUserResponseDto> {
+    const updatedUser = await this.userService.updateUserById(user.id, {
+      name: dto.name,
+      password: dto.password,
+      timezone: dto.timezone,
+      profileImageURL: dto.profileImageURL
+    });
 
-  @Patch(":id")
-  async update(@Param("id") id: string, @Body() dto: UpdateUserDto): Promise<{ user: UserResponseDto }> {
-    const user = await this.userService.update(id, dto);
-    return { user: UserMapper.toResponse(user) };
-  }
-
-  @Delete(":id")
-  async delete(@Param("id") id: string): Promise<void> {
-    await this.userService.delete(id);
+    return { data: UserMapper.toResponse(updatedUser) };
   }
 }

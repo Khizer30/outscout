@@ -1,4 +1,4 @@
-import { JWTService } from "@modules/jwt/jwt.service";
+import { JWTService } from "@modules/jwt/services/jwt.service";
 import { Module } from "@nestjs/common";
 
 @Module({
