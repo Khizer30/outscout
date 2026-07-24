@@ -12,6 +12,7 @@ export const usersTable = pgTable(
     isVerified: boolean().notNull().default(false),
     isSuperAdmin: boolean().notNull().default(false),
     profileImageURL: text(),
+    profileImagePublicId: text(),
     timezone: text().notNull().default("UTC"),
     createdAt: timestamp().defaultNow().notNull(),
     updatedAt: timestamp()

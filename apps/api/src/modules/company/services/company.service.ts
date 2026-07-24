@@ -1,4 +1,4 @@
-import { CompanyEntity } from "@modules/company/domain/company.entity";
+﻿import { CompanyEntity } from "@modules/company/domain/company.entity";
 import { CompanyNotFoundError, CompanyUpdateConflictError } from "@modules/company/domain/company.errors";
 import { CompanyRepository } from "@modules/company/domain/company.repository";
 import { CompanyMembershipEntity } from "@modules/company/domain/companyMembership.entity";
@@ -21,11 +21,11 @@ export class CompanyService {
   ) {}
 
   async createCompany(userId: string, data: CreateCompanyData): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }> {
-    // Create the plain domain entities
     const company = CompanyEntity.create({
       name: data.name,
       about: data.about,
-      companyImageURL: data.companyImageURL
+      companyImageURL: data.companyImageURL,
+      companyImagePublicId: data.companyImageURL ? this.mediaService.urlToPublicId(data.companyImageURL) : null
     });
 
     const membership = CompanyMembershipEntity.create({
@@ -35,7 +35,6 @@ export class CompanyService {
       status: "ACTIVE"
     });
 
-    // Save using the transactional repository method
     return await this.companyRepo.create(company, membership);
   }
 
@@ -47,23 +46,31 @@ export class CompanyService {
     return this.companyRepo.findMembershipsByUserId(userId, { status: ["ACTIVE"] });
   }
 
-  async updateCompany(id: string, data: { name?: string; about?: string | null; companyImageURL?: string }): Promise<CompanyEntity> {
+  async updateCompany(id: string, data: { name?: string; about?: string | null; companyImageURL?: string | null }): Promise<CompanyEntity> {
     const company = await this.companyRepo.findById(id);
     if (!company) {
       throw new CompanyNotFoundError({ id });
     }
 
-    const oldImageURL = company.companyImageURL;
-    const updatedCompany = company.update(data);
+    const oldPublicId = company.companyImagePublicId;
+
+    const companyImagePublicId =
+      data.companyImageURL !== undefined
+        ? data.companyImageURL
+          ? this.mediaService.urlToPublicId(data.companyImageURL)
+          : null
+        : undefined;
+
+    const updatedCompany = company.update({ ...data, companyImagePublicId });
     const saved = await this.companyRepo.update(updatedCompany);
 
     if (!saved) {
       throw new CompanyUpdateConflictError({ id });
     }
 
-    if (data.companyImageURL !== undefined && oldImageURL) {
+    if (data.companyImageURL !== undefined && oldPublicId && oldPublicId !== companyImagePublicId) {
       try {
-        await this.mediaService.deleteImage(oldImageURL);
+        await this.mediaService.deleteImageByPublicId(oldPublicId);
       } catch (error) {
         this.logger.error("Failed to delete old company image", error);
       }

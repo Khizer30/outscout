@@ -1,4 +1,4 @@
-import { AuthGuard } from "@middleware/auth.guard";
+﻿import { AuthGuard } from "@middleware/auth.guard";
 import Roles from "@middleware/roles.decorator";
 import { User } from "@middleware/user.decorator";
 import { CompanyMapper, CompanyMembershipMapper } from "@modules/company/infrastructure/company.mapper";
@@ -7,9 +7,7 @@ import { CompanyMessageRulesMapper } from "@modules/company/infrastructure/compa
 import { CompanyService } from "@modules/company/services/company.service";
 import { CompanyEmailSettingsService } from "@modules/company/services/companyEmailSettings.service";
 import { CompanyMessageRulesService } from "@modules/company/services/companyMessageRules.service";
-import { MediaService } from "@modules/media/services/media.service";
-import { Body, Controller, Delete, ForbiddenException, Get, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { Body, Controller, Delete, ForbiddenException, Get, Patch, Post, UseGuards } from "@nestjs/common";
 import {
   CreateCompanyDto,
   CreateCompanyResponseDto,
@@ -28,8 +26,7 @@ export class CompanyController {
   constructor(
     private readonly companyService: CompanyService,
     private readonly companyEmailSettingsService: CompanyEmailSettingsService,
-    private readonly companyMessageRulesService: CompanyMessageRulesService,
-    private readonly mediaService: MediaService
+    private readonly companyMessageRulesService: CompanyMessageRulesService
   ) {}
 
   @Get()
@@ -47,16 +44,11 @@ export class CompanyController {
 
   @Post()
   @UseGuards(AuthGuard)
-  @UseInterceptors(FileInterceptor("companyImage"))
-  async create(@User() user: AuthenticatedUser, @Body() dto: CreateCompanyDto, @UploadedFile() file?: Express.Multer.File): Promise<CreateCompanyResponseDto> {
-    let companyImageURL: string | null = null;
-    if (file) {
-      companyImageURL = await this.mediaService.uploadImage(file, "outscout/companies");
-    }
-
+  async create(@User() user: AuthenticatedUser, @Body() dto: CreateCompanyDto): Promise<CreateCompanyResponseDto> {
     const { company } = await this.companyService.createCompany(user.id, {
-      ...dto,
-      companyImageURL
+      name: dto.name,
+      about: dto.about,
+      companyImageURL: dto.companyImageURL
     });
 
     return { data: CompanyMapper.toResponse(company) };
@@ -65,23 +57,16 @@ export class CompanyController {
   @Patch()
   @UseGuards(AuthGuard)
   @Roles(["COMPANY_ADMIN"])
-  @UseInterceptors(FileInterceptor("companyImage"))
-  async update(@User() user: AuthenticatedUser, @Body() dto: UpdateCompanyDto, @UploadedFile() file?: Express.Multer.File): Promise<UpdateCompanyResponseDto> {
+  async update(@User() user: AuthenticatedUser, @Body() dto: UpdateCompanyDto): Promise<UpdateCompanyResponseDto> {
     const id = user.companyId;
     if (!id) {
       throw new ForbiddenException("You do not belong to a company");
     }
 
-    let companyImageURL: string | undefined = undefined;
-
-    if (file) {
-      companyImageURL = await this.mediaService.uploadImage(file, "outscout/companies");
-    }
-
     const updated = await this.companyService.updateCompany(id, {
       name: dto.name,
       about: dto.about,
-      ...(companyImageURL !== undefined ? { companyImageURL } : {})
+      ...(dto.companyImageURL !== undefined ? { companyImageURL: dto.companyImageURL } : {})
     });
 
     return { data: CompanyMapper.toResponse(updated) };

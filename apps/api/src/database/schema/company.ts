@@ -6,6 +6,7 @@ export const companyTable = pgTable("company", {
   name: text().notNull(),
   about: text(),
   companyImageURL: text(),
+  companyImagePublicId: text(),
   createdAt: timestamp().defaultNow().notNull(),
   updatedAt: timestamp()
     .defaultNow()

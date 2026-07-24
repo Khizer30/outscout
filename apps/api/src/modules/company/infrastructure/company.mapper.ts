@@ -5,7 +5,7 @@ import { Company, CompanyInsert, CompanyMembership, CompanyMembershipInsert } fr
 
 export class CompanyMapper {
   static toDomain(row: Company): CompanyEntity {
-    return new CompanyEntity(row.id, row.name, row.about, row.companyImageURL, row.createdAt, row.updatedAt, row.deletedAt);
+    return new CompanyEntity(row.id, row.name, row.about, row.companyImageURL, row.companyImagePublicId, row.createdAt, row.updatedAt, row.deletedAt);
   }
 
   static toPersistence(entity: CompanyEntity): CompanyInsert {
@@ -14,6 +14,7 @@ export class CompanyMapper {
       name: entity.name,
       about: entity.about,
       companyImageURL: entity.companyImageURL,
+      companyImagePublicId: entity.companyImagePublicId,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       deletedAt: entity.deletedAt
@@ -26,6 +27,7 @@ export class CompanyMapper {
       name: entity.name,
       about: entity.about,
       companyImageURL: entity.companyImageURL,
+      companyImagePublicId: entity.companyImagePublicId,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       deletedAt: entity.deletedAt

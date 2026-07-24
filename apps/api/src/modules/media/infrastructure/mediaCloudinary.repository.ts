@@ -1,34 +1,11 @@
-import { Readable } from "stream";
-import { MediaRepository } from "@modules/media/domain/media.repository";
+﻿import { MediaRepository } from "@modules/media/domain/media.repository";
 import type { UploadImageSignature } from "@modules/media/domain/media.types";
 import { MediaConfig } from "@modules/media/domain/media.value-objects";
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
-import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
-import sharp from "sharp";
+import { v2 as cloudinary } from "cloudinary";
 
 @Injectable()
 export class MediaCloudinaryRepository implements MediaRepository {
-  async uploadImage(file: Express.Multer.File, folder: string): Promise<string> {
-    const webpBuffer = await sharp(file.buffer).webp({ quality: 85 }).toBuffer();
-
-    const result = await new Promise<UploadApiResponse>((resolve, reject) => {
-      const upload = cloudinary.uploader.upload_stream({ resource_type: "image", access_mode: "public", folder, format: "webp" }, (error, result) => {
-        if (error) {
-          return reject(error);
-        }
-        if (!result) {
-          return reject(new Error("Upload failed: result is undefined"));
-        }
-
-        resolve(result);
-      });
-
-      Readable.from(webpBuffer).pipe(upload);
-    });
-
-    return result.secure_url;
-  }
-
   async deleteImage(url: string, checkTimestamp = false): Promise<void> {
     const publicId = this.urlToPublicId(url);
 
@@ -53,6 +30,10 @@ export class MediaCloudinaryRepository implements MediaRepository {
     await cloudinary.uploader.destroy(publicId);
   }
 
+  async deleteImageByPublicId(publicId: string): Promise<void> {
+    await cloudinary.uploader.destroy(publicId);
+  }
+
   generateUploadImageSignature(folder: string, width = 250, height = 250): UploadImageSignature {
     const config = cloudinary.config();
     const timestamp = Math.round(Date.now() / 1000);
@@ -70,8 +51,8 @@ export class MediaCloudinaryRepository implements MediaRepository {
     };
   }
 
-  private urlToPublicId(url: string): string {
-    const match = url.match(/\/upload\/(?:v\d+\/)?(.+?)(?:\.[^.]+)?$/);
+  urlToPublicId(url: string): string {
+    const match = url.match(/\/upload\/(?:(?:[^/]+\/)*v\d+\/)?(.+?)(?:\.[^.]+)?$/);
     if (!match) {
       throw new Error(`Invalid Cloudinary URL: ${url}`);
     }

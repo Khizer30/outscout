@@ -9,6 +9,7 @@ export class UserEntity {
     public readonly isVerified: boolean,
     public readonly isSuperAdmin: boolean,
     public readonly profileImageURL: string | null,
+    public readonly profileImagePublicId: string | null,
     public readonly timezone: string,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
@@ -23,6 +24,7 @@ export class UserEntity {
     isVerified?: boolean;
     isSuperAdmin?: boolean;
     profileImageURL?: string | null;
+    profileImagePublicId?: string | null;
     timezone?: string;
     createdAt?: Date;
     updatedAt?: Date;
@@ -36,6 +38,7 @@ export class UserEntity {
       props.isVerified ?? false,
       props.isSuperAdmin ?? false,
       props.profileImageURL ?? null,
+      props.profileImagePublicId ?? null,
       props.timezone ?? "UTC",
       props.createdAt ?? new Date(),
       props.updatedAt ?? new Date(),
@@ -49,6 +52,7 @@ export class UserEntity {
     passwordHash?: string;
     isVerified?: boolean;
     profileImageURL?: string | null;
+    profileImagePublicId?: string | null;
     timezone?: string;
   }): UserEntity {
     return new UserEntity(
@@ -59,6 +63,7 @@ export class UserEntity {
       props.isVerified ?? this.isVerified,
       this.isSuperAdmin,
       props.profileImageURL !== undefined ? props.profileImageURL : this.profileImageURL,
+      props.profileImagePublicId !== undefined ? props.profileImagePublicId : this.profileImagePublicId,
       props.timezone ?? this.timezone,
       this.createdAt,
       new Date(),
@@ -75,6 +80,7 @@ export class UserEntity {
       this.isVerified,
       this.isSuperAdmin,
       this.profileImageURL,
+      this.profileImagePublicId,
       this.timezone,
       this.createdAt,
       new Date(),
