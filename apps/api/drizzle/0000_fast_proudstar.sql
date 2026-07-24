@@ -95,7 +95,6 @@ CREATE TABLE "users" (
 	"isVerified" boolean DEFAULT false NOT NULL,
 	"isSuperAdmin" boolean DEFAULT false NOT NULL,
 	"profileImageURL" text,
-	"profileImagePublicId" text,
 	"timezone" text DEFAULT 'UTC' NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now() NOT NULL,

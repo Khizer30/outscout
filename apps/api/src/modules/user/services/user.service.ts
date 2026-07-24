@@ -59,15 +59,11 @@ export class UserService {
       passwordHash = await this.encryptionService.hashPassword(data.password);
     }
 
-    const profileImagePublicId =
-      data.profileImageURL !== undefined ? (data.profileImageURL ? this.mediaService.urlToPublicId(data.profileImageURL) : null) : undefined;
-
     const updatedUser = user.update({
       name: data.name,
       passwordHash,
       timezone: data.timezone,
-      profileImageURL: data.profileImageURL,
-      profileImagePublicId
+      profileImageURL: data.profileImageURL
     });
 
     return this.userRepo.update(updatedUser);
@@ -88,11 +84,12 @@ export class UserService {
       throw new UserNotFoundError({ userId });
     }
 
-    const previousPublicId = user.profileImagePublicId;
+    const previousUrl = user.profileImageURL;
     const updatedUser = await this.updateUserEntity(user, data);
 
-    if (data.profileImageURL && previousPublicId && previousPublicId !== updatedUser.profileImagePublicId) {
-      await this.mediaService.deleteImageByPublicId(previousPublicId);
+    if (data.profileImageURL && previousUrl && previousUrl !== updatedUser.profileImageURL) {
+      const publicId = this.mediaService.urlToPublicId(previousUrl);
+      await this.mediaService.deleteImageByPublicId(publicId);
     }
 
     return updatedUser;
