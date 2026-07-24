@@ -9,6 +9,7 @@ export const UserResponseSchema = z.object({
   isVerified: z.boolean(),
   isSuperAdmin: z.boolean(),
   profileImageURL: z.string().nullable(),
+  profileImagePublicId: z.string().nullable(),
   timezone: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),

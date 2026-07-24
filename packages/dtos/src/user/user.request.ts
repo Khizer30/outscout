@@ -12,7 +12,8 @@ export const UpdateUserSchema = z.object({
     .regex(/[0-9]/, { error: "Password must contain at least 1 digit" })
     .regex(/[^a-zA-Z0-9]/, { error: "Password must contain at least 1 special character" })
     .optional(),
-  timezone: z.string().trim().min(1, { error: "Timezone is required" }).optional()
+  timezone: z.string().trim().min(1, { error: "Timezone is required" }).optional(),
+  profileImageURL: z.url({ message: "Invalid image URL" }).optional().nullable()
 });
 
 export class UpdateUserDto extends createZodDto(UpdateUserSchema) {}
