@@ -1,5 +1,5 @@
 {
-  "id": "38c1974c-77d3-4377-bb70-a54075765a5c",
+  "id": "3ac939e2-d355-4b56-b2a4-6e479f438b5c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -161,12 +161,6 @@
         },
         "companyImageURL": {
           "name": "companyImageURL",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "companyImagePublicId": {
-          "name": "companyImagePublicId",
           "type": "text",
           "primaryKey": false,
           "notNull": false
