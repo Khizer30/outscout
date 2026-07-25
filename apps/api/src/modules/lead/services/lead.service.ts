@@ -1,5 +1,5 @@
 import { LeadEntity } from "@modules/lead/domain/lead.entity";
-import { LeadNotFoundError } from "@modules/lead/domain/lead.errors";
+import { LeadAccessDeniedError, LeadNotFoundError } from "@modules/lead/domain/lead.errors";
 import { LeadRepository } from "@modules/lead/domain/lead.repository";
 import { CreateLeadProps, LeadStatus } from "@modules/lead/domain/lead.types";
 import { Injectable } from "@nestjs/common";
@@ -14,24 +14,29 @@ export class LeadService {
     return this.leadRepo.create(lead);
   }
 
-  async findById(id: string): Promise<LeadEntity> {
+  async findById(id: string, companyId: string): Promise<LeadEntity> {
     const lead = await this.leadRepo.findById(id);
     if (!lead) {
       throw new LeadNotFoundError({ id });
+    }
+
+    if (lead.companyId !== companyId) {
+      throw new LeadAccessDeniedError({ id });
     }
 
     return lead;
   }
 
-  async findByCompany(companyId: string, filters?: { status?: LeadStatus[] }): Promise<LeadEntity[]> {
-    return this.leadRepo.findByCompany(companyId, filters);
+  async findByCompany(
+    companyId: string,
+    filters?: { status?: LeadStatus[] },
+    pagination?: { page: number; limit: number }
+  ): Promise<{ leads: LeadEntity[]; total: number }> {
+    return this.leadRepo.findByCompany(companyId, filters, pagination);
   }
 
-  async updateStatus(id: string, status: LeadStatus): Promise<LeadEntity> {
-    const lead = await this.leadRepo.findById(id);
-    if (!lead) {
-      throw new LeadNotFoundError({ id });
-    }
+  async updateStatus(id: string, companyId: string, status: LeadStatus): Promise<LeadEntity> {
+    const lead = await this.findById(id, companyId);
 
     const updated = await this.leadRepo.update(lead.updateStatus(status));
     if (!updated) {
