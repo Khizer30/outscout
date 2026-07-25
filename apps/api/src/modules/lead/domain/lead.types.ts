@@ -1,4 +1,5 @@
-export type LeadType = "RESTAURANT" | "HOTEL" | "HOSPITAL" | "DENTAL_CLINIC" | "REAL_ESTATE_AGENCY" | "ACCOUNTING" | "GYM" | "BEAUTY_SALON";
+export const LEAD_TYPES = ["RESTAURANT", "HOTEL", "HOSPITAL", "DENTAL_CLINIC", "REAL_ESTATE_AGENCY", "ACCOUNTING", "GYM", "BEAUTY_SALON"] as const;
+export type LeadType = (typeof LEAD_TYPES)[number];
 
 export type LeadStatus = "ENRICHING" | "READY" | "CONTACTED" | "INTERESTED" | "UNRESPONSIVE" | "REJECTED";
 
