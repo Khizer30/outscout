@@ -24,3 +24,26 @@ export interface LeadSocialLinks {
   whatsapp?: string;
   otherLinks: string[];
 }
+
+export interface CreateLeadProps {
+  id?: string;
+  companyId: string;
+  status?: LeadStatus;
+  name?: string | null;
+  description?: string | null;
+  address?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  phone?: string | null;
+  website?: string | null;
+  businessStatus?: string | null;
+  rating?: number | null;
+  userRatingCount?: number | null;
+  primaryType?: LeadType | null;
+  types?: LeadType[];
+  emails?: string[];
+  otherPhones?: string[];
+  socialLinks?: LeadSocialLinks;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

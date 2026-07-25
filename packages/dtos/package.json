@@ -23,6 +23,10 @@
     "./team": {
       "types": "./dist/team/index.d.ts",
       "default": "./dist/team/index.js"
+    },
+    "./lead": {
+      "types": "./dist/lead/index.d.ts",
+      "default": "./dist/lead/index.js"
     }
   },
   "scripts": {

@@ -1,4 +1,4 @@
-import { LeadSocialLinks, LeadStatus, LeadType } from "@modules/lead/domain/lead.types";
+import { CreateLeadProps, LeadSocialLinks, LeadStatus, LeadType } from "@modules/lead/domain/lead.types";
 import { createId } from "@paralleldrive/cuid2";
 
 export class LeadEntity {
@@ -25,28 +25,7 @@ export class LeadEntity {
     public readonly updatedAt: Date
   ) {}
 
-  static create(props: {
-    id?: string;
-    companyId: string;
-    status?: LeadStatus;
-    name?: string | null;
-    description?: string | null;
-    address?: string | null;
-    latitude?: number | null;
-    longitude?: number | null;
-    phone?: string | null;
-    website?: string | null;
-    businessStatus?: string | null;
-    rating?: number | null;
-    userRatingCount?: number | null;
-    primaryType?: LeadType | null;
-    types?: LeadType[];
-    emails?: string[];
-    otherPhones?: string[];
-    socialLinks?: LeadSocialLinks;
-    createdAt?: Date;
-    updatedAt?: Date;
-  }): LeadEntity {
+  static create(props: CreateLeadProps): LeadEntity {
     return new LeadEntity(
       props.id ?? createId(),
       props.companyId,
