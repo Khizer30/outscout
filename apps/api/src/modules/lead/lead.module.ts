@@ -6,10 +6,11 @@ import { LeadDrizzleRepository } from "@modules/lead/infrastructure/leadDrizzle.
 import { LeadSourceGooglePlacesRepository } from "@modules/lead/infrastructure/leadSourceGooglePlaces.repository";
 import { LeadController } from "@modules/lead/presentation/lead.controller";
 import { LeadService } from "@modules/lead/services/lead.service";
+import { WebScrapingModule } from "@modules/webScraping/webScraping.module";
 import { Module } from "@nestjs/common";
 
 @Module({
-  imports: [DatabaseModule, JWTModule],
+  imports: [DatabaseModule, JWTModule, WebScrapingModule],
   controllers: [LeadController],
   providers: [
     LeadService,

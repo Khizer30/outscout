@@ -4,13 +4,17 @@ import { LeadRepository } from "@modules/lead/domain/lead.repository";
 import { LeadStatus } from "@modules/lead/domain/lead.types";
 import { LeadSourceRepository } from "@modules/lead/domain/leadSource.repository";
 import { LeadSourceSearchParams } from "@modules/lead/domain/leadSource.types";
-import { Injectable } from "@nestjs/common";
+import { WebScrapingService } from "@modules/webScraping/services/webScraping.service";
+import { Injectable, Logger } from "@nestjs/common";
 
 @Injectable()
 export class LeadService {
+  private readonly logger = new Logger(LeadService.name);
+
   constructor(
     private readonly leadRepo: LeadRepository,
-    private readonly leadSourceRepo: LeadSourceRepository
+    private readonly leadSourceRepo: LeadSourceRepository,
+    private readonly webScrapingService: WebScrapingService
   ) {}
 
   async generate(companyId: string, params: LeadSourceSearchParams): Promise<LeadEntity[]> {
@@ -34,6 +38,16 @@ export class LeadService {
         otherPhones: result.otherPhones
       })
     );
+
+    // Log Websites Markdown
+    for (const lead of leads) {
+      if (lead.website) {
+        const scraped = await this.webScrapingService.scrape(lead.website);
+        if (scraped) {
+          this.logger.log(`Scraped ${lead.website}:\n${scraped}`);
+        }
+      }
+    }
 
     return this.leadRepo.createMany(leads);
   }

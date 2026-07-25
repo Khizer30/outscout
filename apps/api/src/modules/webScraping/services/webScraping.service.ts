@@ -1,9 +1,10 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { chromium } from "playwright";
 import TurndownService from "turndown";
 
 @Injectable()
 export class WebScrapingService {
+  private readonly logger = new Logger(WebScrapingService.name);
   private readonly timeoutMs = 15000;
   private readonly turndownService: TurndownService;
 
@@ -20,7 +21,7 @@ export class WebScrapingService {
     });
   }
 
-  async scrape(websiteUrl: string): Promise<string> {
+  async scrape(websiteUrl: string): Promise<string | null> {
     let url = websiteUrl.trim();
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
       url = "https://" + url;
@@ -64,7 +65,8 @@ export class WebScrapingService {
 
       return `${markdown}\n\nALL HREFS ON PAGE:\n${hrefs.join("\n")}`;
     } catch (error) {
-      throw new InternalServerErrorException(`Failed to scrape ${url}: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.warn(`Failed to scrape ${url}: ${error instanceof Error ? error.message : JSON.stringify(error)}`);
+      return null;
     } finally {
       await browser.close();
     }
