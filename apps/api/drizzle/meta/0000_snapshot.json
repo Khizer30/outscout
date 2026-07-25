@@ -1,5 +1,5 @@
 {
-  "id": "ea051e48-70ab-4d96-8f35-7bc2cc897c5c",
+  "id": "d94c3c81-61ba-421e-a784-c10ca9f6d81b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1290,15 +1290,11 @@
       "name": "lead_type",
       "schema": "public",
       "values": [
-        "SOFTWARE_COMPANY",
-        "ADVERTISING_AGENCY",
-        "MARKETING_AGENCY",
         "RESTAURANT",
         "HOTEL",
         "HOSPITAL",
         "DENTAL_CLINIC",
         "REAL_ESTATE_AGENCY",
-        "LAW_FIRM",
         "ACCOUNTING",
         "GYM",
         "BEAUTY_SALON"

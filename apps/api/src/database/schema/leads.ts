@@ -3,15 +3,11 @@ import { companyTable } from "@schema/company";
 import { pgTable, text, integer, doublePrecision, jsonb, timestamp, pgEnum } from "drizzle-orm/pg-core";
 
 export const leadTypeEnum = pgEnum("lead_type", [
-  "SOFTWARE_COMPANY",
-  "ADVERTISING_AGENCY",
-  "MARKETING_AGENCY",
   "RESTAURANT",
   "HOTEL",
   "HOSPITAL",
   "DENTAL_CLINIC",
   "REAL_ESTATE_AGENCY",
-  "LAW_FIRM",
   "ACCOUNTING",
   "GYM",
   "BEAUTY_SALON"

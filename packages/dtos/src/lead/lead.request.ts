@@ -3,20 +3,7 @@ import { z } from "zod";
 
 export const LeadStatusSchema = z.enum(["ENRICHING", "READY", "CONTACTED", "INTERESTED", "UNRESPONSIVE", "REJECTED"]);
 
-export const LeadTypeSchema = z.enum([
-  "SOFTWARE_COMPANY",
-  "ADVERTISING_AGENCY",
-  "MARKETING_AGENCY",
-  "RESTAURANT",
-  "HOTEL",
-  "HOSPITAL",
-  "DENTAL_CLINIC",
-  "REAL_ESTATE_AGENCY",
-  "LAW_FIRM",
-  "ACCOUNTING",
-  "GYM",
-  "BEAUTY_SALON"
-]);
+export const LeadTypeSchema = z.enum(["RESTAURANT", "HOTEL", "HOSPITAL", "DENTAL_CLINIC", "REAL_ESTATE_AGENCY", "ACCOUNTING", "GYM", "BEAUTY_SALON"]);
 
 // Generate Leads
 export const GenerateLeadsSchema = z.object({

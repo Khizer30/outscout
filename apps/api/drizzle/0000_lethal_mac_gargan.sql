@@ -4,7 +4,7 @@ CREATE TYPE "public"."company_membership_role" AS ENUM('COMPANY_ADMIN', 'COMPANY
 CREATE TYPE "public"."company_membership_status" AS ENUM('ACTIVE', 'INACTIVE');--> statement-breakpoint
 CREATE TYPE "public"."message_channel" AS ENUM('WHATSAPP', 'EMAIL');--> statement-breakpoint
 CREATE TYPE "public"."lead_status" AS ENUM('ENRICHING', 'READY', 'CONTACTED', 'INTERESTED', 'UNRESPONSIVE', 'REJECTED');--> statement-breakpoint
-CREATE TYPE "public"."lead_type" AS ENUM('SOFTWARE_COMPANY', 'ADVERTISING_AGENCY', 'MARKETING_AGENCY', 'RESTAURANT', 'HOTEL', 'HOSPITAL', 'DENTAL_CLINIC', 'REAL_ESTATE_AGENCY', 'LAW_FIRM', 'ACCOUNTING', 'GYM', 'BEAUTY_SALON');--> statement-breakpoint
+CREATE TYPE "public"."lead_type" AS ENUM('RESTAURANT', 'HOTEL', 'HOSPITAL', 'DENTAL_CLINIC', 'REAL_ESTATE_AGENCY', 'ACCOUNTING', 'GYM', 'BEAUTY_SALON');--> statement-breakpoint
 CREATE TYPE "public"."verification_type" AS ENUM('VERIFY', 'RESET');--> statement-breakpoint
 CREATE TABLE "audit_logs" (
 	"id" text PRIMARY KEY NOT NULL,
