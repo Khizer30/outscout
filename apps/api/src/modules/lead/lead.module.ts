@@ -1,4 +1,5 @@
 import { DatabaseModule } from "@database/database.module";
+import { JWTModule } from "@modules/jwt/jwt.module";
 import { LeadRepository } from "@modules/lead/domain/lead.repository";
 import { LeadDrizzleRepository } from "@modules/lead/infrastructure/leadDrizzle.repository";
 import { LeadController } from "@modules/lead/presentation/lead.controller";
@@ -6,7 +7,7 @@ import { LeadService } from "@modules/lead/services/lead.service";
 import { Module } from "@nestjs/common";
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, JWTModule],
   controllers: [LeadController],
   providers: [
     LeadService,
