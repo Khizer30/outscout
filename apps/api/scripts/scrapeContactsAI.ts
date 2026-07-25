@@ -18,6 +18,7 @@ if (!GEMINI_API_KEY) {
 }
 
 export interface ContactInfo {
+  description: string | null;
   emails: string[];
   phones: string[];
   location: string | null;
@@ -38,7 +39,7 @@ interface GeminiResponse {
 async function extractWithGemini(markdown: string, hrefs: string[]): Promise<ContactInfo> {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
-  const userMessage = `Extract contact and social media information from the following website content.
+  const userMessage = `Extract business description, contact and social media information from the following website content.
 
   MARKDOWN CONTENT (links are in [label](url) format):
   ${markdown.slice(0, 20000)}
@@ -46,13 +47,13 @@ async function extractWithGemini(markdown: string, hrefs: string[]): Promise<Con
   ALL HREFS ON PAGE (deduplicated — includes icon-only links not visible in markdown):
   ${hrefs.join("\n")}
 
-  Extract and return only what is explicitly present. Do not invent or guess.`;
+  Extract and return only what is explicitly present. Do not invent or guess. Provide a concise description of what the business does based on the website content.`;
 
   const body = {
     system_instruction: {
       parts: [
         {
-          text: "You are a contact information extractor. Extract emails, phone numbers, location/address, and social media profile links from website content. Return only what is explicitly present — never fabricate data."
+          text: "You are a business and contact information extractor. Extract a concise description of the business, emails, phone numbers, location/address, and social media profile links from website content. Return only what is explicitly present — never fabricate data."
         }
       ]
     },
@@ -64,8 +65,9 @@ async function extractWithGemini(markdown: string, hrefs: string[]): Promise<Con
       responseMimeType: "application/json",
       responseSchema: {
         type: "OBJECT",
-        required: ["emails", "phones", "location", "instagram", "facebook", "twitter", "linkedin", "tiktok", "youtube", "whatsapp", "other"],
+        required: ["description", "emails", "phones", "location", "instagram", "facebook", "twitter", "linkedin", "tiktok", "youtube", "whatsapp", "other"],
         properties: {
+          description: { type: "STRING", nullable: true },
           emails: { type: "ARRAY", items: { type: "STRING" } },
           phones: { type: "ARRAY", items: { type: "STRING" } },
           location: { type: "STRING", nullable: true },
