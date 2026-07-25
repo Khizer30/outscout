@@ -34,6 +34,11 @@ export class AuthService {
     private readonly teamService: TeamService
   ) {}
 
+  private ipPrefixMatches(a: string, b: string): boolean {
+    const prefixOf = (ip: string) => ip.split(".").slice(0, 2).join(".");
+    return prefixOf(a) === prefixOf(b);
+  }
+
   private buildAccessTokenPayload(user: UserEntity, active?: { company: CompanyEntity; membership: CompanyMembershipEntity }): AuthenticatedUser {
     return {
       id: user.id,
@@ -179,6 +184,11 @@ export class AuthService {
     }
 
     if (session.expiryTime < new Date()) {
+      await this.sessionRepo.delete(session.id);
+      throw new InvalidSessionError();
+    }
+
+    if (!this.ipPrefixMatches(session.ipAddress, ipAddress)) {
       await this.sessionRepo.delete(session.id);
       throw new InvalidSessionError();
     }
