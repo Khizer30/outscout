@@ -62,7 +62,7 @@ export class LeadService {
   async updateStatus(id: string, companyId: string, status: LeadStatus): Promise<LeadEntity> {
     const lead = await this.findById(id, companyId);
 
-    const updated = await this.leadRepo.update(lead.updateStatus(status));
+    const updated = await this.leadRepo.update(lead.update({ status }));
     if (!updated) {
       throw new LeadNotFoundError({ id });
     }

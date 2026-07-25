@@ -1,4 +1,4 @@
-import { CreateLeadProps, LeadSocialLinks, LeadStatus, LeadType } from "@modules/lead/domain/lead.types";
+import { CreateLeadProps, LeadSocialLinks, LeadStatus, LeadType, UpdateLeadProps } from "@modules/lead/domain/lead.types";
 import { createId } from "@paralleldrive/cuid2";
 
 export class LeadEntity {
@@ -50,26 +50,26 @@ export class LeadEntity {
     );
   }
 
-  updateStatus(status: LeadStatus): LeadEntity {
+  update(props: UpdateLeadProps): LeadEntity {
     return new LeadEntity(
       this.id,
       this.companyId,
-      status,
-      this.name,
-      this.description,
-      this.address,
-      this.latitude,
-      this.longitude,
-      this.phone,
-      this.website,
-      this.businessStatus,
-      this.rating,
-      this.userRatingCount,
-      this.primaryType,
-      this.types,
-      this.emails,
-      this.otherPhones,
-      this.socialLinks,
+      props.status ?? this.status,
+      props.name !== undefined ? props.name : this.name,
+      props.description !== undefined ? props.description : this.description,
+      props.address !== undefined ? props.address : this.address,
+      props.latitude !== undefined ? props.latitude : this.latitude,
+      props.longitude !== undefined ? props.longitude : this.longitude,
+      props.phone !== undefined ? props.phone : this.phone,
+      props.website !== undefined ? props.website : this.website,
+      props.businessStatus !== undefined ? props.businessStatus : this.businessStatus,
+      props.rating !== undefined ? props.rating : this.rating,
+      props.userRatingCount !== undefined ? props.userRatingCount : this.userRatingCount,
+      props.primaryType !== undefined ? props.primaryType : this.primaryType,
+      props.types ?? this.types,
+      props.emails ?? this.emails,
+      props.otherPhones ?? this.otherPhones,
+      props.socialLinks ?? this.socialLinks,
       this.createdAt,
       new Date()
     );
