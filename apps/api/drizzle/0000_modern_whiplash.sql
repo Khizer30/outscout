@@ -3,6 +3,8 @@ CREATE TYPE "public"."company_invitation_status" AS ENUM('PENDING', 'ACCEPTED', 
 CREATE TYPE "public"."company_membership_role" AS ENUM('COMPANY_ADMIN', 'COMPANY_USER');--> statement-breakpoint
 CREATE TYPE "public"."company_membership_status" AS ENUM('ACTIVE', 'INACTIVE');--> statement-breakpoint
 CREATE TYPE "public"."message_channel" AS ENUM('WHATSAPP', 'EMAIL');--> statement-breakpoint
+CREATE TYPE "public"."lead_status" AS ENUM('ENRICHING', 'READY', 'CONTACTED', 'INTERESTED', 'UNRESPONSIVE', 'REJECTED');--> statement-breakpoint
+CREATE TYPE "public"."lead_type" AS ENUM('SOFTWARE_COMPANY', 'ADVERTISING_AGENCY', 'MARKETING_AGENCY', 'RESTAURANT', 'HOTEL', 'HOSPITAL', 'DENTAL_CLINIC', 'REAL_ESTATE_AGENCY', 'LAW_FIRM', 'ACCOUNTING', 'GYM', 'BEAUTY_SALON');--> statement-breakpoint
 CREATE TYPE "public"."verification_type" AS ENUM('VERIFY', 'RESET');--> statement-breakpoint
 CREATE TABLE "audit_logs" (
 	"id" text PRIMARY KEY NOT NULL,
@@ -77,6 +79,29 @@ CREATE TABLE "company_message_rules_history" (
 	"changedAt" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "leads" (
+	"id" text PRIMARY KEY NOT NULL,
+	"companyId" text NOT NULL,
+	"status" "lead_status" DEFAULT 'ENRICHING' NOT NULL,
+	"name" text,
+	"description" text,
+	"address" text,
+	"latitude" double precision,
+	"longitude" double precision,
+	"phone" text,
+	"website" text,
+	"businessStatus" text,
+	"rating" double precision,
+	"userRatingCount" integer,
+	"primaryType" "lead_type",
+	"types" "lead_type"[] DEFAULT '{}' NOT NULL,
+	"emails" text[] DEFAULT '{}' NOT NULL,
+	"otherPhones" text[] DEFAULT '{}' NOT NULL,
+	"socialLinks" jsonb DEFAULT '{"otherLinks":[]}'::jsonb NOT NULL,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "sessions" (
 	"id" text PRIMARY KEY NOT NULL,
 	"userId" text NOT NULL,
@@ -121,6 +146,7 @@ ALTER TABLE "company_message_rules" ADD CONSTRAINT "company_message_rules_compan
 ALTER TABLE "company_message_rules" ADD CONSTRAINT "company_message_rules_updatedBy_users_id_fk" FOREIGN KEY ("updatedBy") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "company_message_rules_history" ADD CONSTRAINT "company_message_rules_history_companyMessageRulesId_company_message_rules_id_fk" FOREIGN KEY ("companyMessageRulesId") REFERENCES "public"."company_message_rules"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "company_message_rules_history" ADD CONSTRAINT "company_message_rules_history_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "leads" ADD CONSTRAINT "leads_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "verifications" ADD CONSTRAINT "verifications_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "audit_logs_actor_id_idx" ON "audit_logs" USING btree ("actorId");--> statement-breakpoint
