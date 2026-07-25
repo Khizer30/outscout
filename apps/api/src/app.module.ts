@@ -4,6 +4,7 @@ import { AuthModule } from "@modules/auth/auth.module";
 import { CompanyModule } from "@modules/company/company.module";
 import { EncryptionModule } from "@modules/encryption/encryption.module";
 import { JWTModule } from "@modules/jwt/jwt.module";
+import { LeadModule } from "@modules/lead/lead.module";
 import { MailModule } from "@modules/mail/mail.module";
 import { MediaModule } from "@modules/media/media.module";
 import { TeamModule } from "@modules/team/team.module";
@@ -33,7 +34,8 @@ import { AppController } from "@src/app.controller";
     UserModule,
     CompanyModule,
     TeamModule,
-    AuthModule
+    AuthModule,
+    LeadModule
   ],
   controllers: [AppController],
   providers: [
