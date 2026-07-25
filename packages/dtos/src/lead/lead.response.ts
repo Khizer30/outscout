@@ -1,21 +1,6 @@
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
-import { LeadStatusSchema } from "./lead.request.js";
-
-export const LeadTypeSchema = z.enum([
-  "SOFTWARE_COMPANY",
-  "ADVERTISING_AGENCY",
-  "MARKETING_AGENCY",
-  "RESTAURANT",
-  "HOTEL",
-  "HOSPITAL",
-  "DENTAL_CLINIC",
-  "REAL_ESTATE_AGENCY",
-  "LAW_FIRM",
-  "ACCOUNTING",
-  "GYM",
-  "BEAUTY_SALON"
-]);
+import { LeadStatusSchema, LeadTypeSchema } from "./lead.request.js";
 
 export const LeadSocialLinksSchema = z.object({
   instagram: z.string().optional(),
@@ -53,6 +38,13 @@ export const LeadResponseSchema = z.object({
 });
 
 export class LeadResponseDto extends createZodDto(LeadResponseSchema) {}
+
+// Generate Leads
+export const GenerateLeadsResponseSchema = z.object({
+  data: z.array(LeadResponseSchema)
+});
+
+export class GenerateLeadsResponseDto extends createZodDto(GenerateLeadsResponseSchema) {}
 
 // Get Leads
 export const GetLeadsResponseSchema = z.object({

@@ -13,10 +13,18 @@ export class LeadDrizzleRepository extends LeadRepository {
     super();
   }
 
-  async create(lead: LeadEntity): Promise<LeadEntity> {
-    const [row] = await this.databaseService.db.insert(leadsTable).values(LeadMapper.toPersistence(lead)).returning();
+  async createMany(leads: LeadEntity[]): Promise<LeadEntity[]> {
+    if (leads.length === 0) {
+      return [];
+    }
 
-    return LeadMapper.toDomain(row);
+    const rows = await this.databaseService.db
+      .insert(leadsTable)
+      .values(leads.map(LeadMapper.toPersistence))
+      .onConflictDoNothing({ target: leadsTable.id })
+      .returning();
+
+    return rows.map(LeadMapper.toDomain);
   }
 
   async findById(id: string): Promise<LeadEntity | null> {

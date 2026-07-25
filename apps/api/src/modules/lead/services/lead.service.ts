@@ -1,17 +1,41 @@
 import { LeadEntity } from "@modules/lead/domain/lead.entity";
 import { LeadAccessDeniedError, LeadNotFoundError } from "@modules/lead/domain/lead.errors";
 import { LeadRepository } from "@modules/lead/domain/lead.repository";
-import { CreateLeadProps, LeadStatus } from "@modules/lead/domain/lead.types";
+import { LeadStatus } from "@modules/lead/domain/lead.types";
+import { LeadSourceRepository } from "@modules/lead/domain/leadSource.repository";
+import { LeadSourceSearchParams } from "@modules/lead/domain/leadSource.types";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class LeadService {
-  constructor(private readonly leadRepo: LeadRepository) {}
+  constructor(
+    private readonly leadRepo: LeadRepository,
+    private readonly leadSourceRepo: LeadSourceRepository
+  ) {}
 
-  async create(data: CreateLeadProps): Promise<LeadEntity> {
-    const lead = LeadEntity.create(data);
+  async generate(companyId: string, params: LeadSourceSearchParams): Promise<LeadEntity[]> {
+    const results = await this.leadSourceRepo.searchNearby(params);
 
-    return this.leadRepo.create(lead);
+    const leads = results.map((result) =>
+      LeadEntity.create({
+        id: result.placeId,
+        companyId,
+        name: result.name,
+        address: result.address,
+        latitude: result.latitude,
+        longitude: result.longitude,
+        phone: result.phone,
+        website: result.website,
+        businessStatus: result.businessStatus,
+        rating: result.rating,
+        userRatingCount: result.userRatingCount,
+        primaryType: result.primaryType,
+        types: result.types,
+        otherPhones: result.otherPhones
+      })
+    );
+
+    return this.leadRepo.createMany(leads);
   }
 
   async findById(id: string, companyId: string): Promise<LeadEntity> {
