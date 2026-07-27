@@ -33,8 +33,10 @@ import { AppController } from "@src/app.controller";
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         connection: {
-          host: configService.getOrThrow<string>("QUEUE_HOST"),
-          port: Number(configService.getOrThrow<string>("QUEUE_PORT"))
+          host: configService.getOrThrow<string>("REDIS_HOST"),
+          port: +configService.getOrThrow<string>("REDIS_PORT"),
+          username: configService.getOrThrow<string>("REDIS_USERNAME"),
+          password: configService.getOrThrow<string>("REDIS_PASSWORD")
         }
       }),
       inject: [ConfigService]
