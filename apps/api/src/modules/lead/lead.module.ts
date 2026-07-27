@@ -1,4 +1,5 @@
 import { DatabaseModule } from "@database/database.module";
+import { AiModule } from "@modules/ai/ai.module";
 import { JWTModule } from "@modules/jwt/jwt.module";
 import { LeadRepository } from "@modules/lead/domain/lead.repository";
 import { LeadSourceRepository } from "@modules/lead/domain/leadSource.repository";
@@ -10,7 +11,7 @@ import { WebScrapingModule } from "@modules/webScraping/webScraping.module";
 import { Module } from "@nestjs/common";
 
 @Module({
-  imports: [DatabaseModule, JWTModule, WebScrapingModule],
+  imports: [DatabaseModule, JWTModule, WebScrapingModule, AiModule],
   controllers: [LeadController],
   providers: [
     LeadService,

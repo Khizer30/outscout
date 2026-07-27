@@ -3,8 +3,24 @@ import { AiRepository } from "@modules/ai/domain/ai.repository";
 import { ContactInfo } from "@modules/ai/domain/ai.types";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { ContactInfoSchema } from "@repo/dtos/ai";
 import { AgentMiddleware, createAgent, modelCallLimitMiddleware, modelRetryMiddleware, piiMiddleware } from "langchain";
+import { z } from "zod";
+
+// Structured output schema for the Gemini extraction call
+const ContactInfoSchema = z.object({
+  description: z.string().nullable(),
+  emails: z.array(z.string()),
+  phones: z.array(z.string()),
+  location: z.string().nullable(),
+  instagram: z.string().nullable(),
+  facebook: z.string().nullable(),
+  twitter: z.string().nullable(),
+  linkedin: z.string().nullable(),
+  tiktok: z.string().nullable(),
+  youtube: z.string().nullable(),
+  whatsapp: z.string().nullable(),
+  other: z.array(z.string())
+});
 
 @Injectable()
 export class AiGoogleRepository extends AiRepository {
@@ -24,7 +40,7 @@ export class AiGoogleRepository extends AiRepository {
     });
   }
 
-  async extractContactInfo(content: string): Promise<ContactInfo> {
+  async extractBusinessInfo(content: string): Promise<ContactInfo> {
     const systemInstructions =
       "You are a business and contact information extractor. Extract a concise description of the business, emails, phone numbers, location/address, and social media profile links from website content. Return only what is explicitly present — never fabricate data.";
 

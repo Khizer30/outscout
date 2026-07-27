@@ -10,6 +10,7 @@ import {
   GetLeadResponseDto,
   GetLeadsDto,
   GetLeadsResponseDto,
+  ProcessLeadResponseDto,
   UpdateLeadDto,
   UpdateLeadResponseDto
 } from "@repo/dtos/lead";
@@ -78,5 +79,19 @@ export class LeadController {
     const updated = await this.leadService.update(id, companyId, dto);
 
     return { data: LeadMapper.toResponse(updated) };
+  }
+
+  @Post("process-lead/:id")
+  @HttpCode(200)
+  @UseGuards(AuthGuard)
+  async processLead(@User() user: AuthenticatedUser, @Param() { id }: IdDto): Promise<ProcessLeadResponseDto> {
+    const companyId = user.companyId;
+    if (!companyId) {
+      throw new ForbiddenException("You do not belong to a company");
+    }
+
+    const lead = await this.leadService.processLead(id, companyId);
+
+    return { data: LeadMapper.toResponse(lead) };
   }
 }

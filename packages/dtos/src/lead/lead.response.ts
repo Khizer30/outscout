@@ -61,3 +61,10 @@ export const UpdateLeadResponseSchema = z.object({
 });
 
 export class UpdateLeadResponseDto extends createZodDto(UpdateLeadResponseSchema) {}
+
+// Process Lead
+export const ProcessLeadResponseSchema = z.object({
+  data: LeadResponseSchema
+});
+
+export class ProcessLeadResponseDto extends createZodDto(ProcessLeadResponseSchema) {}
