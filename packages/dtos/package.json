@@ -4,6 +4,10 @@
   "type": "module",
   "private": true,
   "exports": {
+    "./common": {
+      "types": "./dist/common/index.d.ts",
+      "default": "./dist/common/index.js"
+    },
     "./media": {
       "types": "./dist/media/index.d.ts",
       "default": "./dist/media/index.js"
@@ -23,6 +27,10 @@
     "./team": {
       "types": "./dist/team/index.d.ts",
       "default": "./dist/team/index.js"
+    },
+    "./lead": {
+      "types": "./dist/lead/index.d.ts",
+      "default": "./dist/lead/index.js"
     }
   },
   "scripts": {

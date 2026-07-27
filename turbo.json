@@ -23,6 +23,7 @@
         "DATABASE_URL",
         "GOOGLE_PLACES_API_KEY",
         "GEMINI_API_KEY",
+        "GEMINI_MODEL",
         "BREVO_SENDER_NAME",
         "BREVO_SENDER_EMAIL",
         "BREVO_API_KEY",

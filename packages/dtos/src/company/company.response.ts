@@ -7,7 +7,6 @@ export const CompanyResponseSchema = z.object({
   name: z.string(),
   about: z.string().nullable(),
   companyImageURL: z.string().nullable(),
-  companyImagePublicId: z.string().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
   deletedAt: z.date().nullable()

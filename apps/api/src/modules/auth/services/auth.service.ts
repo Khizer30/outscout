@@ -34,6 +34,11 @@ export class AuthService {
     private readonly teamService: TeamService
   ) {}
 
+  private ipPrefixMatches(a: string, b: string): boolean {
+    const prefixOf = (ip: string) => ip.split(".").slice(0, 2).join(".");
+    return prefixOf(a) === prefixOf(b);
+  }
+
   private buildAccessTokenPayload(user: UserEntity, active?: { company: CompanyEntity; membership: CompanyMembershipEntity }): AuthenticatedUser {
     return {
       id: user.id,
@@ -116,7 +121,7 @@ export class AuthService {
     }
   }
 
-  async login(dto: LoginDto, ipAddress: string): Promise<{ accessToken: string; refreshToken: string }> {
+  async login(dto: LoginDto, ipAddress: string): Promise<{ user: AuthenticatedUser; accessToken: string; refreshToken: string }> {
     const user = await this.userService.findByEmail(dto.email);
     if (!user) {
       throw new InvalidCredentialsError();
@@ -134,7 +139,8 @@ export class AuthService {
     const activeMemberships = await this.companyRepo.findMembershipsByUserId(user.id, { status: ["ACTIVE"] });
     const active = activeMemberships[0];
 
-    const accessToken = this.jwtService.generateAccessToken(this.buildAccessTokenPayload(user, active));
+    const userPayload = this.buildAccessTokenPayload(user, active);
+    const accessToken = this.jwtService.generateAccessToken(userPayload);
     const refreshToken = this.jwtService.generateRefreshToken({ id: user.id });
 
     const refreshTokenHash = await this.encryptionService.hashToken(refreshToken);
@@ -150,10 +156,10 @@ export class AuthService {
     await this.sessionRepo.deleteByUserId(user.id);
     await this.sessionRepo.create(session);
 
-    return { accessToken, refreshToken };
+    return { user: userPayload, accessToken, refreshToken };
   }
 
-  async refresh(token: string, ipAddress: string): Promise<{ accessToken: string; refreshToken: string }> {
+  async refresh(token: string, ipAddress: string): Promise<{ user: AuthenticatedUser; accessToken: string; refreshToken: string }> {
     let payload: JwtPayload | string;
     try {
       payload = this.jwtService.verifyRefreshToken(token);
@@ -182,10 +188,16 @@ export class AuthService {
       throw new InvalidSessionError();
     }
 
+    if (!this.ipPrefixMatches(session.ipAddress, ipAddress)) {
+      await this.sessionRepo.delete(session.id);
+      throw new InvalidSessionError();
+    }
+
     const activeMemberships = await this.companyRepo.findMembershipsByUserId(user.id);
     const active = activeMemberships[0];
 
-    const newAccessToken = this.jwtService.generateAccessToken(this.buildAccessTokenPayload(user, active));
+    const userPayload = this.buildAccessTokenPayload(user, active);
+    const newAccessToken = this.jwtService.generateAccessToken(userPayload);
     const newRefreshToken = this.jwtService.generateRefreshToken({ id: user.id });
 
     const newRefreshTokenHash = await this.encryptionService.hashToken(newRefreshToken);
@@ -194,7 +206,7 @@ export class AuthService {
     const updatedSession = new SessionEntity(session.id, session.userId, newRefreshTokenHash, ipAddress, newExpiryTime, session.createdAt);
     await this.sessionRepo.update(updatedSession);
 
-    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+    return { user: userPayload, accessToken: newAccessToken, refreshToken: newRefreshToken };
   }
 
   async logout(token: string): Promise<void> {
@@ -210,7 +222,11 @@ export class AuthService {
     await this.sessionRepo.deleteByUserId(userId);
   }
 
-  async switchCompany(userId: string, ipAddress: string, dto: SwitchCompanyDto): Promise<{ accessToken: string; refreshToken: string }> {
+  async switchCompany(
+    userId: string,
+    ipAddress: string,
+    dto: SwitchCompanyDto
+  ): Promise<{ user: AuthenticatedUser; accessToken: string; refreshToken: string }> {
     const user = await this.userService.findById(userId);
     if (!user || !user.isVerified) {
       throw new InvalidSessionError();
@@ -221,7 +237,8 @@ export class AuthService {
       throw new CompanyMembershipNotFoundError({ membershipId: dto.membershipId });
     }
 
-    const newAccessToken = this.jwtService.generateAccessToken(this.buildAccessTokenPayload(user, active));
+    const userPayload = this.buildAccessTokenPayload(user, active);
+    const newAccessToken = this.jwtService.generateAccessToken(userPayload);
     const newRefreshToken = this.jwtService.generateRefreshToken({ id: user.id });
 
     const refreshTokenHash = await this.encryptionService.hashToken(newRefreshToken);
@@ -237,7 +254,7 @@ export class AuthService {
     await this.sessionRepo.deleteByUserId(user.id);
     await this.sessionRepo.create(session);
 
-    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+    return { user: userPayload, accessToken: newAccessToken, refreshToken: newRefreshToken };
   }
 
   async forgotPassword(dto: ForgotPasswordDto): Promise<void> {

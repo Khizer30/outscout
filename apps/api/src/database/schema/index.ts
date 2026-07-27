@@ -5,6 +5,7 @@ export * from "@schema/companyInvitation";
 export * from "@schema/companyMembership";
 export * from "@schema/companyMessageRules";
 export * from "@schema/companyMessageRulesHistory";
+export * from "@schema/leads";
 export * from "@schema/sessions";
 export * from "@schema/users";
 export * from "@schema/verifications";

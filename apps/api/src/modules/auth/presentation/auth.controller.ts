@@ -52,7 +52,7 @@ export class AuthController {
   @Post("login")
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto, @Ip() ip: string, @Res({ passthrough: true }) res: Response): Promise<LoginResponseDto> {
-    const { accessToken, refreshToken } = await this.authService.login(dto, ip);
+    const { user, accessToken, refreshToken } = await this.authService.login(dto, ip);
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: this.isProduction,
@@ -62,7 +62,7 @@ export class AuthController {
       path: "/"
     });
 
-    return { data: { accessToken } };
+    return { data: { user, accessToken } };
   }
 
   @Get("refresh")
@@ -74,7 +74,7 @@ export class AuthController {
     }
 
     try {
-      const { accessToken, refreshToken: newRefreshToken } = await this.authService.refresh(token, ip);
+      const { user, accessToken, refreshToken: newRefreshToken } = await this.authService.refresh(token, ip);
 
       res.cookie("refreshToken", newRefreshToken, {
         httpOnly: this.isProduction,
@@ -84,7 +84,7 @@ export class AuthController {
         path: "/"
       });
 
-      return { data: { accessToken } };
+      return { data: { user, accessToken } };
     } catch (err) {
       res.clearCookie("refreshToken", { path: "/" });
       throw err;
@@ -119,7 +119,7 @@ export class AuthController {
     @Ip() ip: string,
     @Res({ passthrough: true }) res: Response
   ): Promise<SwitchCompanyResponseDto> {
-    const { accessToken, refreshToken: newRefreshToken } = await this.authService.switchCompany(user.id, ip, dto);
+    const { user: updatedUser, accessToken, refreshToken: newRefreshToken } = await this.authService.switchCompany(user.id, ip, dto);
 
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: this.isProduction,
@@ -129,7 +129,7 @@ export class AuthController {
       path: "/"
     });
 
-    return { data: { accessToken } };
+    return { data: { user: updatedUser, accessToken } };
   }
 
   @Delete("me")

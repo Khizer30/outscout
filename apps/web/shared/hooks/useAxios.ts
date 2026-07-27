@@ -1,4 +1,5 @@
-﻿import { api as authApi } from "@shared/lib/axios";
+import type { RefreshResponseDto } from "@repo/dtos/auth";
+import { api as authApi } from "@shared/lib/axios";
 import { useAuthStore } from "@shared/stores/authStore";
 import axios, { AxiosHeaders, type AxiosError, type InternalAxiosRequestConfig } from "axios";
 
@@ -33,11 +34,11 @@ const useAxios = () => {
         originalRequest._retry = true;
 
         try {
-          const { data } = await authApi.get<{ accessToken: string }>("/auth/refresh");
-          const { user, setCredentials } = useAuthStore.getState();
-          setCredentials(user, data.accessToken);
+          const { data: resBody } = await authApi.get<RefreshResponseDto>("/auth/refresh");
+          const { setCredentials } = useAuthStore.getState();
+          setCredentials(resBody.data.user, resBody.data.accessToken);
 
-          originalRequest.headers.set("Authorization", `Bearer ${data.accessToken}`);
+          originalRequest.headers.set("Authorization", `Bearer ${resBody.data.accessToken}`);
           return api(originalRequest);
         } catch {
           useAuthStore.getState().logout();

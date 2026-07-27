@@ -24,8 +24,7 @@ export class CompanyService {
     const company = CompanyEntity.create({
       name: data.name,
       about: data.about,
-      companyImageURL: data.companyImageURL,
-      companyImagePublicId: data.companyImageURL ? this.mediaService.urlToPublicId(data.companyImageURL) : null
+      companyImageURL: data.companyImageURL
     });
 
     const membership = CompanyMembershipEntity.create({
@@ -52,21 +51,19 @@ export class CompanyService {
       throw new CompanyNotFoundError({ id });
     }
 
-    const oldPublicId = company.companyImagePublicId;
+    const previousUrl = company.companyImageURL;
 
-    const companyImagePublicId =
-      data.companyImageURL !== undefined ? (data.companyImageURL ? this.mediaService.urlToPublicId(data.companyImageURL) : null) : undefined;
-
-    const updatedCompany = company.update({ ...data, companyImagePublicId });
+    const updatedCompany = company.update(data);
     const saved = await this.companyRepo.update(updatedCompany);
 
     if (!saved) {
       throw new CompanyUpdateConflictError({ id });
     }
 
-    if (data.companyImageURL !== undefined && oldPublicId && oldPublicId !== companyImagePublicId) {
+    if (data.companyImageURL && previousUrl && previousUrl !== saved.companyImageURL) {
       try {
-        await this.mediaService.deleteImageByPublicId(oldPublicId);
+        const publicId = this.mediaService.urlToPublicId(previousUrl);
+        await this.mediaService.deleteImageByPublicId(publicId);
       } catch (error) {
         this.logger.error("Failed to delete old company image", error);
       }

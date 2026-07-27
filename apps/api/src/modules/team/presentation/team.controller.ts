@@ -4,6 +4,7 @@ import { User } from "@middleware/user.decorator";
 import { InvitationMapper } from "@modules/team/infrastructure/invitation.mapper";
 import { TeamService } from "@modules/team/services/team.service";
 import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, HttpStatus, Param, Post, UseGuards } from "@nestjs/common";
+import { IdDto } from "@repo/dtos/common";
 import {
   AcceptMyInvitationResponseDto,
   InvitationEmailResponseDto,
@@ -50,7 +51,7 @@ export class TeamController {
   @Delete("invitations/:id")
   @UseGuards(AuthGuard)
   @Roles(["COMPANY_ADMIN"])
-  async revoke(@User() user: AuthenticatedUser, @Param("id") id: string): Promise<RevokeInvitationResponseDto> {
+  async revoke(@User() user: AuthenticatedUser, @Param() { id }: IdDto): Promise<RevokeInvitationResponseDto> {
     if (!user.companyId) {
       throw new ForbiddenException("You do not belong to a company");
     }
@@ -61,7 +62,7 @@ export class TeamController {
   }
 
   @Get("invitations/:id/email")
-  async getEmail(@Param("id") id: string): Promise<InvitationEmailResponseDto> {
+  async getEmail(@Param() { id }: IdDto): Promise<InvitationEmailResponseDto> {
     const email = await this.teamService.getInvitationEmail(id);
 
     return { data: { email } };
@@ -77,7 +78,7 @@ export class TeamController {
 
   @Post("invitations/:id/accept")
   @UseGuards(AuthGuard)
-  async acceptMine(@User() user: AuthenticatedUser, @Param("id") id: string): Promise<AcceptMyInvitationResponseDto> {
+  async acceptMine(@User() user: AuthenticatedUser, @Param() { id }: IdDto): Promise<AcceptMyInvitationResponseDto> {
     const { invitation } = await this.teamService.acceptInvitationById(id, user.id);
 
     return { data: InvitationMapper.toResponse(invitation) };
@@ -85,7 +86,7 @@ export class TeamController {
 
   @Post("invitations/:id/reject")
   @UseGuards(AuthGuard)
-  async rejectMine(@User() user: AuthenticatedUser, @Param("id") id: string): Promise<RejectInvitationResponseDto> {
+  async rejectMine(@User() user: AuthenticatedUser, @Param() { id }: IdDto): Promise<RejectInvitationResponseDto> {
     await this.teamService.rejectInvitationById(id, user.id);
 
     return { message: "Invitation rejected successfully" };

@@ -1,13 +1,16 @@
 import { DatabaseModule } from "@database/database.module";
 import { LoggerMiddleware } from "@middleware/logger.middleware";
+import { AiModule } from "@modules/ai/ai.module";
 import { AuthModule } from "@modules/auth/auth.module";
 import { CompanyModule } from "@modules/company/company.module";
 import { EncryptionModule } from "@modules/encryption/encryption.module";
 import { JWTModule } from "@modules/jwt/jwt.module";
+import { LeadModule } from "@modules/lead/lead.module";
 import { MailModule } from "@modules/mail/mail.module";
 import { MediaModule } from "@modules/media/media.module";
 import { TeamModule } from "@modules/team/team.module";
 import { UserModule } from "@modules/user/user.module";
+import { WebScrapingModule } from "@modules/webScraping/webScraping.module";
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
@@ -30,10 +33,13 @@ import { AppController } from "@src/app.controller";
     DatabaseModule,
     MailModule,
     MediaModule,
+    AuthModule,
     UserModule,
     CompanyModule,
     TeamModule,
-    AuthModule
+    LeadModule,
+    WebScrapingModule,
+    AiModule
   ],
   controllers: [AppController],
   providers: [
