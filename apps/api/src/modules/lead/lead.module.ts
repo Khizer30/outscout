@@ -8,10 +8,11 @@ import { LeadSourceGooglePlacesRepository } from "@modules/lead/infrastructure/l
 import { LeadController } from "@modules/lead/presentation/lead.controller";
 import { LeadService } from "@modules/lead/services/lead.service";
 import { WebScrapingModule } from "@modules/webScraping/webScraping.module";
+import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";
 
 @Module({
-  imports: [DatabaseModule, JWTModule, WebScrapingModule, AiModule],
+  imports: [DatabaseModule, JWTModule, WebScrapingModule, AiModule, BullModule.registerQueue({ name: "webScraper" })],
   controllers: [LeadController],
   providers: [
     LeadService,

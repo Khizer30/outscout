@@ -6,7 +6,9 @@ import { LeadSocialLinks, LeadStatus, UpdateLeadProps } from "@modules/lead/doma
 import { LeadSourceRepository } from "@modules/lead/domain/leadSource.repository";
 import { LeadSourceSearchParams } from "@modules/lead/domain/leadSource.types";
 import { WebScrapingService } from "@modules/webScraping/services/webScraping.service";
+import { InjectQueue } from "@nestjs/bullmq";
 import { Injectable, Logger } from "@nestjs/common";
+import { Queue } from "bullmq";
 
 @Injectable()
 export class LeadService {
@@ -16,7 +18,8 @@ export class LeadService {
     private readonly leadRepo: LeadRepository,
     private readonly leadSourceRepo: LeadSourceRepository,
     private readonly webScrapingService: WebScrapingService,
-    private readonly aiService: AiService
+    private readonly aiService: AiService,
+    @InjectQueue("webScraper") private readonly webScraperQueue: Queue
   ) {}
 
   async generate(companyId: string, params: LeadSourceSearchParams): Promise<LeadEntity[]> {
@@ -26,6 +29,7 @@ export class LeadService {
       LeadEntity.create({
         id: result.placeId,
         companyId,
+        status: "ENRICHING",
         name: result.name,
         address: result.address,
         latitude: result.latitude,
@@ -41,17 +45,11 @@ export class LeadService {
       })
     );
 
-    // Log Websites Markdown
-    for (const lead of leads) {
-      if (lead.website) {
-        const scraped = await this.webScrapingService.scrape(lead.website);
-        if (scraped) {
-          this.logger.log(`Scraped ${lead.website}:\n${scraped}`);
-        }
-      }
-    }
+    const created = await this.leadRepo.createMany(leads);
 
-    return this.leadRepo.createMany(leads);
+    await this.webScraperQueue.addBulk(created.map((lead) => ({ name: "processLead", data: { leadId: lead.id, companyId } })));
+
+    return created;
   }
 
   async findById(id: string, companyId: string): Promise<LeadEntity> {
