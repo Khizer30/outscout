@@ -1,7 +1,7 @@
 import { LeadEntity } from "@modules/lead/domain/lead.entity";
 import { LeadAccessDeniedError, LeadNotFoundError } from "@modules/lead/domain/lead.errors";
 import { LeadRepository } from "@modules/lead/domain/lead.repository";
-import { LeadStatus } from "@modules/lead/domain/lead.types";
+import { LeadStatus, UpdateLeadProps } from "@modules/lead/domain/lead.types";
 import { LeadSourceRepository } from "@modules/lead/domain/leadSource.repository";
 import { LeadSourceSearchParams } from "@modules/lead/domain/leadSource.types";
 import { WebScrapingService } from "@modules/webScraping/services/webScraping.service";
@@ -73,10 +73,10 @@ export class LeadService {
     return this.leadRepo.findByCompany(companyId, filters, pagination);
   }
 
-  async updateStatus(id: string, companyId: string, status: LeadStatus): Promise<LeadEntity> {
+  async update(id: string, companyId: string, props: UpdateLeadProps): Promise<LeadEntity> {
     const lead = await this.findById(id, companyId);
 
-    const updated = await this.leadRepo.update(lead.update({ status }));
+    const updated = await this.leadRepo.update(lead.update(props));
     if (!updated) {
       throw new LeadNotFoundError({ id });
     }

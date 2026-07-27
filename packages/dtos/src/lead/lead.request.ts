@@ -5,6 +5,17 @@ export const LeadStatusSchema = z.enum(["ENRICHING", "READY", "CONTACTED", "INTE
 
 export const LeadTypeSchema = z.enum(["RESTAURANT", "HOTEL", "HOSPITAL", "DENTAL_CLINIC", "REAL_ESTATE_AGENCY", "ACCOUNTING", "GYM", "BEAUTY_SALON"]);
 
+export const LeadSocialLinksSchema = z.object({
+  instagram: z.string().optional(),
+  facebook: z.string().optional(),
+  twitter: z.string().optional(),
+  linkedin: z.string().optional(),
+  tiktok: z.string().optional(),
+  youtube: z.string().optional(),
+  whatsapp: z.string().optional(),
+  otherLinks: z.array(z.string())
+});
+
 // Generate Leads
 export const GenerateLeadsSchema = z.object({
   latitude: z.number().min(-90).max(90),
@@ -25,9 +36,15 @@ export const GetLeadsSchema = z.object({
 
 export class GetLeadsDto extends createZodDto(GetLeadsSchema) {}
 
-// Update Lead Status
-export const UpdateLeadStatusSchema = z.object({
-  status: LeadStatusSchema
+// Update Lead
+export const UpdateLeadSchema = z.object({
+  status: LeadStatusSchema.optional(),
+  name: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  emails: z.array(z.string()).optional(),
+  otherPhones: z.array(z.string()).optional(),
+  socialLinks: LeadSocialLinksSchema.optional()
 });
 
-export class UpdateLeadStatusDto extends createZodDto(UpdateLeadStatusSchema) {}
+export class UpdateLeadDto extends createZodDto(UpdateLeadSchema) {}

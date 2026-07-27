@@ -3,14 +3,15 @@ import { User } from "@middleware/user.decorator";
 import { LeadMapper } from "@modules/lead/infrastructure/lead.mapper";
 import { LeadService } from "@modules/lead/services/lead.service";
 import { Body, Controller, ForbiddenException, Get, HttpCode, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { IdDto } from "@repo/dtos/common";
 import {
   GenerateLeadsDto,
   GenerateLeadsResponseDto,
   GetLeadResponseDto,
   GetLeadsDto,
   GetLeadsResponseDto,
-  UpdateLeadStatusDto,
-  UpdateLeadStatusResponseDto
+  UpdateLeadDto,
+  UpdateLeadResponseDto
 } from "@repo/dtos/lead";
 
 @Controller("lead")
@@ -55,7 +56,7 @@ export class LeadController {
 
   @Get(":id")
   @UseGuards(AuthGuard)
-  async getLead(@User() user: AuthenticatedUser, @Param("id") id: string): Promise<GetLeadResponseDto> {
+  async getLead(@User() user: AuthenticatedUser, @Param() { id }: IdDto): Promise<GetLeadResponseDto> {
     const companyId = user.companyId;
     if (!companyId) {
       throw new ForbiddenException("You do not belong to a company");
@@ -66,15 +67,15 @@ export class LeadController {
     return { data: LeadMapper.toResponse(lead) };
   }
 
-  @Patch(":id/status")
+  @Patch(":id")
   @UseGuards(AuthGuard)
-  async updateStatus(@User() user: AuthenticatedUser, @Param("id") id: string, @Body() dto: UpdateLeadStatusDto): Promise<UpdateLeadStatusResponseDto> {
+  async update(@User() user: AuthenticatedUser, @Param() { id }: IdDto, @Body() dto: UpdateLeadDto): Promise<UpdateLeadResponseDto> {
     const companyId = user.companyId;
     if (!companyId) {
       throw new ForbiddenException("You do not belong to a company");
     }
 
-    const updated = await this.leadService.updateStatus(id, companyId, dto.status);
+    const updated = await this.leadService.update(id, companyId, dto);
 
     return { data: LeadMapper.toResponse(updated) };
   }
