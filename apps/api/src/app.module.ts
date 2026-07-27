@@ -1,5 +1,6 @@
 import { DatabaseModule } from "@database/database.module";
 import { LoggerMiddleware } from "@middleware/logger.middleware";
+import { AiModule } from "@modules/ai/ai.module";
 import { AuthModule } from "@modules/auth/auth.module";
 import { CompanyModule } from "@modules/company/company.module";
 import { EncryptionModule } from "@modules/encryption/encryption.module";
@@ -37,7 +38,8 @@ import { AppController } from "@src/app.controller";
     CompanyModule,
     TeamModule,
     LeadModule,
-    WebScrapingModule
+    WebScrapingModule,
+    AiModule
   ],
   controllers: [AppController],
   providers: [
