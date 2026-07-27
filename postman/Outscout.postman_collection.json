@@ -980,6 +980,133 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Lead",
+      "item": [
+        {
+          "name": "Generate Leads",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"latitude\": 33.4929479,\r\n    \"longitude\": 73.0997494,\r\n    \"radius\": 2000,\r\n    \"serviceType\": \"RESTAURANT\",\r\n    // \"serviceType\": \"HOTEL\",\r\n    // \"serviceType\": \"HOSPITAL\",\r\n    // \"serviceType\": \"DENTAL_CLINIC\",\r\n    // \"serviceType\": \"REAL_ESTATE_AGENCY\",\r\n    // \"serviceType\": \"ACCOUNTING\",\r\n    // \"serviceType\": \"GYM\",\r\n    // \"serviceType\": \"BEAUTY_SALON\",\r\n    \"limit\": 5\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/lead/generate",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "generate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Company's Leads",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": [\r\n        \"ENRICHING\",\r\n        \"READY\",\r\n        \"CONTACTED\",\r\n        \"INTERESTED\",\r\n        \"UNRESPONSIVE\",\r\n        \"REJECTED\"\r\n    ],\r\n    \"page\": 1,\r\n    \"limit\": 20\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/lead/search",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "search"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lead By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/lead/{{leadId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "{{leadId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Lead",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"ENRICHING\",\r\n    // \"status\": \"READY\",\r\n    // \"status\": \"CONTACTED\",\r\n    // \"status\": \"INTERESTED\",\r\n    // \"status\": \"UNRESPONSIVE\",\r\n    // \"status\": \"REJECTED\",\r\n    \"name\": \"Google\",\r\n    \"description\": \"A nice place to work\",\r\n    \"phone\": \"+92 123 1234567\",\r\n    \"emails\": [\r\n        \"google@gmail.com\"\r\n    ],\r\n    \"otherPhones\": [\r\n        \"+92 321 1234567\"\r\n    ],\r\n    \"socialLinks\": {\r\n        \"instagram\": \"\",\r\n        \"facebook\": \"\",\r\n        \"twitter\": \"\",\r\n        \"linkedin\": \"\",\r\n        \"tiktok\": \"\",\r\n        \"youtube\": \"\",\r\n        \"whatsapp\": \"\",\r\n        \"otherLinks\": []\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/lead/{{leadId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "{{leadId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Process Lead",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/lead/process-lead/{{leadId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "process-lead",
+                "{{leadId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AI",
+      "item": []
     }
   ],
   "auth": {
@@ -1079,6 +1206,10 @@
     },
     {
       "key": "invitationToken",
+      "value": ""
+    },
+    {
+      "key": "leadId",
       "value": ""
     }
   ]
