@@ -22,7 +22,7 @@
         "JWT_REFRESH_EXPIRE_TIME",
         "DATABASE_URL",
         "GOOGLE_PLACES_API_KEY",
-        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
         "BREVO_SENDER_NAME",
         "BREVO_SENDER_EMAIL",
         "BREVO_API_KEY",

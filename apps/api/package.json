@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "@getbrevo/brevo": "^6.0.2",
+    "@langchain/core": "^1.2.3",
+    "@langchain/google": "^0.2.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
