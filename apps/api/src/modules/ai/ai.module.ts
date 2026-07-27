@@ -1,5 +1,5 @@
 import { AiRepository } from "@modules/ai/domain/ai.repository";
-import { AiGeminiRepository } from "@modules/ai/infrastructure/aiGemini.repository";
+import { AiGoogleRepository } from "@modules/ai/infrastructure/aiGoogle.repository";
 import { AiController } from "@modules/ai/presentation/ai.controller";
 import { AiService } from "@modules/ai/services/ai.service";
 import { JWTModule } from "@modules/jwt/jwt.module";
@@ -13,7 +13,7 @@ import { Module } from "@nestjs/common";
     AiService,
     {
       provide: AiRepository,
-      useClass: AiGeminiRepository
+      useClass: AiGoogleRepository
     }
   ],
   exports: [AiService, AiRepository]
