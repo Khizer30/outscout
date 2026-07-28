@@ -2,7 +2,8 @@ import { AuthGuard } from "@middleware/auth.guard";
 import { User } from "@middleware/user.decorator";
 import { LeadMapper } from "@modules/lead/infrastructure/lead.mapper";
 import { LeadService } from "@modules/lead/services/lead.service";
-import { Body, Controller, ForbiddenException, Get, HttpCode, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, ForbiddenException, Get, HttpCode, MessageEvent, Param, Patch, Post, Sse, UseGuards } from "@nestjs/common";
+import { RedisService } from "@redis/services/redis.service";
 import { IdDto } from "@repo/dtos/common";
 import {
   GenerateLeadsDto,
@@ -14,10 +15,33 @@ import {
   UpdateLeadDto,
   UpdateLeadResponseDto
 } from "@repo/dtos/lead";
+import { Observable } from "rxjs";
 
 @Controller("lead")
 export class LeadController {
-  constructor(private readonly leadService: LeadService) {}
+  constructor(
+    private readonly leadService: LeadService,
+    private readonly redisService: RedisService
+  ) {}
+
+  @Sse("stream")
+  @UseGuards(AuthGuard)
+  stream(@User() user: AuthenticatedUser): Observable<MessageEvent> {
+    const companyId = user.companyId;
+    if (!companyId) {
+      throw new ForbiddenException("You do not belong to a company");
+    }
+
+    return new Observable<MessageEvent>((subscriber) => {
+      const client = this.redisService.subscribe(`leads:${companyId}`, (message) => {
+        subscriber.next({ data: JSON.parse(message) });
+      });
+
+      return () => {
+        client.disconnect();
+      };
+    });
+  }
 
   @Post("generate")
   @UseGuards(AuthGuard)

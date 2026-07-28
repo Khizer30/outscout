@@ -3,6 +3,7 @@ import { LeadProcessor } from "@modules/lead/presentation/lead.processor";
 import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { RedisModule } from "@redis/redis.module";
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
     BullModule.registerQueue({
       name: "webScraper"
     }),
+    RedisModule,
     LeadModule
   ],
   providers: [LeadProcessor]

@@ -9,9 +9,10 @@ import { MapModule } from "@modules/map/map.module";
 import { WebScrapingModule } from "@modules/webScraping/webScraping.module";
 import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";
+import { RedisModule } from "@redis/redis.module";
 
 @Module({
-  imports: [DatabaseModule, JWTModule, WebScrapingModule, AiModule, MapModule, BullModule.registerQueue({ name: "webScraper" })],
+  imports: [DatabaseModule, JWTModule, WebScrapingModule, AiModule, MapModule, RedisModule, BullModule.registerQueue({ name: "webScraper" })],
   controllers: [LeadController],
   providers: [
     LeadService,
