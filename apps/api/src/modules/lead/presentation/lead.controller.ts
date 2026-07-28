@@ -2,17 +2,14 @@ import { AuthGuard } from "@middleware/auth.guard";
 import { User } from "@middleware/user.decorator";
 import { LeadMapper } from "@modules/lead/infrastructure/lead.mapper";
 import { LeadService } from "@modules/lead/services/lead.service";
-import { Body, Controller, ForbiddenException, Get, HttpCode, NotFoundException, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, ForbiddenException, Get, HttpCode, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { IdDto } from "@repo/dtos/common";
 import {
-  AutocompleteLeadsDto,
-  AutocompleteLeadsResponseDto,
   GenerateLeadsDto,
   GenerateLeadsResponseDto,
   GetLeadResponseDto,
   GetLeadsDto,
   GetLeadsResponseDto,
-  GetPlaceDetailsResponseDto,
   ProcessLeadResponseDto,
   UpdateLeadDto,
   UpdateLeadResponseDto
@@ -21,32 +18,6 @@ import {
 @Controller("lead")
 export class LeadController {
   constructor(private readonly leadService: LeadService) {}
-
-  @Post("autocomplete")
-  @HttpCode(200)
-  @UseGuards(AuthGuard)
-  async autocomplete(@Body() dto: AutocompleteLeadsDto): Promise<AutocompleteLeadsResponseDto> {
-    const results = await this.leadService.autocomplete({
-      query: dto.query,
-      latitude: dto.latitude,
-      longitude: dto.longitude,
-      radiusMeters: dto.radius,
-      types: dto.types
-    });
-
-    return { data: results };
-  }
-
-  @Get("place/:id")
-  @UseGuards(AuthGuard)
-  async getPlaceDetails(@Param() { id }: IdDto): Promise<GetPlaceDetailsResponseDto> {
-    const details = await this.leadService.getPlaceDetails(id);
-    if (!details) {
-      throw new NotFoundException(`Place not found: ${id}`);
-    }
-
-    return { data: details };
-  }
 
   @Post("generate")
   @UseGuards(AuthGuard)

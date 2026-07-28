@@ -28,21 +28,6 @@ export const LeadResponseSchema = z.object({
 
 export class LeadResponseDto extends createZodDto(LeadResponseSchema) {}
 
-// Autocomplete Leads
-export const AutocompletePredictionSchema = z.object({
-  placeId: z.string(),
-  text: z.string(),
-  mainText: z.string(),
-  secondaryText: z.string(),
-  types: z.array(z.string())
-});
-
-export const AutocompleteLeadsResponseSchema = z.object({
-  data: z.array(AutocompletePredictionSchema)
-});
-
-export class AutocompleteLeadsResponseDto extends createZodDto(AutocompleteLeadsResponseSchema) {}
-
 // Generate Leads
 export const GenerateLeadsResponseSchema = z.object({
   data: z.array(LeadResponseSchema)
@@ -83,25 +68,3 @@ export const ProcessLeadResponseSchema = z.object({
 });
 
 export class ProcessLeadResponseDto extends createZodDto(ProcessLeadResponseSchema) {}
-
-// Place Details
-export const PlaceDetailsSchema = z.object({
-  placeId: z.string(),
-  name: z.string().nullable(),
-  address: z.string().nullable(),
-  latitude: z.number().nullable(),
-  longitude: z.number().nullable(),
-  phone: z.string().nullable(),
-  website: z.string().nullable(),
-  businessStatus: z.string().nullable(),
-  rating: z.number().nullable(),
-  userRatingCount: z.number().nullable(),
-  primaryType: LeadTypeSchema.nullable(),
-  types: z.array(LeadTypeSchema)
-});
-
-export const GetPlaceDetailsResponseSchema = z.object({
-  data: PlaceDetailsSchema
-});
-
-export class GetPlaceDetailsResponseDto extends createZodDto(GetPlaceDetailsResponseSchema) {}

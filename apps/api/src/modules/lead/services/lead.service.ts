@@ -3,13 +3,8 @@ import { LeadEntity } from "@modules/lead/domain/lead.entity";
 import { LeadAccessDeniedError, LeadNotEnrichingError, LeadNotFoundError, LeadWebsiteMissingError } from "@modules/lead/domain/lead.errors";
 import { LeadRepository } from "@modules/lead/domain/lead.repository";
 import { LeadSocialLinks, LeadStatus, UpdateLeadProps } from "@modules/lead/domain/lead.types";
-import { LeadSourceRepository } from "@modules/lead/domain/leadSource.repository";
-import {
-  LeadSourceAutocompleteParams,
-  LeadSourceAutocompleteResult,
-  LeadSourcePlaceDetailsResult,
-  LeadSourceSearchParams
-} from "@modules/lead/domain/leadSource.types";
+import { MapSearchParams } from "@modules/map/domain/mapPlace.types";
+import { MapService } from "@modules/map/services/map.service";
 import { WebScrapingService } from "@modules/webScraping/services/webScraping.service";
 import { InjectQueue } from "@nestjs/bullmq";
 import { Injectable, Logger } from "@nestjs/common";
@@ -21,22 +16,14 @@ export class LeadService {
 
   constructor(
     private readonly leadRepo: LeadRepository,
-    private readonly leadSourceRepo: LeadSourceRepository,
+    private readonly mapService: MapService,
     private readonly webScrapingService: WebScrapingService,
     private readonly aiService: AiService,
     @InjectQueue("webScraper") private readonly webScraperQueue: Queue
   ) {}
 
-  async autocomplete(params: LeadSourceAutocompleteParams): Promise<LeadSourceAutocompleteResult[]> {
-    return this.leadSourceRepo.autocomplete(params);
-  }
-
-  async getPlaceDetails(placeId: string): Promise<LeadSourcePlaceDetailsResult | null> {
-    return this.leadSourceRepo.getPlaceDetails(placeId);
-  }
-
-  async generate(companyId: string, params: LeadSourceSearchParams): Promise<LeadEntity[]> {
-    const results = await this.leadSourceRepo.searchNearby(params);
+  async generate(companyId: string, params: MapSearchParams): Promise<LeadEntity[]> {
+    const results = await this.mapService.searchNearby(params);
 
     const leads = results.map((result) =>
       LeadEntity.create({
