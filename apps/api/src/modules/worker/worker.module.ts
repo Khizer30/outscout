@@ -1,3 +1,5 @@
+import { LeadModule } from "@modules/lead/lead.module";
+import { LeadProcessor } from "@modules/lead/presentation/lead.processor";
 import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
@@ -22,7 +24,9 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
     }),
     BullModule.registerQueue({
       name: "webScraper"
-    })
-  ]
+    }),
+    LeadModule
+  ],
+  providers: [LeadProcessor]
 })
 export class WorkerModule {}

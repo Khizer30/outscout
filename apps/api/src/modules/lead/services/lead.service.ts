@@ -1,6 +1,6 @@
 import { AiService } from "@modules/ai/services/ai.service";
 import { LeadEntity } from "@modules/lead/domain/lead.entity";
-import { LeadAccessDeniedError, LeadNotEnrichingError, LeadNotFoundError, LeadWebsiteMissingError } from "@modules/lead/domain/lead.errors";
+import { LeadAccessDeniedError, LeadNotEnrichingError, LeadNotFoundError } from "@modules/lead/domain/lead.errors";
 import { LeadRepository } from "@modules/lead/domain/lead.repository";
 import { LeadSocialLinks, LeadStatus, UpdateLeadProps } from "@modules/lead/domain/lead.types";
 import { MapSearchParams } from "@modules/map/domain/mapPlace.types";
@@ -91,13 +91,9 @@ export class LeadService {
       throw new LeadNotEnrichingError({ id, status: lead.status });
     }
 
-    if (!lead.website) {
-      throw new LeadWebsiteMissingError({ id });
-    }
-
-    const content = await this.webScrapingService.scrape(lead.website);
+    const content = lead.website ? await this.webScrapingService.scrape(lead.website) : undefined;
     if (!content) {
-      throw new LeadWebsiteMissingError({ id, website: lead.website, reason: "Failed to scrape website" });
+      return this.update(id, companyId, { status: "READY" });
     }
 
     const contactInfo = await this.aiService.extractBusinessInfo(content);
