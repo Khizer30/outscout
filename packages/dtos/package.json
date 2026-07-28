@@ -28,6 +28,10 @@
       "types": "./dist/team/index.d.ts",
       "default": "./dist/team/index.js"
     },
+    "./map": {
+      "types": "./dist/map/index.d.ts",
+      "default": "./dist/map/index.js"
+    },
     "./lead": {
       "types": "./dist/lead/index.d.ts",
       "default": "./dist/lead/index.js"

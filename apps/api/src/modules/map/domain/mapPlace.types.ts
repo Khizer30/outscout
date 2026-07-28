@@ -1,6 +1,22 @@
 import { LeadType } from "@modules/lead/domain/lead.types";
 
-export interface LeadSourceSearchParams {
+export interface MapAutocompleteParams {
+  query: string;
+  latitude?: number;
+  longitude?: number;
+  radiusMeters?: number;
+  types?: LeadType[];
+}
+
+export interface MapAutocompleteResult {
+  placeId: string;
+  text: string;
+  mainText: string;
+  secondaryText: string;
+  types: string[];
+}
+
+export interface MapSearchParams {
   latitude: number;
   longitude: number;
   radiusMeters: number;
@@ -8,7 +24,7 @@ export interface LeadSourceSearchParams {
   limit: number;
 }
 
-export interface LeadSourceResult {
+export interface MapPlaceResult {
   placeId: string;
   name: string | null;
   address: string | null;

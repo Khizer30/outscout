@@ -1,9 +1,7 @@
 import { CompanyEntity } from "@modules/company/domain/company.entity";
 import { CompanyNotFoundError } from "@modules/company/domain/company.errors";
 import { CompanyRepository } from "@modules/company/domain/company.repository";
-import { CompanyEmailSettingsRepository } from "@modules/company/domain/companyEmailSettings.repository";
 import { CompanyMembershipEntity } from "@modules/company/domain/companyMembership.entity";
-import { EncryptionService } from "@modules/encryption/services/encryption.service";
 import { JWTService } from "@modules/jwt/services/jwt.service";
 import { MailService } from "@modules/mail/services/mail.service";
 import { CompanyInvitationEntity } from "@modules/team/domain/invitation.entity";
@@ -25,16 +23,18 @@ import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class TeamService {
+  private readonly frontendUrl: string;
+
   constructor(
     private readonly invitationRepo: InvitationRepository,
     private readonly companyRepo: CompanyRepository,
-    private readonly companyEmailSettingsRepo: CompanyEmailSettingsRepository,
     private readonly userService: UserService,
     private readonly mailService: MailService,
     private readonly jwtService: JWTService,
-    private readonly encryptionService: EncryptionService,
     private readonly configService: ConfigService
-  ) {}
+  ) {
+    this.frontendUrl = this.configService.getOrThrow<string>("FRONTEND_URL");
+  }
 
   async inviteUser(companyId: string, invitedByUserId: string, email: string): Promise<CompanyInvitationEntity> {
     const company = await this.companyRepo.findById(companyId);
@@ -219,19 +219,8 @@ export class TeamService {
   }
 
   private async sendInvitationEmail(company: CompanyEntity, invitation: CompanyInvitationEntity, isExistingUser: boolean): Promise<void> {
-    const frontendUrl = this.configService.getOrThrow<string>("FRONTEND_URL");
-    const acceptUrl = isExistingUser ? null : `${frontendUrl}/auth/signup?token=${invitation.token}`;
+    const acceptUrl = isExistingUser ? null : `${this.frontendUrl}/auth/signup?token=${invitation.token}`;
 
-    const settings = await this.companyEmailSettingsRepo.findByCompanyId(company.id);
-    const decryptedApiKey = settings?.brevoApiKeyCipher ? this.encryptionService.decrypt(settings.brevoApiKeyCipher) : null;
-
-    await this.mailService.sendInvitationEmail(invitation.email, acceptUrl, {
-      decryptedApiKey,
-      fromEmail: settings?.fromEmail,
-      companyName: company.name,
-      primaryColor: settings?.primaryColor,
-      secondaryColor: settings?.secondaryColor,
-      companyImageURL: company.companyImageURL
-    });
+    await this.mailService.sendInvitationEmail(invitation.email, acceptUrl, company.name);
   }
 }

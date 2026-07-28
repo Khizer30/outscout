@@ -6,22 +6,6 @@ import { ConfigService } from "@nestjs/config";
 import { AgentMiddleware, createAgent, modelCallLimitMiddleware, modelRetryMiddleware, piiMiddleware } from "langchain";
 import { z } from "zod";
 
-// Structured output schema for the Gemini extraction call
-const ContactInfoSchema = z.object({
-  description: z.string().nullable(),
-  emails: z.array(z.string()),
-  phones: z.array(z.string()),
-  location: z.string().nullable(),
-  instagram: z.string().nullable(),
-  facebook: z.string().nullable(),
-  twitter: z.string().nullable(),
-  linkedin: z.string().nullable(),
-  tiktok: z.string().nullable(),
-  youtube: z.string().nullable(),
-  whatsapp: z.string().nullable(),
-  other: z.array(z.string())
-});
-
 @Injectable()
 export class AiGoogleRepository extends AiRepository {
   private readonly logger = new Logger(AiGoogleRepository.name);
@@ -43,6 +27,22 @@ export class AiGoogleRepository extends AiRepository {
   async extractBusinessInfo(content: string): Promise<ContactInfo> {
     const systemInstructions =
       "You are a business and contact information extractor. Extract a concise description of the business, emails, phone numbers, location/address, and social media profile links from website content. Return only what is explicitly present — never fabricate data.";
+
+    // Structured output schema for the Gemini extraction call
+    const ContactInfoSchema = z.object({
+      description: z.string().nullable(),
+      emails: z.array(z.string()),
+      phones: z.array(z.string()),
+      location: z.string().nullable(),
+      instagram: z.string().nullable(),
+      facebook: z.string().nullable(),
+      twitter: z.string().nullable(),
+      linkedin: z.string().nullable(),
+      tiktok: z.string().nullable(),
+      youtube: z.string().nullable(),
+      whatsapp: z.string().nullable(),
+      other: z.array(z.string())
+    });
 
     const userMessage = `
       Extract business description, contact and social media information from the following website content (markdown with links in [label](url) format, followed by a deduplicated list of all page hrefs — including icon-only links not visible in the markdown).

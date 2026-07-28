@@ -1,12 +1,14 @@
 import { AiService } from "@modules/ai/services/ai.service";
 import { LeadEntity } from "@modules/lead/domain/lead.entity";
-import { LeadAccessDeniedError, LeadNotEnrichingError, LeadNotFoundError, LeadWebsiteMissingError } from "@modules/lead/domain/lead.errors";
+import { LeadAccessDeniedError, LeadNotEnrichingError, LeadNotFoundError } from "@modules/lead/domain/lead.errors";
 import { LeadRepository } from "@modules/lead/domain/lead.repository";
 import { LeadSocialLinks, LeadStatus, UpdateLeadProps } from "@modules/lead/domain/lead.types";
-import { LeadSourceRepository } from "@modules/lead/domain/leadSource.repository";
-import { LeadSourceSearchParams } from "@modules/lead/domain/leadSource.types";
+import { MapSearchParams } from "@modules/map/domain/mapPlace.types";
+import { MapService } from "@modules/map/services/map.service";
 import { WebScrapingService } from "@modules/webScraping/services/webScraping.service";
+import { InjectQueue } from "@nestjs/bullmq";
 import { Injectable, Logger } from "@nestjs/common";
+import { Queue } from "bullmq";
 
 @Injectable()
 export class LeadService {
@@ -14,18 +16,20 @@ export class LeadService {
 
   constructor(
     private readonly leadRepo: LeadRepository,
-    private readonly leadSourceRepo: LeadSourceRepository,
+    private readonly mapService: MapService,
     private readonly webScrapingService: WebScrapingService,
-    private readonly aiService: AiService
+    private readonly aiService: AiService,
+    @InjectQueue("webScraper") private readonly webScraperQueue: Queue
   ) {}
 
-  async generate(companyId: string, params: LeadSourceSearchParams): Promise<LeadEntity[]> {
-    const results = await this.leadSourceRepo.searchNearby(params);
+  async generate(companyId: string, params: MapSearchParams): Promise<LeadEntity[]> {
+    const results = await this.mapService.searchNearby(params);
 
     const leads = results.map((result) =>
       LeadEntity.create({
         id: result.placeId,
         companyId,
+        status: "ENRICHING",
         name: result.name,
         address: result.address,
         latitude: result.latitude,
@@ -41,17 +45,11 @@ export class LeadService {
       })
     );
 
-    // Log Websites Markdown
-    for (const lead of leads) {
-      if (lead.website) {
-        const scraped = await this.webScrapingService.scrape(lead.website);
-        if (scraped) {
-          this.logger.log(`Scraped ${lead.website}:\n${scraped}`);
-        }
-      }
-    }
+    const created = await this.leadRepo.createMany(leads);
 
-    return this.leadRepo.createMany(leads);
+    await this.webScraperQueue.addBulk(created.map((lead) => ({ name: "processLead", data: { leadId: lead.id, companyId } })));
+
+    return created;
   }
 
   async findById(id: string, companyId: string): Promise<LeadEntity> {
@@ -93,13 +91,9 @@ export class LeadService {
       throw new LeadNotEnrichingError({ id, status: lead.status });
     }
 
-    if (!lead.website) {
-      throw new LeadWebsiteMissingError({ id });
-    }
-
-    const content = await this.webScrapingService.scrape(lead.website);
+    const content = lead.website ? await this.webScrapingService.scrape(lead.website) : undefined;
     if (!content) {
-      throw new LeadWebsiteMissingError({ id, website: lead.website, reason: "Failed to scrape website" });
+      return this.update(id, companyId, { status: "READY" });
     }
 
     const contactInfo = await this.aiService.extractBusinessInfo(content);

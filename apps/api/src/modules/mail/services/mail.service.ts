@@ -1,5 +1,4 @@
 import { MailRepository } from "@modules/mail/domain/mail.repository";
-import type { CompanyMailConfig } from "@modules/mail/domain/mail.types";
 import { OutscoutBranding } from "@modules/mail/domain/mail.value-objects";
 import generateInvitationEmail from "@modules/mail/templates/invitation.html";
 import generateInvitationText from "@modules/mail/templates/invitation.text";
@@ -45,26 +44,16 @@ export class MailService {
     });
   }
 
-  async sendInvitationEmail(to: string, acceptUrl: string | null, companyConfig: CompanyMailConfig): Promise<void> {
-    const primaryColor = companyConfig.primaryColor ?? OutscoutBranding.PRIMARY_COLOR;
-    const secondaryColor = companyConfig.secondaryColor ?? OutscoutBranding.SECONDARY_COLOR;
-    const companyImage = companyConfig.companyImageURL ?? OutscoutBranding.LOGO_URL;
-
-    const subject = `You've been invited to join ${companyConfig.companyName} on Outscout`;
-    const textContent = generateInvitationText({ companyName: companyConfig.companyName, acceptUrl });
-    const htmlContent = generateInvitationEmail({ companyName: companyConfig.companyName, acceptUrl, companyImage, primaryColor, secondaryColor });
-
-    if (companyConfig.decryptedApiKey && companyConfig.fromEmail) {
-      await this.sender.sendWith(
-        {
-          apiKey: companyConfig.decryptedApiKey,
-          senderEmail: companyConfig.fromEmail,
-          senderName: companyConfig.companyName
-        },
-        { to, subject, textContent, htmlContent }
-      );
-      return;
-    }
+  async sendInvitationEmail(to: string, acceptUrl: string | null, companyName: string): Promise<void> {
+    const subject = `You've been invited to join ${companyName} on Outscout`;
+    const textContent = generateInvitationText({ companyName, acceptUrl });
+    const htmlContent = generateInvitationEmail({
+      companyName,
+      acceptUrl,
+      companyImage: OutscoutBranding.LOGO_URL,
+      primaryColor: OutscoutBranding.PRIMARY_COLOR,
+      secondaryColor: OutscoutBranding.SECONDARY_COLOR
+    });
 
     await this.sender.send({ to, subject, textContent, htmlContent });
   }

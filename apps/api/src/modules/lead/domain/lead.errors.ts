@@ -17,9 +17,3 @@ export class LeadNotEnrichingError extends AppError {
     super("LEAD_NOT_ENRICHING", "Lead must be in ENRICHING status to be processed by AI", details, 409);
   }
 }
-
-export class LeadWebsiteMissingError extends AppError {
-  constructor(details?: Record<string, unknown>) {
-    super("LEAD_WEBSITE_MISSING", "Lead has no website to extract business info from", details, 422);
-  }
-}

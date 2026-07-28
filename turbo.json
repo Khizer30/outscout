@@ -29,7 +29,11 @@
         "BREVO_API_KEY",
         "CLOUDINARY_CLOUD",
         "CLOUDINARY_API_KEY",
-        "CLOUDINARY_API_SECRET"
+        "CLOUDINARY_API_SECRET",
+        "REDIS_HOST",
+        "REDIS_PORT",
+        "REDIS_USERNAME",
+        "REDIS_PASSWORD"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", "drizzle/**"]
