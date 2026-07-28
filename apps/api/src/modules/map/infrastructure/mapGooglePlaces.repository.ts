@@ -1,12 +1,6 @@
 import { LEAD_TYPES, LeadType } from "@modules/lead/domain/lead.types";
-import { LeadSourceRepository } from "@modules/lead/domain/leadSource.repository";
-import {
-  LeadSourceAutocompleteParams,
-  LeadSourceAutocompleteResult,
-  LeadSourcePlaceDetailsResult,
-  LeadSourceResult,
-  LeadSourceSearchParams
-} from "@modules/lead/domain/leadSource.types";
+import { MapPlaceRepository } from "@modules/map/domain/mapPlace.repository";
+import { MapAutocompleteParams, MapAutocompleteResult, MapPlaceResult, MapSearchParams } from "@modules/map/domain/mapPlace.types";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
@@ -45,29 +39,9 @@ interface GoogleNearbySearchResponse {
   places?: GooglePlace[];
 }
 
-const FIELD_MASK = [
-  "places.id",
-  "places.displayName",
-  "places.formattedAddress",
-  "places.location",
-  "places.nationalPhoneNumber",
-  "places.internationalPhoneNumber",
-  "places.websiteUri",
-  "places.types",
-  "places.primaryType",
-  "places.businessStatus",
-  "places.rating",
-  "places.userRatingCount"
-].join(",");
-
-function toLeadType(googleType: string): LeadType | null {
-  const candidate = googleType.toUpperCase();
-  return (LEAD_TYPES as readonly string[]).includes(candidate) ? (candidate as LeadType) : null;
-}
-
 @Injectable()
-export class LeadSourceGooglePlacesRepository extends LeadSourceRepository {
-  private readonly logger = new Logger(LeadSourceGooglePlacesRepository.name);
+export class MapGooglePlacesRepository extends MapPlaceRepository {
+  private readonly logger = new Logger(MapGooglePlacesRepository.name);
   private readonly apiKey: string;
 
   constructor(config: ConfigService) {
@@ -75,7 +49,22 @@ export class LeadSourceGooglePlacesRepository extends LeadSourceRepository {
     this.apiKey = config.getOrThrow<string>("GOOGLE_PLACES_API_KEY");
   }
 
-  async searchNearby(params: LeadSourceSearchParams): Promise<LeadSourceResult[]> {
+  async searchNearby(params: MapSearchParams): Promise<MapPlaceResult[]> {
+    const fieldMask = [
+      "places.id",
+      "places.displayName",
+      "places.formattedAddress",
+      "places.location",
+      "places.nationalPhoneNumber",
+      "places.internationalPhoneNumber",
+      "places.websiteUri",
+      "places.types",
+      "places.primaryType",
+      "places.businessStatus",
+      "places.rating",
+      "places.userRatingCount"
+    ].join(",");
+
     const body = {
       includedTypes: [params.serviceType.toLowerCase()],
       maxResultCount: params.limit,
@@ -92,7 +81,7 @@ export class LeadSourceGooglePlacesRepository extends LeadSourceRepository {
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": this.apiKey,
-        "X-Goog-FieldMask": FIELD_MASK
+        "X-Goog-FieldMask": fieldMask
       },
       body: JSON.stringify(body)
     });
@@ -105,10 +94,10 @@ export class LeadSourceGooglePlacesRepository extends LeadSourceRepository {
 
     const data: GoogleNearbySearchResponse = await response.json();
 
-    return (data.places ?? []).map((place) => this.toLeadSourceResult(place));
+    return (data.places ?? []).map((place) => this.toMapPlaceResult(place));
   }
 
-  async autocomplete(params: LeadSourceAutocompleteParams): Promise<LeadSourceAutocompleteResult[]> {
+  async autocomplete(params: MapAutocompleteParams): Promise<MapAutocompleteResult[]> {
     const body: Record<string, unknown> = {
       input: params.query
     };
@@ -158,7 +147,7 @@ export class LeadSourceGooglePlacesRepository extends LeadSourceRepository {
       }));
   }
 
-  async getPlaceDetails(placeId: string): Promise<LeadSourcePlaceDetailsResult | null> {
+  async getPlaceDetails(placeId: string): Promise<MapPlaceResult | null> {
     const fieldMask = [
       "id",
       "displayName",
@@ -194,12 +183,17 @@ export class LeadSourceGooglePlacesRepository extends LeadSourceRepository {
 
     const place: GooglePlace = await response.json();
 
-    return this.toLeadSourceResult(place);
+    return this.toMapPlaceResult(place);
   }
 
-  private toLeadSourceResult(place: GooglePlace): LeadSourceResult {
-    const types = (place.types ?? []).map(toLeadType).filter((type): type is LeadType => type !== null);
-    const primaryType = place.primaryType ? toLeadType(place.primaryType) : null;
+  private toLeadType(googleType: string): LeadType | null {
+    const candidate = googleType.toUpperCase();
+    return (LEAD_TYPES as readonly string[]).includes(candidate) ? (candidate as LeadType) : null;
+  }
+
+  private toMapPlaceResult(place: GooglePlace): MapPlaceResult {
+    const types = (place.types ?? []).map(this.toLeadType).filter((type): type is LeadType => type !== null);
+    const primaryType = place.primaryType ? this.toLeadType(place.primaryType) : null;
 
     return {
       placeId: place.id,

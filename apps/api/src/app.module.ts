@@ -7,6 +7,7 @@ import { EncryptionModule } from "@modules/encryption/encryption.module";
 import { JWTModule } from "@modules/jwt/jwt.module";
 import { LeadModule } from "@modules/lead/lead.module";
 import { MailModule } from "@modules/mail/mail.module";
+import { MapModule } from "@modules/map/map.module";
 import { MediaModule } from "@modules/media/media.module";
 import { TeamModule } from "@modules/team/team.module";
 import { UserModule } from "@modules/user/user.module";
@@ -53,6 +54,7 @@ import { AppController } from "@src/app.controller";
     UserModule,
     CompanyModule,
     TeamModule,
+    MapModule,
     LeadModule,
     WebScrapingModule,
     AiModule
