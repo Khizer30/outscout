@@ -1,6 +1,12 @@
 import { LEAD_TYPES, LeadType } from "@modules/lead/domain/lead.types";
 import { LeadSourceRepository } from "@modules/lead/domain/leadSource.repository";
-import { LeadSourceAutocompleteParams, LeadSourceAutocompleteResult, LeadSourceResult, LeadSourceSearchParams } from "@modules/lead/domain/leadSource.types";
+import {
+  LeadSourceAutocompleteParams,
+  LeadSourceAutocompleteResult,
+  LeadSourcePlaceDetailsResult,
+  LeadSourceResult,
+  LeadSourceSearchParams
+} from "@modules/lead/domain/leadSource.types";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
@@ -150,6 +156,45 @@ export class LeadSourceGooglePlacesRepository extends LeadSourceRepository {
         secondaryText: p.structuredFormat?.secondaryText?.text ?? "",
         types: p.types ?? []
       }));
+  }
+
+  async getPlaceDetails(placeId: string): Promise<LeadSourcePlaceDetailsResult | null> {
+    const fieldMask = [
+      "id",
+      "displayName",
+      "formattedAddress",
+      "location",
+      "nationalPhoneNumber",
+      "internationalPhoneNumber",
+      "websiteUri",
+      "types",
+      "primaryType",
+      "businessStatus",
+      "rating",
+      "userRatingCount"
+    ].join(",");
+
+    const response = await fetch(`https://places.googleapis.com/v1/places/${placeId}`, {
+      method: "GET",
+      headers: {
+        "X-Goog-Api-Key": this.apiKey,
+        "X-Goog-FieldMask": fieldMask
+      }
+    });
+
+    if (response.status === 404) {
+      return null;
+    }
+
+    if (!response.ok) {
+      const error = await response.text();
+      this.logger.error(`Google Place Details API error ${response.status}: ${error}`);
+      throw new Error(`Google Place Details API error ${response.status}`);
+    }
+
+    const place: GooglePlace = await response.json();
+
+    return this.toLeadSourceResult(place);
   }
 
   private toLeadSourceResult(place: GooglePlace): LeadSourceResult {

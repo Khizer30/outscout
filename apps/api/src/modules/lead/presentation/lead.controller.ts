@@ -2,7 +2,7 @@ import { AuthGuard } from "@middleware/auth.guard";
 import { User } from "@middleware/user.decorator";
 import { LeadMapper } from "@modules/lead/infrastructure/lead.mapper";
 import { LeadService } from "@modules/lead/services/lead.service";
-import { Body, Controller, ForbiddenException, Get, HttpCode, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, ForbiddenException, Get, HttpCode, NotFoundException, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { IdDto } from "@repo/dtos/common";
 import {
   AutocompleteLeadsDto,
@@ -12,6 +12,7 @@ import {
   GetLeadResponseDto,
   GetLeadsDto,
   GetLeadsResponseDto,
+  GetPlaceDetailsResponseDto,
   ProcessLeadResponseDto,
   UpdateLeadDto,
   UpdateLeadResponseDto
@@ -34,6 +35,17 @@ export class LeadController {
     });
 
     return { data: results };
+  }
+
+  @Get("place/:id")
+  @UseGuards(AuthGuard)
+  async getPlaceDetails(@Param() { id }: IdDto): Promise<GetPlaceDetailsResponseDto> {
+    const details = await this.leadService.getPlaceDetails(id);
+    if (!details) {
+      throw new NotFoundException(`Place not found: ${id}`);
+    }
+
+    return { data: details };
   }
 
   @Post("generate")

@@ -39,3 +39,18 @@ export interface LeadSourceResult {
   types: LeadType[];
   otherPhones: string[];
 }
+
+export interface LeadSourcePlaceDetailsResult {
+  placeId: string;
+  name: string | null;
+  address: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  phone: string | null;
+  website: string | null;
+  businessStatus: string | null;
+  rating: number | null;
+  userRatingCount: number | null;
+  primaryType: LeadType | null;
+  types: LeadType[];
+}
