@@ -1,3 +1,4 @@
+import { LeadMapper } from "@modules/lead/infrastructure/lead.mapper";
 import { LeadService } from "@modules/lead/services/lead.service";
 import { Processor, WorkerHost } from "@nestjs/bullmq";
 import { Logger } from "@nestjs/common";
@@ -31,6 +32,6 @@ export class LeadProcessor extends WorkerHost {
 
     const lead = await this.leadService.processLead(leadId, companyId);
 
-    await this.redisService.publish(`leads:${companyId}`, JSON.stringify({ jobId: job.id, leadId: lead.id, status: lead.status }));
+    await this.redisService.publish(`leads:${companyId}`, JSON.stringify({ jobId: job.id, data: LeadMapper.toResponse(lead) }));
   }
 }
