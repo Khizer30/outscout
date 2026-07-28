@@ -4,7 +4,7 @@ import { LeadAccessDeniedError, LeadNotEnrichingError, LeadNotFoundError, LeadWe
 import { LeadRepository } from "@modules/lead/domain/lead.repository";
 import { LeadSocialLinks, LeadStatus, UpdateLeadProps } from "@modules/lead/domain/lead.types";
 import { LeadSourceRepository } from "@modules/lead/domain/leadSource.repository";
-import { LeadSourceSearchParams } from "@modules/lead/domain/leadSource.types";
+import { LeadSourceAutocompleteParams, LeadSourceAutocompleteResult, LeadSourceSearchParams } from "@modules/lead/domain/leadSource.types";
 import { WebScrapingService } from "@modules/webScraping/services/webScraping.service";
 import { InjectQueue } from "@nestjs/bullmq";
 import { Injectable, Logger } from "@nestjs/common";
@@ -21,6 +21,10 @@ export class LeadService {
     private readonly aiService: AiService,
     @InjectQueue("webScraper") private readonly webScraperQueue: Queue
   ) {}
+
+  async autocomplete(params: LeadSourceAutocompleteParams): Promise<LeadSourceAutocompleteResult[]> {
+    return this.leadSourceRepo.autocomplete(params);
+  }
 
   async generate(companyId: string, params: LeadSourceSearchParams): Promise<LeadEntity[]> {
     const results = await this.leadSourceRepo.searchNearby(params);

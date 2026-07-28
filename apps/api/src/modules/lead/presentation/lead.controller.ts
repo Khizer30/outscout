@@ -5,6 +5,8 @@ import { LeadService } from "@modules/lead/services/lead.service";
 import { Body, Controller, ForbiddenException, Get, HttpCode, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { IdDto } from "@repo/dtos/common";
 import {
+  AutocompleteLeadsDto,
+  AutocompleteLeadsResponseDto,
   GenerateLeadsDto,
   GenerateLeadsResponseDto,
   GetLeadResponseDto,
@@ -18,6 +20,21 @@ import {
 @Controller("lead")
 export class LeadController {
   constructor(private readonly leadService: LeadService) {}
+
+  @Post("autocomplete")
+  @HttpCode(200)
+  @UseGuards(AuthGuard)
+  async autocomplete(@Body() dto: AutocompleteLeadsDto): Promise<AutocompleteLeadsResponseDto> {
+    const results = await this.leadService.autocomplete({
+      query: dto.query,
+      latitude: dto.latitude,
+      longitude: dto.longitude,
+      radiusMeters: dto.radius,
+      types: dto.types
+    });
+
+    return { data: results };
+  }
 
   @Post("generate")
   @UseGuards(AuthGuard)

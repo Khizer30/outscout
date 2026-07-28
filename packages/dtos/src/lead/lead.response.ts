@@ -28,6 +28,21 @@ export const LeadResponseSchema = z.object({
 
 export class LeadResponseDto extends createZodDto(LeadResponseSchema) {}
 
+// Autocomplete Leads
+export const AutocompletePredictionSchema = z.object({
+  placeId: z.string(),
+  text: z.string(),
+  mainText: z.string(),
+  secondaryText: z.string(),
+  types: z.array(z.string())
+});
+
+export const AutocompleteLeadsResponseSchema = z.object({
+  data: z.array(AutocompletePredictionSchema)
+});
+
+export class AutocompleteLeadsResponseDto extends createZodDto(AutocompleteLeadsResponseSchema) {}
+
 // Generate Leads
 export const GenerateLeadsResponseSchema = z.object({
   data: z.array(LeadResponseSchema)

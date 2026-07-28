@@ -1,5 +1,21 @@
 import { LeadType } from "@modules/lead/domain/lead.types";
 
+export interface LeadSourceAutocompleteParams {
+  query: string;
+  latitude?: number;
+  longitude?: number;
+  radiusMeters?: number;
+  types?: LeadType[];
+}
+
+export interface LeadSourceAutocompleteResult {
+  placeId: string;
+  text: string;
+  mainText: string;
+  secondaryText: string;
+  types: string[];
+}
+
 export interface LeadSourceSearchParams {
   latitude: number;
   longitude: number;

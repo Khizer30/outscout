@@ -1,8 +1,24 @@
 import { LEAD_TYPES, LeadType } from "@modules/lead/domain/lead.types";
 import { LeadSourceRepository } from "@modules/lead/domain/leadSource.repository";
-import { LeadSourceResult, LeadSourceSearchParams } from "@modules/lead/domain/leadSource.types";
+import { LeadSourceAutocompleteParams, LeadSourceAutocompleteResult, LeadSourceResult, LeadSourceSearchParams } from "@modules/lead/domain/leadSource.types";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+
+interface GoogleAutocompleteSuggestion {
+  placePrediction?: {
+    placeId: string;
+    text?: { text: string };
+    structuredFormat?: {
+      mainText?: { text: string };
+      secondaryText?: { text: string };
+    };
+    types?: string[];
+  };
+}
+
+interface GoogleAutocompleteResponse {
+  suggestions?: GoogleAutocompleteSuggestion[];
+}
 
 interface GooglePlace {
   id: string;
@@ -84,6 +100,56 @@ export class LeadSourceGooglePlacesRepository extends LeadSourceRepository {
     const data: GoogleNearbySearchResponse = await response.json();
 
     return (data.places ?? []).map((place) => this.toLeadSourceResult(place));
+  }
+
+  async autocomplete(params: LeadSourceAutocompleteParams): Promise<LeadSourceAutocompleteResult[]> {
+    const body: Record<string, unknown> = {
+      input: params.query
+    };
+
+    if (params.latitude !== undefined && params.longitude !== undefined) {
+      body.locationBias = {
+        circle: {
+          center: {
+            latitude: params.latitude,
+            longitude: params.longitude
+          },
+          radius: params.radiusMeters ?? 5000
+        }
+      };
+    }
+
+    if (params.types && params.types.length > 0) {
+      body.includedPrimaryTypes = params.types.map((t) => t.toLowerCase());
+    }
+
+    const response = await fetch("https://places.googleapis.com/v1/places:autocomplete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": this.apiKey
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      this.logger.error(`Google Places Autocomplete API error ${response.status}: ${error}`);
+      throw new Error(`Google Places Autocomplete API error ${response.status}`);
+    }
+
+    const data: GoogleAutocompleteResponse = await response.json();
+
+    return (data.suggestions ?? [])
+      .map((s) => s.placePrediction)
+      .filter((p): p is NonNullable<typeof p> => Boolean(p))
+      .map((p) => ({
+        placeId: p.placeId,
+        text: p.text?.text ?? "",
+        mainText: p.structuredFormat?.mainText?.text ?? "",
+        secondaryText: p.structuredFormat?.secondaryText?.text ?? "",
+        types: p.types ?? []
+      }));
   }
 
   private toLeadSourceResult(place: GooglePlace): LeadSourceResult {
