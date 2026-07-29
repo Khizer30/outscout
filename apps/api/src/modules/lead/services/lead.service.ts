@@ -1,3 +1,5 @@
+import { MessageChannel } from "@modules/ai/domain/ai.types";
+import { AiGeneratedMessageEntity } from "@modules/ai/domain/aiGeneratedMessage.entity";
 import { AiService } from "@modules/ai/services/ai.service";
 import { LeadEntity } from "@modules/lead/domain/lead.entity";
 import { LeadAccessDeniedError, LeadNotEnrichingError, LeadNotFoundError } from "@modules/lead/domain/lead.errors";
@@ -9,8 +11,6 @@ import { WebScrapingService } from "@modules/webScraping/services/webScraping.se
 import { InjectQueue } from "@nestjs/bullmq";
 import { Injectable, Logger } from "@nestjs/common";
 import { Queue } from "bullmq";
-import { AiGeneratedMessageEntity } from "@modules/ai/domain/aiGeneratedMessage.entity";
-import { MessageChannel } from "@modules/ai/domain/ai.types";
 
 @Injectable()
 export class LeadService {

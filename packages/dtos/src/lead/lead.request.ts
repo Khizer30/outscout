@@ -48,3 +48,12 @@ export const UpdateLeadSchema = z.object({
 });
 
 export class UpdateLeadDto extends createZodDto(UpdateLeadSchema) {}
+
+// Generate Outreach Message
+export const MessageChannelSchema = z.enum(["WHATSAPP", "EMAIL"]);
+
+export const GenerateOutreachMessageQuerySchema = z.object({
+  channel: MessageChannelSchema
+});
+
+export class GenerateOutreachMessageQueryDto extends createZodDto(GenerateOutreachMessageQuerySchema) {}
