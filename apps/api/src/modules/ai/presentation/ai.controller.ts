@@ -21,8 +21,9 @@ export class AiController {
       throw new ForbiddenException("You do not belong to a company");
     }
 
-    const generated = await this.aiService.generateOutreachMessage(id, companyId, query.channel);
+    const generated = await this.aiService.generateOutreachMessage(id, companyId, query.channel, user.id);
+    const { channel, ...data } = generated.data;
 
-    return { data: { leadId: id, ...generated } };
+    return { data: { id: generated.id, leadId: generated.leadId, channel, data } };
   }
 }

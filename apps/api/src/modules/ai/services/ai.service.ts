@@ -1,6 +1,8 @@
 import { AiGenerationFailedError } from "@modules/ai/domain/ai.errors";
 import { AiRepository } from "@modules/ai/domain/ai.repository";
-import { ContactInfo, GeneratedMessage, MessageChannel } from "@modules/ai/domain/ai.types";
+import { ContactInfo, MessageChannel } from "@modules/ai/domain/ai.types";
+import { AiGeneratedMessageEntity } from "@modules/ai/domain/aiGeneratedMessage.entity";
+import { AiGeneratedMessageRepository } from "@modules/ai/domain/aiGeneratedMessage.repository";
 import { CompanyNotFoundError } from "@modules/company/domain/company.errors";
 import { CompanyService } from "@modules/company/services/company.service";
 import { CompanyMessageRulesService } from "@modules/company/services/companyMessageRules.service";
@@ -16,7 +18,8 @@ export class AiService {
     private readonly aiRepo: AiRepository,
     private readonly leadRepo: LeadRepository,
     private readonly companyService: CompanyService,
-    private readonly companyMessageRulesService: CompanyMessageRulesService
+    private readonly companyMessageRulesService: CompanyMessageRulesService,
+    private readonly aiGeneratedMessageRepo: AiGeneratedMessageRepository
   ) {}
 
   async extractBusinessInfo(content: string): Promise<ContactInfo> {
@@ -28,7 +31,7 @@ export class AiService {
     }
   }
 
-  async generateOutreachMessage(leadId: string, companyId: string, channel: MessageChannel): Promise<GeneratedMessage> {
+  async generateOutreachMessage(leadId: string, companyId: string, channel: MessageChannel, userId: string): Promise<AiGeneratedMessageEntity> {
     const lead = await this.leadRepo.findById(leadId);
     if (!lead) {
       throw new LeadNotFoundError({ id: leadId });
@@ -46,7 +49,7 @@ export class AiService {
     const messageRules = await this.companyMessageRulesService.findByCompanyAndChannel(companyId, channel);
 
     try {
-      return await this.aiRepo.generateOutreachMessage({
+      const generated = await this.aiRepo.generateOutreachMessage({
         channel,
         lead: {
           name: lead.name,
@@ -64,6 +67,17 @@ export class AiService {
         company: { about: company.about },
         messageRules: { rules: messageRules?.rules ?? null, greeting: messageRules?.greeting ?? null }
       });
+
+      const entity = AiGeneratedMessageEntity.create({
+        leadId,
+        companyId,
+        companyMessageRulesId: messageRules?.id ?? null,
+        companyMessageRulesVersion: messageRules?.version ?? null,
+        data: generated,
+        createdBy: userId
+      });
+
+      return await this.aiGeneratedMessageRepo.create(entity);
     } catch (error) {
       this.logger.error(`Failed to generate outreach message: ${error instanceof Error ? error.message : String(error)}`);
       throw new AiGenerationFailedError();

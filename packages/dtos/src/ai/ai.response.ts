@@ -1,10 +1,9 @@
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
+import { MessageChannelSchema } from "./ai.request.js";
 
 // Generate Outreach Message
 export const GeneratedWhatsAppMessageSchema = z.object({
-  leadId: z.string(),
-  channel: z.literal("WHATSAPP"),
   greetings: z.string(),
   opening: z.string(),
   body: z.string(),
@@ -12,8 +11,6 @@ export const GeneratedWhatsAppMessageSchema = z.object({
 });
 
 export const GeneratedEmailMessageSchema = z.object({
-  leadId: z.string(),
-  channel: z.literal("EMAIL"),
   subject: z.string(),
   opening: z.string(),
   body: z.string(),
@@ -22,7 +19,12 @@ export const GeneratedEmailMessageSchema = z.object({
 });
 
 export const GenerateOutreachMessageResponseSchema = z.object({
-  data: z.discriminatedUnion("channel", [GeneratedWhatsAppMessageSchema, GeneratedEmailMessageSchema])
+  data: z.object({
+    id: z.string(),
+    leadId: z.string(),
+    channel: MessageChannelSchema,
+    data: z.union([GeneratedWhatsAppMessageSchema, GeneratedEmailMessageSchema])
+  })
 });
 
 export class GenerateOutreachMessageResponseDto extends createZodDto(GenerateOutreachMessageResponseSchema) {}
