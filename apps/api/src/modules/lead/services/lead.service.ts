@@ -9,6 +9,8 @@ import { WebScrapingService } from "@modules/webScraping/services/webScraping.se
 import { InjectQueue } from "@nestjs/bullmq";
 import { Injectable, Logger } from "@nestjs/common";
 import { Queue } from "bullmq";
+import { AiGeneratedMessageEntity } from "@modules/ai/domain/aiGeneratedMessage.entity";
+import { MessageChannel } from "@modules/ai/domain/ai.types";
 
 @Injectable()
 export class LeadService {
@@ -82,6 +84,11 @@ export class LeadService {
     }
 
     return updated;
+  }
+
+  async generateOutreachMessage(leadId: string, companyId: string, channel: MessageChannel, userId: string): Promise<AiGeneratedMessageEntity> {
+    const lead = await this.findById(leadId, companyId);
+    return this.aiService.generateOutreachMessage(lead, companyId, channel, userId);
   }
 
   async processLead(id: string, companyId: string): Promise<LeadEntity> {

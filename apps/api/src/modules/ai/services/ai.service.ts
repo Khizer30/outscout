@@ -6,8 +6,7 @@ import { AiGeneratedMessageRepository } from "@modules/ai/domain/aiGeneratedMess
 import { CompanyNotFoundError } from "@modules/company/domain/company.errors";
 import { CompanyService } from "@modules/company/services/company.service";
 import { CompanyMessageRulesService } from "@modules/company/services/companyMessageRules.service";
-import { LeadAccessDeniedError, LeadNotFoundError } from "@modules/lead/domain/lead.errors";
-import { LeadRepository } from "@modules/lead/domain/lead.repository";
+import { LeadEntity } from "@modules/lead/domain/lead.entity";
 import { Injectable, Logger } from "@nestjs/common";
 
 @Injectable()
@@ -16,7 +15,6 @@ export class AiService {
 
   constructor(
     private readonly aiRepo: AiRepository,
-    private readonly leadRepo: LeadRepository,
     private readonly companyService: CompanyService,
     private readonly companyMessageRulesService: CompanyMessageRulesService,
     private readonly aiGeneratedMessageRepo: AiGeneratedMessageRepository
@@ -31,16 +29,7 @@ export class AiService {
     }
   }
 
-  async generateOutreachMessage(leadId: string, companyId: string, channel: MessageChannel, userId: string): Promise<AiGeneratedMessageEntity> {
-    const lead = await this.leadRepo.findById(leadId);
-    if (!lead) {
-      throw new LeadNotFoundError({ id: leadId });
-    }
-
-    if (lead.companyId !== companyId) {
-      throw new LeadAccessDeniedError({ id: leadId });
-    }
-
+  async generateOutreachMessage(lead: LeadEntity, companyId: string, channel: MessageChannel, userId: string): Promise<AiGeneratedMessageEntity> {
     const company = await this.companyService.findById(companyId);
     if (!company) {
       throw new CompanyNotFoundError({ id: companyId });
@@ -69,7 +58,7 @@ export class AiService {
       });
 
       const entity = AiGeneratedMessageEntity.create({
-        leadId,
+        leadId: lead.id,
         companyId,
         companyMessageRulesId: messageRules?.id ?? null,
         companyMessageRulesVersion: messageRules?.version ?? null,

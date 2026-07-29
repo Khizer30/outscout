@@ -2,8 +2,9 @@ import { AuthGuard } from "@middleware/auth.guard";
 import { User } from "@middleware/user.decorator";
 import { LeadMapper } from "@modules/lead/infrastructure/lead.mapper";
 import { LeadService } from "@modules/lead/services/lead.service";
-import { Body, Controller, ForbiddenException, Get, HttpCode, MessageEvent, Param, Patch, Post, Sse, UseGuards } from "@nestjs/common";
+import { Body, Controller, ForbiddenException, Get, HttpCode, MessageEvent, Param, Patch, Post, Query, Sse, UseGuards } from "@nestjs/common";
 import { RedisService } from "@redis/services/redis.service";
+import { GenerateOutreachMessageQueryDto, GenerateOutreachMessageResponseDto } from "@repo/dtos/ai";
 import { IdDto } from "@repo/dtos/common";
 import {
   GenerateLeadsDto,
@@ -103,6 +104,24 @@ export class LeadController {
     const updated = await this.leadService.update(id, companyId, dto);
 
     return { data: LeadMapper.toResponse(updated) };
+  }
+
+  @Get(":id/outreach-message")
+  @UseGuards(AuthGuard)
+  async generateOutreachMessage(
+    @User() user: AuthenticatedUser,
+    @Param() { id }: IdDto,
+    @Query() query: GenerateOutreachMessageQueryDto
+  ): Promise<GenerateOutreachMessageResponseDto> {
+    const companyId = user.companyId;
+    if (!companyId) {
+      throw new ForbiddenException("You do not belong to a company");
+    }
+
+    const generated = await this.leadService.generateOutreachMessage(id, companyId, query.channel, user.id);
+    const { channel, ...data } = generated.data;
+
+    return { data: { id: generated.id, leadId: generated.leadId, channel, data } };
   }
 
   @Post("process-lead/:id")
