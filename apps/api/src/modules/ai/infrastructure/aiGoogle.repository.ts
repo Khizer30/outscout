@@ -1,6 +1,6 @@
 import { ChatGoogle } from "@langchain/google";
 import { AiRepository } from "@modules/ai/domain/ai.repository";
-import { ContactInfo } from "@modules/ai/domain/ai.types";
+import { ContactInfo, GenerateOutreachMessageInput, GeneratedEmailMessage, GeneratedMessage, GeneratedWhatsAppMessage } from "@modules/ai/domain/ai.types";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AgentMiddleware, createAgent, modelCallLimitMiddleware, modelRetryMiddleware, piiMiddleware } from "langchain";
@@ -67,6 +67,152 @@ export class AiGoogleRepository extends AiRepository {
     } catch (error) {
       this.logger.error(`Gemini contact extraction failed: ${error instanceof Error ? error.message : String(error)}`);
       throw new Error("Failed to extract contact info via Gemini", { cause: error });
+    }
+  }
+
+  async generateOutreachMessage(input: GenerateOutreachMessageInput): Promise<GeneratedMessage> {
+    const about = input.company.about ?? "We help local businesses build a strong online presence, reach more customers, and grow their revenue.";
+
+    const socialLinks = Object.entries({
+      Instagram: input.lead.socialLinks.instagram,
+      Facebook: input.lead.socialLinks.facebook,
+      Twitter: input.lead.socialLinks.twitter,
+      LinkedIn: input.lead.socialLinks.linkedin,
+      TikTok: input.lead.socialLinks.tiktok,
+      YouTube: input.lead.socialLinks.youtube,
+      WhatsApp: input.lead.socialLinks.whatsapp
+    })
+      .filter(([, url]) => !!url)
+      .map(([label, url]) => `${label}: ${url}`)
+      .concat(input.lead.socialLinks.otherLinks)
+      .join(", ");
+
+    const userMessage = `
+      Generate the outreach message for this business:
+
+      - Name: ${input.lead.name ?? "Unknown"}
+      - Description: ${input.lead.description ?? "Unknown"}
+      - Type: ${input.lead.primaryType ?? "Unknown"}
+      - Address: ${input.lead.address ?? "Unknown"}
+      - Phone: ${input.lead.phone ?? "Unknown"}
+      - Email: ${input.lead.emails[0] ?? "Not available"}
+      - Website: ${input.lead.website ?? "No website"}
+      - Business status: ${input.lead.businessStatus ?? "Unknown"}
+      - Rating: ${input.lead.rating ?? "Unknown"} (${input.lead.userRatingCount ?? 0} reviews)
+      - Social media: ${socialLinks || "None"}
+    `;
+
+    if (input.channel === "EMAIL") {
+      return this.generateEmailMessage(input, about, userMessage);
+    }
+
+    return this.generateWhatsAppMessage(input, about, userMessage);
+  }
+
+  private async generateWhatsAppMessage(input: GenerateOutreachMessageInput, about: string, userMessage: string): Promise<GeneratedWhatsAppMessage> {
+    const greeting = input.messageRules.greeting ?? "Hello";
+    const rules =
+      input.messageRules.rules ??
+      `
+      - Start with the greeting: "${greeting}, <BUSINESS_NAME>"
+      - Address the business by name
+      - Keep it under 150 words
+      - Sound human, warm, and professional; not salesy or spammy
+      - Mention one specific benefit relevant to their business type
+      - End with a soft call-to-action (e.g. asking if they are open to a quick chat right now)
+      - Do NOT use emojis
+      - Do NOT include any subject line or label, just the message body
+      - Do NOT mention Google Map ratings
+    `;
+
+    const systemInstructions = `
+      You are an expert cold outreach copywriter for a digital marketing agency.
+
+      Your job is to write a short, friendly, personalised WhatsApp message to a business owner.
+
+      RULES
+      ${rules}
+
+      ABOUT OUR BUSINESS
+      ${about}
+    `;
+
+    const WhatsAppMessageSchema = z.object({
+      greetings: z.string().describe("The opening greeting line, e.g. 'Hello, <BUSINESS_NAME>'"),
+      opening: z.string().describe("A short, observant piece of small talk personalised to this specific business"),
+      body: z.string().describe("The core pitch: one specific benefit relevant to this business type"),
+      callToAction: z.string().describe("A soft closing call-to-action inviting a quick chat")
+    });
+
+    try {
+      const agent = createAgent({
+        model: this.model,
+        middleware: this.middleware,
+        systemPrompt: systemInstructions,
+        responseFormat: WhatsAppMessageSchema
+      });
+
+      const result = await agent.invoke({ messages: [{ role: "user", content: userMessage }] });
+
+      return { channel: "WHATSAPP", ...result.structuredResponse };
+    } catch (error) {
+      this.logger.error(`Gemini WhatsApp message generation failed: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error("Failed to generate WhatsApp message via Gemini", { cause: error });
+    }
+  }
+
+  private async generateEmailMessage(input: GenerateOutreachMessageInput, about: string, userMessage: string): Promise<GeneratedEmailMessage> {
+    const rules =
+      input.messageRules.rules ??
+      `
+      - Write a cold outreach EMAIL — it must have a subject line and a proper email body
+      - Address the recipient as the business owner/team, not by a personal name
+      - Keep the body under 200 words
+      - Tone: professional, human, and warm — not salesy, not pushy, not spammy
+      - Subject line: concise, curiosity-driven, relevant to their business type — no clickbait
+      - Opening line: a genuine, specific observation about their business (from their website if available, otherwise from their business type/location)
+      - Mention 1-2 services most relevant to their specific business type
+      - If the business has no website, specifically mention that we can build one for them
+      - End with a single soft call-to-action — invite a reply or a quick call, nothing aggressive
+      - Do NOT use emojis
+      - Do NOT mention Google Map ratings
+      - Do NOT use generic filler phrases like "I hope this email finds you well" or "I came across your business"
+    `;
+
+    const systemInstructions = `
+      You are an expert cold outreach copywriter for a digital marketing agency.
+
+      Your job is to write a personalised cold outreach email to a business owner.
+
+      RULES
+      ${rules}
+
+      ABOUT OUR BUSINESS
+      ${about}
+    `;
+
+    const EmailMessageSchema = z.object({
+      subject: z.string().describe("Concise, curiosity-driven subject line relevant to their business type"),
+      opening: z.string().describe("A genuine, specific observation about their business used as the opening line"),
+      body: z.string().describe("The core pitch: 1-2 services most relevant to this business type"),
+      callToAction: z.string().describe("A single soft call-to-action inviting a reply or a quick call"),
+      signOff: z.string().describe("A short professional sign-off")
+    });
+
+    try {
+      const agent = createAgent({
+        model: this.model,
+        middleware: this.middleware,
+        systemPrompt: systemInstructions,
+        responseFormat: EmailMessageSchema
+      });
+
+      const result = await agent.invoke({ messages: [{ role: "user", content: userMessage }] });
+
+      return { channel: "EMAIL", ...result.structuredResponse };
+    } catch (error) {
+      this.logger.error(`Gemini email generation failed: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error("Failed to generate email via Gemini", { cause: error });
     }
   }
 }

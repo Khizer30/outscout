@@ -35,6 +35,10 @@
     "./lead": {
       "types": "./dist/lead/index.d.ts",
       "default": "./dist/lead/index.js"
+    },
+    "./ai": {
+      "types": "./dist/ai/index.d.ts",
+      "default": "./dist/ai/index.js"
     }
   },
   "scripts": {
