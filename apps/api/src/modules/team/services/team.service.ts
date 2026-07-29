@@ -1,7 +1,7 @@
 import { CompanyEntity } from "@modules/company/domain/company.entity";
 import { CompanyNotFoundError } from "@modules/company/domain/company.errors";
-import { CompanyRepository } from "@modules/company/domain/company.repository";
 import { CompanyMembershipEntity } from "@modules/company/domain/companyMembership.entity";
+import { CompanyService } from "@modules/company/services/company.service";
 import { JWTService } from "@modules/jwt/services/jwt.service";
 import { MailService } from "@modules/mail/services/mail.service";
 import { CompanyInvitationEntity } from "@modules/team/domain/invitation.entity";
@@ -27,7 +27,7 @@ export class TeamService {
 
   constructor(
     private readonly invitationRepo: InvitationRepository,
-    private readonly companyRepo: CompanyRepository,
+    private readonly companyService: CompanyService,
     private readonly userService: UserService,
     private readonly mailService: MailService,
     private readonly jwtService: JWTService,
@@ -37,14 +37,14 @@ export class TeamService {
   }
 
   async inviteUser(companyId: string, invitedByUserId: string, email: string): Promise<CompanyInvitationEntity> {
-    const company = await this.companyRepo.findById(companyId);
+    const company = await this.companyService.findById(companyId);
     if (!company) {
       throw new CompanyNotFoundError({ companyId });
     }
 
     const existingUser = await this.userService.findByEmail(email);
     if (existingUser) {
-      const [existingMembership] = await this.companyRepo.findMembershipsByUserId(existingUser.id, { companyId });
+      const [existingMembership] = await this.companyService.findMembershipsByUser(existingUser.id, { companyId, status: ["ACTIVE", "INACTIVE"] });
       if (existingMembership) {
         throw new UserAlreadyCompanyMemberError({ email });
       }
@@ -198,17 +198,28 @@ export class TeamService {
     invitation: CompanyInvitationEntity,
     userId: string
   ): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity; invitation: CompanyInvitationEntity }> {
-    const company = await this.companyRepo.findById(invitation.companyId);
+    const { companyId, role } = invitation;
+
+    const company = await this.companyService.findById(companyId);
     if (!company) {
-      throw new CompanyNotFoundError({ companyId: invitation.companyId });
+      throw new CompanyNotFoundError({ companyId });
     }
 
-    const [existingMembership] = await this.companyRepo.findMembershipsByUserId(userId, { companyId: invitation.companyId, status: ["ACTIVE", "INACTIVE"] });
-    const membership =
-      existingMembership?.membership ??
-      (await this.companyRepo.addMembership(
-        CompanyMembershipEntity.create({ companyId: invitation.companyId, userId, role: invitation.role, status: "ACTIVE" })
-      ));
+    const [existing] = await this.companyService.findMembershipsByUser(userId, {
+      companyId,
+      status: ["ACTIVE", "INACTIVE"]
+    });
+
+    let membership = existing?.membership;
+    if (!membership) {
+      const newMembership = CompanyMembershipEntity.create({
+        companyId,
+        userId,
+        role,
+        status: "ACTIVE"
+      });
+      membership = await this.companyService.addMembership(newMembership);
+    }
 
     const saved = await this.invitationRepo.update(invitation.accept());
     if (!saved) {
