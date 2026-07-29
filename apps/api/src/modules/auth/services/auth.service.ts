@@ -7,8 +7,8 @@ import { VerificationRepository } from "@modules/auth/domain/verification.reposi
 import { OtpConfig } from "@modules/auth/domain/verification.value-objects";
 import { CompanyEntity } from "@modules/company/domain/company.entity";
 import { CompanyMembershipNotFoundError } from "@modules/company/domain/company.errors";
-import { CompanyRepository } from "@modules/company/domain/company.repository";
 import { CompanyMembershipEntity } from "@modules/company/domain/companyMembership.entity";
+import { CompanyService } from "@modules/company/services/company.service";
 import { EncryptionService } from "@modules/encryption/services/encryption.service";
 import { JWTService } from "@modules/jwt/services/jwt.service";
 import { MailService } from "@modules/mail/services/mail.service";
@@ -27,7 +27,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly verificationRepo: VerificationRepository,
     private readonly sessionRepo: SessionRepository,
-    private readonly companyRepo: CompanyRepository,
+    private readonly companyService: CompanyService,
     private readonly mailService: MailService,
     private readonly jwtService: JWTService,
     private readonly encryptionService: EncryptionService,
@@ -136,7 +136,7 @@ export class AuthService {
       throw new UserNotVerifiedError();
     }
 
-    const activeMemberships = await this.companyRepo.findMembershipsByUserId(user.id, { status: ["ACTIVE"] });
+    const activeMemberships = await this.companyService.findMembershipsByUser(user.id);
     const active = activeMemberships[0];
 
     const userPayload = this.buildAccessTokenPayload(user, active);
@@ -193,7 +193,7 @@ export class AuthService {
       throw new InvalidSessionError();
     }
 
-    const activeMemberships = await this.companyRepo.findMembershipsByUserId(user.id);
+    const activeMemberships = await this.companyService.findMembershipsByUser(user.id);
     const active = activeMemberships[0];
 
     const userPayload = this.buildAccessTokenPayload(user, active);
@@ -232,7 +232,7 @@ export class AuthService {
       throw new InvalidSessionError();
     }
 
-    const [active] = await this.companyRepo.findMembershipsByUserId(userId, { membershipId: dto.membershipId });
+    const [active] = await this.companyService.findMembershipsByUser(userId, { membershipId: dto.membershipId });
     if (!active) {
       throw new CompanyMembershipNotFoundError({ membershipId: dto.membershipId });
     }

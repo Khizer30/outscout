@@ -2,6 +2,7 @@
 import { CompanyNotFoundError, CompanyUpdateConflictError } from "@modules/company/domain/company.errors";
 import { CompanyRepository } from "@modules/company/domain/company.repository";
 import { CompanyMembershipEntity } from "@modules/company/domain/companyMembership.entity";
+import { CompanyMembershipStatus } from "@modules/company/domain/companyMembership.types";
 import { MediaService } from "@modules/media/services/media.service";
 import { Injectable, Logger } from "@nestjs/common";
 
@@ -41,8 +42,11 @@ export class CompanyService {
     return this.companyRepo.findById(id);
   }
 
-  async findActiveMembershipsByUserId(userId: string): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }[]> {
-    return this.companyRepo.findMembershipsByUserId(userId, { status: ["ACTIVE"] });
+  async findMembershipsByUser(
+    userId: string,
+    filters?: { membershipId?: string; status?: CompanyMembershipStatus[] }
+  ): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }[]> {
+    return this.companyRepo.findMembershipsByUserId(userId, { status: ["ACTIVE"], ...filters });
   }
 
   async updateCompany(id: string, data: { name?: string; about?: string | null; companyImageURL?: string | null }): Promise<CompanyEntity> {

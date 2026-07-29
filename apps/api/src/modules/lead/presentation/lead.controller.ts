@@ -4,9 +4,8 @@ import { LeadMapper } from "@modules/lead/infrastructure/lead.mapper";
 import { LeadService } from "@modules/lead/services/lead.service";
 import { Body, Controller, ForbiddenException, Get, HttpCode, MessageEvent, Param, Patch, Post, Query, Sse, UseGuards } from "@nestjs/common";
 import { RedisService } from "@redis/services/redis.service";
-import { GenerateOutreachMessageQueryDto, GenerateOutreachMessageResponseDto } from "@repo/dtos/lead";
 import { IdDto } from "@repo/dtos/common";
-import {
+import { GenerateOutreachMessageQueryDto, GenerateOutreachMessageResponseDto ,
   GenerateLeadsDto,
   GenerateLeadsResponseDto,
   GetLeadResponseDto,

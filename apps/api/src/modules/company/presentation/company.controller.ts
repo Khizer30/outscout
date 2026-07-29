@@ -32,7 +32,7 @@ export class CompanyController {
   @Get()
   @UseGuards(AuthGuard)
   async getMyCompanies(@User() user: AuthenticatedUser): Promise<GetUserCompaniesResponseDto> {
-    const list = await this.companyService.findActiveMembershipsByUserId(user.id);
+    const list = await this.companyService.findMembershipsByUser(user.id);
 
     return {
       data: list.map((item) => ({

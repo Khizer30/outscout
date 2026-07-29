@@ -34,13 +34,6 @@ import { Module } from "@nestjs/common";
       useClass: CompanyMessageRulesDrizzleRepository
     }
   ],
-  exports: [
-    CompanyService,
-    CompanyRepository,
-    CompanyEmailSettingsService,
-    CompanyEmailSettingsRepository,
-    CompanyMessageRulesService,
-    CompanyMessageRulesRepository
-  ]
+  exports: [CompanyService, CompanyEmailSettingsService, CompanyMessageRulesService]
 })
 export class CompanyModule {}
