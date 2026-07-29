@@ -6,6 +6,17 @@ CREATE TYPE "public"."message_channel" AS ENUM('WHATSAPP', 'EMAIL');--> statemen
 CREATE TYPE "public"."lead_status" AS ENUM('ENRICHING', 'READY', 'CONTACTED', 'INTERESTED', 'UNRESPONSIVE', 'REJECTED');--> statement-breakpoint
 CREATE TYPE "public"."lead_type" AS ENUM('RESTAURANT', 'HOTEL', 'HOSPITAL', 'DENTAL_CLINIC', 'REAL_ESTATE_AGENCY', 'ACCOUNTING', 'GYM', 'BEAUTY_SALON');--> statement-breakpoint
 CREATE TYPE "public"."verification_type" AS ENUM('VERIFY', 'RESET');--> statement-breakpoint
+CREATE TABLE "ai_generated_messages" (
+	"id" text PRIMARY KEY NOT NULL,
+	"leadId" text NOT NULL,
+	"companyId" text NOT NULL,
+	"companyMessageRulesId" text,
+	"companyMessageRulesVersion" integer,
+	"data" jsonb NOT NULL,
+	"createdBy" text,
+	"createdAt" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "audit_logs" (
 	"id" text PRIMARY KEY NOT NULL,
 	"actorId" text,
@@ -135,6 +146,10 @@ CREATE TABLE "verifications" (
 	"createdAt" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+ALTER TABLE "ai_generated_messages" ADD CONSTRAINT "ai_generated_messages_leadId_leads_id_fk" FOREIGN KEY ("leadId") REFERENCES "public"."leads"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "ai_generated_messages" ADD CONSTRAINT "ai_generated_messages_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "ai_generated_messages" ADD CONSTRAINT "ai_generated_messages_companyMessageRulesId_company_message_rules_id_fk" FOREIGN KEY ("companyMessageRulesId") REFERENCES "public"."company_message_rules"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "ai_generated_messages" ADD CONSTRAINT "ai_generated_messages_createdBy_users_id_fk" FOREIGN KEY ("createdBy") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_actorId_users_id_fk" FOREIGN KEY ("actorId") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "company_email_settings" ADD CONSTRAINT "company_email_settings_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -149,6 +164,8 @@ ALTER TABLE "company_message_rules_history" ADD CONSTRAINT "company_message_rule
 ALTER TABLE "leads" ADD CONSTRAINT "leads_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "verifications" ADD CONSTRAINT "verifications_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX "ai_generated_messages_lead_id_idx" ON "ai_generated_messages" USING btree ("leadId");--> statement-breakpoint
+CREATE INDEX "ai_generated_messages_company_id_idx" ON "ai_generated_messages" USING btree ("companyId");--> statement-breakpoint
 CREATE INDEX "audit_logs_actor_id_idx" ON "audit_logs" USING btree ("actorId");--> statement-breakpoint
 CREATE INDEX "audit_logs_company_id_idx" ON "audit_logs" USING btree ("companyId");--> statement-breakpoint
 CREATE INDEX "audit_logs_action_idx" ON "audit_logs" USING btree ("action");--> statement-breakpoint

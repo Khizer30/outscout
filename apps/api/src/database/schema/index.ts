@@ -1,3 +1,4 @@
+export * from "@schema/aiGeneratedMessages";
 export * from "@schema/auditLogs";
 export * from "@schema/company";
 export * from "@schema/companyEmailSettings";
