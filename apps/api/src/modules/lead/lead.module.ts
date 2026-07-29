@@ -21,6 +21,6 @@ import { RedisModule } from "@redis/redis.module";
       useClass: LeadDrizzleRepository
     }
   ],
-  exports: [LeadService, LeadRepository]
+  exports: [LeadService]
 })
 export class LeadModule {}

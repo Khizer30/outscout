@@ -21,6 +21,6 @@ import { Module } from "@nestjs/common";
       useClass: AiGeneratedMessageDrizzleRepository
     }
   ],
-  exports: [AiService, AiRepository]
+  exports: [AiService]
 })
 export class AiModule {}

@@ -11,6 +11,6 @@ import { Module } from "@nestjs/common";
       useClass: MailBrevoRepository
     }
   ],
-  exports: [MailService, MailRepository]
+  exports: [MailService]
 })
 export class MailModule {}

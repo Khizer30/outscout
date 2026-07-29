@@ -20,6 +20,6 @@ import { Module } from "@nestjs/common";
       useClass: InvitationDrizzleRepository
     }
   ],
-  exports: [TeamService, InvitationRepository]
+  exports: [TeamService]
 })
 export class TeamModule {}
