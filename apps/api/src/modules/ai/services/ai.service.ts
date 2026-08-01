@@ -95,8 +95,21 @@ export class AiService {
       }
     }
 
+    const company = await this.companyService.findById(companyId);
+    if (!company) {
+      throw new CompanyNotFoundError({ id: companyId });
+    }
+
+    const messageRules = await this.companyMessageRulesService.findByCompanyAndChannel(companyId, existing.data.channel);
+
     try {
-      const rewritten = await this.aiRepo.rewriteOutreachMessage({ data: existing.data, prompt, messagePart });
+      const rewritten = await this.aiRepo.rewriteOutreachMessage({
+        data: existing.data,
+        prompt,
+        messagePart,
+        company: { about: company.about },
+        messageRules: { rules: messageRules?.rules ?? null, greeting: messageRules?.greeting ?? null }
+      });
 
       const updated = AiGeneratedMessageEntity.create({
         id: existing.id,

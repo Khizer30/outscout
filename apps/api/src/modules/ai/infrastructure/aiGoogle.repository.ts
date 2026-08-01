@@ -2,17 +2,19 @@ import { ChatGoogle } from "@langchain/google";
 import { AiRepository } from "@modules/ai/domain/ai.repository";
 import {
   ContactInfo,
+  ContactInfoSchema,
+  EmailMessageSchema,
   GenerateOutreachMessageInput,
   GeneratedEmailMessage,
   GeneratedMessage,
   GeneratedWhatsAppMessage,
   MessagePart,
-  RewriteOutreachMessageInput
+  RewriteOutreachMessageInput,
+  WhatsAppMessageSchema
 } from "@modules/ai/domain/ai.types";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AgentMiddleware, createAgent, modelCallLimitMiddleware, modelRetryMiddleware, piiMiddleware } from "langchain";
-import { z } from "zod";
 
 @Injectable()
 export class AiGoogleRepository extends AiRepository {
@@ -35,22 +37,6 @@ export class AiGoogleRepository extends AiRepository {
   async extractBusinessInfo(content: string): Promise<ContactInfo> {
     const systemInstructions =
       "You are a business and contact information extractor. Extract a concise description of the business, emails, phone numbers, location/address, and social media profile links from website content. Return only what is explicitly present — never fabricate data.";
-
-    // Structured output schema for the Gemini extraction call
-    const ContactInfoSchema = z.object({
-      description: z.string().nullable(),
-      emails: z.array(z.string()),
-      phones: z.array(z.string()),
-      location: z.string().nullable(),
-      instagram: z.string().nullable(),
-      facebook: z.string().nullable(),
-      twitter: z.string().nullable(),
-      linkedin: z.string().nullable(),
-      tiktok: z.string().nullable(),
-      youtube: z.string().nullable(),
-      whatsapp: z.string().nullable(),
-      other: z.array(z.string())
-    });
 
     const userMessage = `
       Extract business description, contact and social media information from the following website content (markdown with links in [label](url) format, followed by a deduplicated list of all page hrefs — including icon-only links not visible in the markdown).
@@ -145,13 +131,6 @@ export class AiGoogleRepository extends AiRepository {
       ${about}
     `;
 
-    const WhatsAppMessageSchema = z.object({
-      greetings: z.string().describe("The opening greeting line, e.g. 'Hello, <BUSINESS_NAME>'"),
-      opening: z.string().describe("A short, observant piece of small talk personalised to this specific business"),
-      body: z.string().describe("The core pitch: one specific benefit relevant to this business type"),
-      callToAction: z.string().describe("A soft closing call-to-action inviting a quick chat")
-    });
-
     try {
       const agent = createAgent({
         model: this.model,
@@ -166,107 +145,6 @@ export class AiGoogleRepository extends AiRepository {
     } catch (error) {
       this.logger.error(`Gemini WhatsApp message generation failed: ${error instanceof Error ? error.message : String(error)}`);
       throw new Error("Failed to generate WhatsApp message via Gemini", { cause: error });
-    }
-  }
-
-  async rewriteOutreachMessage(input: RewriteOutreachMessageInput): Promise<GeneratedMessage> {
-    if (input.data.channel === "EMAIL") {
-      return this.rewriteEmailMessage(input.data, input.prompt, input.messagePart);
-    }
-
-    return this.rewriteWhatsAppMessage(input.data, input.prompt, input.messagePart);
-  }
-
-  private async rewriteWhatsAppMessage(data: GeneratedWhatsAppMessage, prompt: string, messagePart?: MessagePart): Promise<GeneratedWhatsAppMessage> {
-    const WhatsAppMessageSchema = z.object({
-      greetings: z.string(),
-      opening: z.string(),
-      body: z.string(),
-      callToAction: z.string()
-    });
-
-    const systemInstructions = `
-      You are an expert cold outreach copywriter for a digital marketing agency.
-
-      You are rewriting an existing WhatsApp outreach message per the user's instructions.
-      ${messagePart ? `Focus your rewrite on the "${messagePart}" part, but return the full message.` : "Rewrite the message as a whole, keeping the same overall structure (greetings, opening, body, callToAction)."}
-      Do NOT use emojis. Keep the tone human, warm, and professional; not salesy or spammy.
-    `;
-
-    const userMessage = `
-      CURRENT MESSAGE:
-      ${JSON.stringify({ greetings: data.greetings, opening: data.opening, body: data.body, callToAction: data.callToAction }, null, 2)}
-
-      INSTRUCTIONS:
-      ${prompt}
-    `;
-
-    try {
-      const agent = createAgent({
-        model: this.model,
-        middleware: this.middleware,
-        systemPrompt: systemInstructions,
-        responseFormat: WhatsAppMessageSchema
-      });
-
-      const result = await agent.invoke({ messages: [{ role: "user", content: userMessage }] });
-      const rewritten = result.structuredResponse;
-
-      if (messagePart) {
-        return { ...data, [messagePart]: rewritten[messagePart as keyof typeof rewritten] };
-      }
-
-      return { channel: "WHATSAPP", ...rewritten };
-    } catch (error) {
-      this.logger.error(`Gemini WhatsApp message rewrite failed: ${error instanceof Error ? error.message : String(error)}`);
-      throw new Error("Failed to rewrite WhatsApp message via Gemini", { cause: error });
-    }
-  }
-
-  private async rewriteEmailMessage(data: GeneratedEmailMessage, prompt: string, messagePart?: MessagePart): Promise<GeneratedEmailMessage> {
-    const EmailMessageSchema = z.object({
-      subject: z.string(),
-      opening: z.string(),
-      body: z.string(),
-      callToAction: z.string(),
-      signOff: z.string()
-    });
-
-    const systemInstructions = `
-      You are an expert cold outreach copywriter for a digital marketing agency.
-
-      You are rewriting an existing cold outreach email per the user's instructions.
-      ${messagePart ? `Focus your rewrite on the "${messagePart}" part, but return the full message.` : "Rewrite the message as a whole, keeping the same overall structure (subject, opening, body, callToAction, signOff)."}
-      Do NOT use emojis. Keep the tone human, warm, and professional; not salesy or spammy.
-    `;
-
-    const userMessage = `
-      CURRENT MESSAGE:
-      ${JSON.stringify({ subject: data.subject, opening: data.opening, body: data.body, callToAction: data.callToAction, signOff: data.signOff }, null, 2)}
-
-      INSTRUCTIONS:
-      ${prompt}
-    `;
-
-    try {
-      const agent = createAgent({
-        model: this.model,
-        middleware: this.middleware,
-        systemPrompt: systemInstructions,
-        responseFormat: EmailMessageSchema
-      });
-
-      const result = await agent.invoke({ messages: [{ role: "user", content: userMessage }] });
-      const rewritten = result.structuredResponse;
-
-      if (messagePart) {
-        return { ...data, [messagePart]: rewritten[messagePart as keyof typeof rewritten] };
-      }
-
-      return { channel: "EMAIL", ...rewritten };
-    } catch (error) {
-      this.logger.error(`Gemini email rewrite failed: ${error instanceof Error ? error.message : String(error)}`);
-      throw new Error("Failed to rewrite email via Gemini", { cause: error });
     }
   }
 
@@ -300,14 +178,6 @@ export class AiGoogleRepository extends AiRepository {
       ${about}
     `;
 
-    const EmailMessageSchema = z.object({
-      subject: z.string().describe("Concise, curiosity-driven subject line relevant to their business type"),
-      opening: z.string().describe("A genuine, specific observation about their business used as the opening line"),
-      body: z.string().describe("The core pitch: 1-2 services most relevant to this business type"),
-      callToAction: z.string().describe("A single soft call-to-action inviting a reply or a quick call"),
-      signOff: z.string().describe("A short professional sign-off")
-    });
-
     try {
       const agent = createAgent({
         model: this.model,
@@ -322,6 +192,122 @@ export class AiGoogleRepository extends AiRepository {
     } catch (error) {
       this.logger.error(`Gemini email generation failed: ${error instanceof Error ? error.message : String(error)}`);
       throw new Error("Failed to generate email via Gemini", { cause: error });
+    }
+  }
+
+  async rewriteOutreachMessage(input: RewriteOutreachMessageInput): Promise<GeneratedMessage> {
+    if (input.data.channel === "EMAIL") {
+      return this.rewriteEmailMessage(input.data, input.prompt, input.company, input.messageRules, input.messagePart);
+    }
+
+    return this.rewriteWhatsAppMessage(input.data, input.prompt, input.company, input.messageRules, input.messagePart);
+  }
+
+  private async rewriteWhatsAppMessage(
+    data: GeneratedWhatsAppMessage,
+    prompt: string,
+    company: RewriteOutreachMessageInput["company"],
+    messageRules: RewriteOutreachMessageInput["messageRules"],
+    messagePart?: MessagePart
+  ): Promise<GeneratedWhatsAppMessage> {
+    const about = company.about ?? "We help local businesses build a strong online presence, reach more customers, and grow their revenue.";
+    const rules = messageRules.rules ?? "Keep it under 150 words, human, warm, and professional; not salesy or spammy.";
+
+    const systemInstructions = `
+      You are an expert cold outreach copywriter for a digital marketing agency.
+
+      You are rewriting an existing WhatsApp outreach message per the user's instructions.
+      ${messagePart ? `Focus your rewrite on the "${messagePart}" part, but return the full message.` : "Rewrite the message as a whole, keeping the same overall structure (greetings, opening, body, callToAction)."}
+      Do NOT use emojis. Keep the tone human, warm, and professional; not salesy or spammy.
+
+      RULES
+      ${rules}
+
+      ABOUT OUR BUSINESS
+      ${about}
+    `;
+
+    const userMessage = `
+      CURRENT MESSAGE:
+      ${JSON.stringify({ greetings: data.greetings, opening: data.opening, body: data.body, callToAction: data.callToAction }, null, 2)}
+
+      INSTRUCTIONS:
+      ${prompt}
+    `;
+
+    try {
+      const agent = createAgent({
+        model: this.model,
+        middleware: this.middleware,
+        systemPrompt: systemInstructions,
+        responseFormat: WhatsAppMessageSchema
+      });
+
+      const result = await agent.invoke({ messages: [{ role: "user", content: userMessage }] });
+      const rewritten = result.structuredResponse;
+
+      if (messagePart) {
+        return { ...data, [messagePart]: rewritten[messagePart as keyof typeof rewritten] };
+      }
+
+      return { channel: "WHATSAPP", ...rewritten };
+    } catch (error) {
+      this.logger.error(`Gemini WhatsApp message rewrite failed: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error("Failed to rewrite WhatsApp message via Gemini", { cause: error });
+    }
+  }
+
+  private async rewriteEmailMessage(
+    data: GeneratedEmailMessage,
+    prompt: string,
+    company: RewriteOutreachMessageInput["company"],
+    messageRules: RewriteOutreachMessageInput["messageRules"],
+    messagePart?: MessagePart
+  ): Promise<GeneratedEmailMessage> {
+    const about = company.about ?? "We help local businesses build a strong online presence, reach more customers, and grow their revenue.";
+    const rules = messageRules.rules ?? "Keep the body under 200 words, professional, human, and warm; not salesy, not pushy, not spammy.";
+
+    const systemInstructions = `
+      You are an expert cold outreach copywriter for a digital marketing agency.
+
+      You are rewriting an existing cold outreach email per the user's instructions.
+      ${messagePart ? `Focus your rewrite on the "${messagePart}" part, but return the full message.` : "Rewrite the message as a whole, keeping the same overall structure (subject, opening, body, callToAction, signOff)."}
+      Do NOT use emojis. Keep the tone human, warm, and professional; not salesy or spammy.
+
+      RULES
+      ${rules}
+
+      ABOUT OUR BUSINESS
+      ${about}
+    `;
+
+    const userMessage = `
+      CURRENT MESSAGE:
+      ${JSON.stringify({ subject: data.subject, opening: data.opening, body: data.body, callToAction: data.callToAction, signOff: data.signOff }, null, 2)}
+
+      INSTRUCTIONS:
+      ${prompt}
+    `;
+
+    try {
+      const agent = createAgent({
+        model: this.model,
+        middleware: this.middleware,
+        systemPrompt: systemInstructions,
+        responseFormat: EmailMessageSchema
+      });
+
+      const result = await agent.invoke({ messages: [{ role: "user", content: userMessage }] });
+      const rewritten = result.structuredResponse;
+
+      if (messagePart) {
+        return { ...data, [messagePart]: rewritten[messagePart as keyof typeof rewritten] };
+      }
+
+      return { channel: "EMAIL", ...rewritten };
+    } catch (error) {
+      this.logger.error(`Gemini email rewrite failed: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error("Failed to rewrite email via Gemini", { cause: error });
     }
   }
 }
