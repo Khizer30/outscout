@@ -1,8 +1,8 @@
-import { MessageChannel } from "@modules/ai/domain/ai.types";
+import { MessageChannel, MessagePart } from "@modules/ai/domain/ai.types";
 import { AiGeneratedMessageEntity } from "@modules/ai/domain/aiGeneratedMessage.entity";
 import { AiService } from "@modules/ai/services/ai.service";
 import { LeadEntity } from "@modules/lead/domain/lead.entity";
-import { LeadAccessDeniedError, LeadNotEnrichingError, LeadNotFoundError } from "@modules/lead/domain/lead.errors";
+import { LeadAccessDeniedError, LeadNotEnrichingError, LeadNotFoundError, LeadPhoneMissingError } from "@modules/lead/domain/lead.errors";
 import { LeadRepository } from "@modules/lead/domain/lead.repository";
 import { LeadSocialLinks, LeadStatus, UpdateLeadProps } from "@modules/lead/domain/lead.types";
 import { MapSearchParams } from "@modules/map/domain/mapPlace.types";
@@ -89,6 +89,19 @@ export class LeadService {
   async generateOutreachMessage(leadId: string, companyId: string, channel: MessageChannel, userId: string): Promise<AiGeneratedMessageEntity> {
     const lead = await this.findById(leadId, companyId);
     return this.aiService.generateOutreachMessage(lead, companyId, channel, userId);
+  }
+
+  async generateWhatsAppLink(aiMessageId: string, companyId: string, messagePart: MessagePart | undefined): Promise<string> {
+    const { leadId, text } = await this.aiService.getWhatsAppMessageText(aiMessageId, companyId, messagePart);
+    const lead = await this.findById(leadId, companyId);
+
+    if (!lead.phone) {
+      throw new LeadPhoneMissingError({ id: leadId });
+    }
+
+    const cleanedPhone = lead.phone.replace(/\D/g, "");
+
+    return `https://wa.me/${cleanedPhone}?text=${encodeURIComponent(text)}`;
   }
 
   async processLead(id: string, companyId: string): Promise<LeadEntity> {

@@ -10,6 +10,8 @@ import {
   GenerateOutreachMessageResponseDto,
   GenerateLeadsDto,
   GenerateLeadsResponseDto,
+  GenerateWhatsAppLinkQueryDto,
+  GenerateWhatsAppLinkResponseDto,
   GetLeadResponseDto,
   GetLeadsDto,
   GetLeadsResponseDto,
@@ -107,7 +109,7 @@ export class LeadController {
     return { data: LeadMapper.toResponse(updated) };
   }
 
-  @Get("outreach-message/:id")
+  @Post("outreach-message/:id")
   @UseGuards(AuthGuard)
   async generateOutreachMessage(
     @User() user: AuthenticatedUser,
@@ -123,6 +125,23 @@ export class LeadController {
     const { channel, ...data } = generated.data;
 
     return { data: { id: generated.id, leadId: generated.leadId, channel, data } };
+  }
+
+  @Get("whatsapp-link/:id")
+  @UseGuards(AuthGuard)
+  async generateWhatsAppLink(
+    @User() user: AuthenticatedUser,
+    @Param() { id }: IdDto,
+    @Query() query: GenerateWhatsAppLinkQueryDto
+  ): Promise<GenerateWhatsAppLinkResponseDto> {
+    const companyId = user.companyId;
+    if (!companyId) {
+      throw new ForbiddenException("You do not belong to a company");
+    }
+
+    const link = await this.leadService.generateWhatsAppLink(id, companyId, query.messagePart);
+
+    return { data: { link } };
   }
 
   @Post("process-lead/:id")

@@ -57,3 +57,12 @@ export const GenerateOutreachMessageQuerySchema = z.object({
 });
 
 export class GenerateOutreachMessageQueryDto extends createZodDto(GenerateOutreachMessageQuerySchema) {}
+
+// Generate WhatsApp Link
+export const WhatsAppMessagePartSchema = z.enum(["greetings", "opening", "body", "callToAction"]);
+
+export const GenerateWhatsAppLinkQuerySchema = z.object({
+  messagePart: WhatsAppMessagePartSchema.optional()
+});
+
+export class GenerateWhatsAppLinkQueryDto extends createZodDto(GenerateWhatsAppLinkQuerySchema) {}

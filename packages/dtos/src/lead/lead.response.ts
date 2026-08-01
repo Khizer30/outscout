@@ -95,3 +95,12 @@ export const GenerateOutreachMessageResponseSchema = z.object({
 });
 
 export class GenerateOutreachMessageResponseDto extends createZodDto(GenerateOutreachMessageResponseSchema) {}
+
+// Generate WhatsApp Link
+export const GenerateWhatsAppLinkResponseSchema = z.object({
+  data: z.object({
+    link: z.string()
+  })
+});
+
+export class GenerateWhatsAppLinkResponseDto extends createZodDto(GenerateWhatsAppLinkResponseSchema) {}

@@ -1,11 +1,12 @@
 import {
   AiGenerationFailedError,
   AiGeneratedMessageAccessDeniedError,
+  AiGeneratedMessageChannelMismatchError,
   AiGeneratedMessageNotFoundError,
   InvalidMessagePartError
 } from "@modules/ai/domain/ai.errors";
 import { AiRepository } from "@modules/ai/domain/ai.repository";
-import { ContactInfo, EMAIL_MESSAGE_PARTS, MessageChannel, MessagePart, WHATSAPP_MESSAGE_PARTS } from "@modules/ai/domain/ai.types";
+import { ContactInfo, EMAIL_MESSAGE_PARTS, GeneratedWhatsAppMessage, MessageChannel, MessagePart, WHATSAPP_MESSAGE_PARTS } from "@modules/ai/domain/ai.types";
 import { AiGeneratedMessageEntity } from "@modules/ai/domain/aiGeneratedMessage.entity";
 import { AiGeneratedMessageRepository } from "@modules/ai/domain/aiGeneratedMessage.repository";
 import { CompanyNotFoundError } from "@modules/company/domain/company.errors";
@@ -136,5 +137,28 @@ export class AiService {
     }
 
     return messages;
+  }
+
+  async getWhatsAppMessageText(id: string, companyId: string, messagePart: MessagePart | undefined): Promise<{ leadId: string; text: string }> {
+    const existing = await this.aiGeneratedMessageRepo.findById(id);
+    if (!existing) {
+      throw new AiGeneratedMessageNotFoundError({ id });
+    }
+
+    if (existing.companyId !== companyId) {
+      throw new AiGeneratedMessageAccessDeniedError({ id });
+    }
+
+    if (existing.data.channel !== "WHATSAPP") {
+      throw new AiGeneratedMessageChannelMismatchError({ id, expected: "WHATSAPP", actual: existing.data.channel });
+    }
+
+    if (messagePart) {
+      return { leadId: existing.leadId, text: existing.data[messagePart as keyof GeneratedWhatsAppMessage] as string };
+    }
+
+    const text = WHATSAPP_MESSAGE_PARTS.map((part) => existing.data[part]).join("\n\n");
+
+    return { leadId: existing.leadId, text };
   }
 }
