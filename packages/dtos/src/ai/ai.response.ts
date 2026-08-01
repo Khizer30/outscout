@@ -13,3 +13,16 @@ export const RewriteOutreachMessageResponseSchema = z.object({
 });
 
 export class RewriteOutreachMessageResponseDto extends createZodDto(RewriteOutreachMessageResponseSchema) {}
+
+export const GetOutreachMessageResponseSchema = z.object({
+  data: z.object({
+    id: z.string(),
+    leadId: z.string(),
+    channel: MessageChannelSchema,
+    data: z.union([GeneratedWhatsAppMessageSchema, GeneratedEmailMessageSchema]),
+    createdAt: z.date(),
+    updatedAt: z.date()
+  })
+});
+
+export class GetOutreachMessageResponseDto extends createZodDto(GetOutreachMessageResponseSchema) {}

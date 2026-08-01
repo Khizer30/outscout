@@ -14,7 +14,8 @@ CREATE TABLE "ai_generated_messages" (
 	"companyMessageRulesVersion" integer,
 	"data" jsonb NOT NULL,
 	"createdBy" text,
-	"createdAt" timestamp DEFAULT now() NOT NULL
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "audit_logs" (

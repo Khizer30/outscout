@@ -115,4 +115,13 @@ export class AiService {
       throw new AiGenerationFailedError();
     }
   }
+
+  async getByLead(leadId: string, companyId: string): Promise<AiGeneratedMessageEntity> {
+    const message = await this.aiGeneratedMessageRepo.findByLead(leadId, companyId);
+    if (!message) {
+      throw new AiGeneratedMessageNotFoundError({ leadId });
+    }
+
+    return message;
+  }
 }

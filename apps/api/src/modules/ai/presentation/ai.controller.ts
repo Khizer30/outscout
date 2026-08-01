@@ -1,15 +1,29 @@
 import { AuthGuard } from "@middleware/auth.guard";
 import { User } from "@middleware/user.decorator";
 import { AiService } from "@modules/ai/services/ai.service";
-import { Body, Controller, ForbiddenException, HttpCode, Param, Post, UseGuards } from "@nestjs/common";
-import { RewriteOutreachMessageDto, RewriteOutreachMessageResponseDto } from "@repo/dtos/ai";
+import { Body, Controller, ForbiddenException, Get, HttpCode, Param, Post, UseGuards } from "@nestjs/common";
+import { GetOutreachMessageResponseDto, RewriteOutreachMessageDto, RewriteOutreachMessageResponseDto } from "@repo/dtos/ai";
 import { IdDto } from "@repo/dtos/common";
 
 @Controller("ai")
 export class AiController {
   constructor(private readonly aiService: AiService) {}
 
-  @Post(":id/rewrite")
+  @Get("lead/:id")
+  @UseGuards(AuthGuard)
+  async getOutreachMessageByLead(@User() user: AuthenticatedUser, @Param() { id }: IdDto): Promise<GetOutreachMessageResponseDto> {
+    const companyId = user.companyId;
+    if (!companyId) {
+      throw new ForbiddenException("You do not belong to a company");
+    }
+
+    const message = await this.aiService.getByLead(id, companyId);
+    const { channel, ...data } = message.data;
+
+    return { data: { id: message.id, leadId: message.leadId, channel, data, createdAt: message.createdAt, updatedAt: message.updatedAt } };
+  }
+
+  @Post("rewrite/:id")
   @HttpCode(200)
   @UseGuards(AuthGuard)
   async rewriteOutreachMessage(

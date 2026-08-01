@@ -4,7 +4,7 @@ import { AiGeneratedMessageRepository } from "@modules/ai/domain/aiGeneratedMess
 import { AiGeneratedMessageMapper } from "@modules/ai/infrastructure/aiGeneratedMessage.mapper";
 import { Injectable } from "@nestjs/common";
 import { aiGeneratedMessagesTable } from "@schema/index";
-import { eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 @Injectable()
 export class AiGeneratedMessageDrizzleRepository extends AiGeneratedMessageRepository {
@@ -20,6 +20,17 @@ export class AiGeneratedMessageDrizzleRepository extends AiGeneratedMessageRepos
 
   async findById(id: string): Promise<AiGeneratedMessageEntity | null> {
     const [row] = await this.databaseService.db.select().from(aiGeneratedMessagesTable).where(eq(aiGeneratedMessagesTable.id, id));
+
+    return row ? AiGeneratedMessageMapper.toDomain(row) : null;
+  }
+
+  async findByLead(leadId: string, companyId: string): Promise<AiGeneratedMessageEntity | null> {
+    const [row] = await this.databaseService.db
+      .select()
+      .from(aiGeneratedMessagesTable)
+      .where(and(eq(aiGeneratedMessagesTable.leadId, leadId), eq(aiGeneratedMessagesTable.companyId, companyId)))
+      .orderBy(desc(aiGeneratedMessagesTable.createdAt))
+      .limit(1);
 
     return row ? AiGeneratedMessageMapper.toDomain(row) : null;
   }

@@ -5,7 +5,9 @@ import { LeadService } from "@modules/lead/services/lead.service";
 import { Body, Controller, ForbiddenException, Get, HttpCode, MessageEvent, Param, Patch, Post, Query, Sse, UseGuards } from "@nestjs/common";
 import { RedisService } from "@redis/services/redis.service";
 import { IdDto } from "@repo/dtos/common";
-import { GenerateOutreachMessageQueryDto, GenerateOutreachMessageResponseDto ,
+import {
+  GenerateOutreachMessageQueryDto,
+  GenerateOutreachMessageResponseDto,
   GenerateLeadsDto,
   GenerateLeadsResponseDto,
   GetLeadResponseDto,
@@ -105,7 +107,7 @@ export class LeadController {
     return { data: LeadMapper.toResponse(updated) };
   }
 
-  @Get(":id/outreach-message")
+  @Get("outreach-message/:id")
   @UseGuards(AuthGuard)
   async generateOutreachMessage(
     @User() user: AuthenticatedUser,

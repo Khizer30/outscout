@@ -10,7 +10,8 @@ export class AiGeneratedMessageEntity {
     public readonly companyMessageRulesVersion: number | null,
     public readonly data: GeneratedMessage,
     public readonly createdBy: string | null,
-    public readonly createdAt: Date
+    public readonly createdAt: Date,
+    public readonly updatedAt: Date
   ) {}
 
   static create(props: {
@@ -22,6 +23,7 @@ export class AiGeneratedMessageEntity {
     data: GeneratedMessage;
     createdBy?: string | null;
     createdAt?: Date;
+    updatedAt?: Date;
   }): AiGeneratedMessageEntity {
     return new AiGeneratedMessageEntity(
       props.id ?? createId(),
@@ -31,7 +33,8 @@ export class AiGeneratedMessageEntity {
       props.companyMessageRulesVersion ?? null,
       props.data,
       props.createdBy ?? null,
-      props.createdAt ?? new Date()
+      props.createdAt ?? new Date(),
+      props.updatedAt ?? new Date()
     );
   }
 }
