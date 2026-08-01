@@ -1,6 +1,11 @@
-import { AiGenerationFailedError } from "@modules/ai/domain/ai.errors";
+import {
+  AiGenerationFailedError,
+  AiGeneratedMessageAccessDeniedError,
+  AiGeneratedMessageNotFoundError,
+  InvalidMessagePartError
+} from "@modules/ai/domain/ai.errors";
 import { AiRepository } from "@modules/ai/domain/ai.repository";
-import { ContactInfo, MessageChannel } from "@modules/ai/domain/ai.types";
+import { ContactInfo, EMAIL_MESSAGE_PARTS, MessageChannel, MessagePart, WHATSAPP_MESSAGE_PARTS } from "@modules/ai/domain/ai.types";
 import { AiGeneratedMessageEntity } from "@modules/ai/domain/aiGeneratedMessage.entity";
 import { AiGeneratedMessageRepository } from "@modules/ai/domain/aiGeneratedMessage.repository";
 import { CompanyNotFoundError } from "@modules/company/domain/company.errors";
@@ -69,6 +74,44 @@ export class AiService {
       return await this.aiGeneratedMessageRepo.create(entity);
     } catch (error) {
       this.logger.error(`Failed to generate outreach message: ${error instanceof Error ? error.message : String(error)}`);
+      throw new AiGenerationFailedError();
+    }
+  }
+
+  async rewriteOutreachMessage(id: string, companyId: string, prompt: string, messagePart: MessagePart | undefined): Promise<AiGeneratedMessageEntity> {
+    const existing = await this.aiGeneratedMessageRepo.findById(id);
+    if (!existing) {
+      throw new AiGeneratedMessageNotFoundError({ id });
+    }
+
+    if (existing.companyId !== companyId) {
+      throw new AiGeneratedMessageAccessDeniedError({ id });
+    }
+
+    if (messagePart) {
+      const validParts: readonly string[] = existing.data.channel === "EMAIL" ? EMAIL_MESSAGE_PARTS : WHATSAPP_MESSAGE_PARTS;
+      if (!validParts.includes(messagePart)) {
+        throw new InvalidMessagePartError({ messagePart, channel: existing.data.channel });
+      }
+    }
+
+    try {
+      const rewritten = await this.aiRepo.rewriteOutreachMessage({ data: existing.data, prompt, messagePart });
+
+      const updated = AiGeneratedMessageEntity.create({
+        id: existing.id,
+        leadId: existing.leadId,
+        companyId: existing.companyId,
+        companyMessageRulesId: existing.companyMessageRulesId,
+        companyMessageRulesVersion: existing.companyMessageRulesVersion,
+        data: rewritten,
+        createdBy: existing.createdBy,
+        createdAt: existing.createdAt
+      });
+
+      return await this.aiGeneratedMessageRepo.update(updated);
+    } catch (error) {
+      this.logger.error(`Failed to rewrite outreach message: ${error instanceof Error ? error.message : String(error)}`);
       throw new AiGenerationFailedError();
     }
   }

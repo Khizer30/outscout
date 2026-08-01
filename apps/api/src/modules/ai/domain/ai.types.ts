@@ -52,6 +52,17 @@ export interface GeneratedEmailMessage {
 
 export type GeneratedMessage = GeneratedWhatsAppMessage | GeneratedEmailMessage;
 
+export const WHATSAPP_MESSAGE_PARTS = ["greetings", "opening", "body", "callToAction"] as const;
+export const EMAIL_MESSAGE_PARTS = ["subject", "opening", "body", "callToAction", "signOff"] as const;
+
+export type MessagePart = (typeof WHATSAPP_MESSAGE_PARTS)[number] | (typeof EMAIL_MESSAGE_PARTS)[number];
+
+export interface RewriteOutreachMessageInput {
+  data: GeneratedMessage;
+  prompt: string;
+  messagePart?: MessagePart;
+}
+
 export interface ContactInfo {
   description: string | null;
   emails: string[];

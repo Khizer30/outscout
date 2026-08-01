@@ -1,11 +1,11 @@
 {
   "name": "outscout",
   "description": "Geo-targeted B2B lead generation and outreach platform",
+  "private": true,
   "author": {
     "name": "Syed Muhammad Khizer",
     "email": "syed.khizer30@gmail.com"
   },
-  "private": true,
   "scripts": {
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
