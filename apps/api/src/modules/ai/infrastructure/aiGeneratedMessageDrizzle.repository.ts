@@ -24,15 +24,22 @@ export class AiGeneratedMessageDrizzleRepository extends AiGeneratedMessageRepos
     return row ? AiGeneratedMessageMapper.toDomain(row) : null;
   }
 
-  async findByLead(leadId: string, companyId: string): Promise<AiGeneratedMessageEntity | null> {
-    const [row] = await this.databaseService.db
+  async findByLead(leadId: string, companyId: string): Promise<AiGeneratedMessageEntity[]> {
+    const rows = await this.databaseService.db
       .select()
       .from(aiGeneratedMessagesTable)
       .where(and(eq(aiGeneratedMessagesTable.leadId, leadId), eq(aiGeneratedMessagesTable.companyId, companyId)))
-      .orderBy(desc(aiGeneratedMessagesTable.createdAt))
-      .limit(1);
+      .orderBy(desc(aiGeneratedMessagesTable.createdAt));
 
-    return row ? AiGeneratedMessageMapper.toDomain(row) : null;
+    const latestByChannel = new Map<string, AiGeneratedMessageEntity>();
+    for (const row of rows) {
+      const entity = AiGeneratedMessageMapper.toDomain(row);
+      if (!latestByChannel.has(entity.data.channel)) {
+        latestByChannel.set(entity.data.channel, entity);
+      }
+    }
+
+    return [...latestByChannel.values()];
   }
 
   async update(entity: AiGeneratedMessageEntity): Promise<AiGeneratedMessageEntity> {

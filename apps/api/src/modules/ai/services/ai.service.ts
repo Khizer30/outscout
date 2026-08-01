@@ -129,12 +129,12 @@ export class AiService {
     }
   }
 
-  async getByLead(leadId: string, companyId: string): Promise<AiGeneratedMessageEntity> {
-    const message = await this.aiGeneratedMessageRepo.findByLead(leadId, companyId);
-    if (!message) {
+  async getByLead(leadId: string, companyId: string): Promise<AiGeneratedMessageEntity[]> {
+    const messages = await this.aiGeneratedMessageRepo.findByLead(leadId, companyId);
+    if (messages.length === 0) {
       throw new AiGeneratedMessageNotFoundError({ leadId });
     }
 
-    return message;
+    return messages;
   }
 }

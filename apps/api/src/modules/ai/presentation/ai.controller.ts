@@ -17,10 +17,15 @@ export class AiController {
       throw new ForbiddenException("You do not belong to a company");
     }
 
-    const message = await this.aiService.getByLead(id, companyId);
-    const { channel, ...data } = message.data;
+    const messages = await this.aiService.getByLead(id, companyId);
 
-    return { data: { id: message.id, leadId: message.leadId, channel, data, createdAt: message.createdAt, updatedAt: message.updatedAt } };
+    return {
+      data: messages.map((message) => {
+        const { channel, ...data } = message.data;
+
+        return { id: message.id, leadId: message.leadId, channel, data, createdAt: message.createdAt, updatedAt: message.updatedAt };
+      })
+    };
   }
 
   @Post("rewrite/:id")
