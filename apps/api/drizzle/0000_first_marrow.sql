@@ -9,6 +9,7 @@ CREATE TYPE "public"."verification_type" AS ENUM('VERIFY', 'RESET');--> statemen
 CREATE TABLE "ai_generated_messages" (
 	"id" text PRIMARY KEY NOT NULL,
 	"leadId" text NOT NULL,
+	"leadCreatedAt" timestamp NOT NULL,
 	"companyId" text NOT NULL,
 	"companyMessageRulesId" text,
 	"companyMessageRulesVersion" integer,
@@ -92,7 +93,7 @@ CREATE TABLE "company_message_rules_history" (
 );
 --> statement-breakpoint
 CREATE TABLE "leads" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" text NOT NULL,
 	"companyId" text NOT NULL,
 	"status" "lead_status" DEFAULT 'ENRICHING' NOT NULL,
 	"name" text,
@@ -111,8 +112,17 @@ CREATE TABLE "leads" (
 	"otherPhones" text[] DEFAULT '{}' NOT NULL,
 	"socialLinks" jsonb DEFAULT '{"otherLinks":[]}'::jsonb NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
-	"updatedAt" timestamp DEFAULT now() NOT NULL
-);
+	"updatedAt" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "leads_id_createdAt_pk" PRIMARY KEY ("id", "createdAt")
+) PARTITION BY RANGE ("createdAt");
+--> statement-breakpoint
+CREATE TABLE "leads_2026" PARTITION OF "leads"
+	FOR VALUES FROM ('2026-01-01') TO ('2027-01-01');
+--> statement-breakpoint
+CREATE TABLE "leads_2027" PARTITION OF "leads"
+	FOR VALUES FROM ('2027-01-01') TO ('2028-01-01');
+--> statement-breakpoint
+CREATE TABLE "leads_default" PARTITION OF "leads" DEFAULT;
 --> statement-breakpoint
 CREATE TABLE "sessions" (
 	"id" text PRIMARY KEY NOT NULL,
@@ -147,7 +157,7 @@ CREATE TABLE "verifications" (
 	"createdAt" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "ai_generated_messages" ADD CONSTRAINT "ai_generated_messages_leadId_leads_id_fk" FOREIGN KEY ("leadId") REFERENCES "public"."leads"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "ai_generated_messages" ADD CONSTRAINT "ai_generated_messages_leadId_leadCreatedAt_leads_id_createdAt_fk" FOREIGN KEY ("leadId","leadCreatedAt") REFERENCES "public"."leads"("id","createdAt") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "ai_generated_messages" ADD CONSTRAINT "ai_generated_messages_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "ai_generated_messages" ADD CONSTRAINT "ai_generated_messages_companyMessageRulesId_company_message_rules_id_fk" FOREIGN KEY ("companyMessageRulesId") REFERENCES "public"."company_message_rules"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "ai_generated_messages" ADD CONSTRAINT "ai_generated_messages_createdBy_users_id_fk" FOREIGN KEY ("createdBy") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint

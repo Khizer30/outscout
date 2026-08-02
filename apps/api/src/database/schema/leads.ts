@@ -1,6 +1,6 @@
 import cuid from "@common/cuid";
 import { companyTable } from "@schema/company";
-import { pgTable, text, integer, doublePrecision, jsonb, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, doublePrecision, jsonb, timestamp, pgEnum, primaryKey } from "drizzle-orm/pg-core";
 
 export const leadTypeEnum = pgEnum("lead_type", [
   "RESTAURANT",
@@ -28,33 +28,37 @@ export type LeadSocialLinks = {
   otherLinks: string[];
 };
 
-export const leadsTable = pgTable("leads", {
-  id: cuid().primaryKey(),
-  companyId: text()
-    .notNull()
-    .references(() => companyTable.id, { onDelete: "cascade" }),
-  status: leadStatusEnum().notNull().default("ENRICHING"),
-  name: text(),
-  description: text(),
-  address: text(),
-  latitude: doublePrecision(),
-  longitude: doublePrecision(),
-  phone: text(),
-  website: text(),
-  businessStatus: text(),
-  rating: doublePrecision(),
-  userRatingCount: integer(),
-  primaryType: leadTypeEnum(),
-  types: leadTypeEnum().array().notNull().default([]),
-  emails: text().array().notNull().default([]),
-  otherPhones: text().array().notNull().default([]),
-  socialLinks: jsonb().$type<LeadSocialLinks>().notNull().default({ otherLinks: [] }),
-  createdAt: timestamp().defaultNow().notNull(),
-  updatedAt: timestamp()
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull()
-});
+export const leadsTable = pgTable(
+  "leads",
+  {
+    id: cuid().notNull(),
+    companyId: text()
+      .notNull()
+      .references(() => companyTable.id, { onDelete: "cascade" }),
+    status: leadStatusEnum().notNull().default("ENRICHING"),
+    name: text(),
+    description: text(),
+    address: text(),
+    latitude: doublePrecision(),
+    longitude: doublePrecision(),
+    phone: text(),
+    website: text(),
+    businessStatus: text(),
+    rating: doublePrecision(),
+    userRatingCount: integer(),
+    primaryType: leadTypeEnum(),
+    types: leadTypeEnum().array().notNull().default([]),
+    emails: text().array().notNull().default([]),
+    otherPhones: text().array().notNull().default([]),
+    socialLinks: jsonb().$type<LeadSocialLinks>().notNull().default({ otherLinks: [] }),
+    createdAt: timestamp().defaultNow().notNull(),
+    updatedAt: timestamp()
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull()
+  },
+  (table) => [primaryKey({ columns: [table.id, table.createdAt] })]
+);
 
 export type Lead = typeof leadsTable.$inferSelect;
 export type LeadInsert = typeof leadsTable.$inferInsert;

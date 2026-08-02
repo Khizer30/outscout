@@ -3,7 +3,7 @@ import { companyTable } from "@schema/company";
 import { companyMessageRulesTable } from "@schema/companyMessageRules";
 import { leadsTable } from "@schema/leads";
 import { usersTable } from "@schema/users";
-import { pgTable, text, integer, jsonb, timestamp, index } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, jsonb, timestamp, index, foreignKey } from "drizzle-orm/pg-core";
 
 export type AiGeneratedMessageData =
   | { channel: "WHATSAPP"; greetings: string; opening: string; body: string; callToAction: string }
@@ -13,9 +13,8 @@ export const aiGeneratedMessagesTable = pgTable(
   "ai_generated_messages",
   {
     id: cuid().primaryKey(),
-    leadId: text()
-      .notNull()
-      .references(() => leadsTable.id, { onDelete: "cascade" }),
+    leadId: text().notNull(),
+    leadCreatedAt: timestamp().notNull(),
     companyId: text()
       .notNull()
       .references(() => companyTable.id, { onDelete: "cascade" }),
@@ -29,7 +28,14 @@ export const aiGeneratedMessagesTable = pgTable(
       .$onUpdate(() => new Date())
       .notNull()
   },
-  (table) => [index("ai_generated_messages_lead_id_idx").on(table.leadId), index("ai_generated_messages_company_id_idx").on(table.companyId)]
+  (table) => [
+    index("ai_generated_messages_lead_id_idx").on(table.leadId),
+    index("ai_generated_messages_company_id_idx").on(table.companyId),
+    foreignKey({
+      columns: [table.leadId, table.leadCreatedAt],
+      foreignColumns: [leadsTable.id, leadsTable.createdAt]
+    }).onDelete("cascade")
+  ]
 );
 
 export type AiGeneratedMessage = typeof aiGeneratedMessagesTable.$inferSelect;

@@ -5,6 +5,7 @@ export class AiGeneratedMessageEntity {
   constructor(
     public readonly id: string,
     public readonly leadId: string,
+    public readonly leadCreatedAt: Date,
     public readonly companyId: string,
     public readonly companyMessageRulesId: string | null,
     public readonly companyMessageRulesVersion: number | null,
@@ -17,6 +18,7 @@ export class AiGeneratedMessageEntity {
   static create(props: {
     id?: string;
     leadId: string;
+    leadCreatedAt: Date;
     companyId: string;
     companyMessageRulesId?: string | null;
     companyMessageRulesVersion?: number | null;
@@ -28,6 +30,7 @@ export class AiGeneratedMessageEntity {
     return new AiGeneratedMessageEntity(
       props.id ?? createId(),
       props.leadId,
+      props.leadCreatedAt,
       props.companyId,
       props.companyMessageRulesId ?? null,
       props.companyMessageRulesVersion ?? null,
