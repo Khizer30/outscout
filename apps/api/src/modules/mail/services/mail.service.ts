@@ -1,9 +1,12 @@
 import { MailRepository } from "@modules/mail/domain/mail.repository";
+import type { MailSenderConfig } from "@modules/mail/domain/mail.types";
 import { OutscoutBranding } from "@modules/mail/domain/mail.value-objects";
 import generateInvitationEmail from "@modules/mail/templates/invitation.html";
 import generateInvitationText from "@modules/mail/templates/invitation.text";
 import generateOtpEmail from "@modules/mail/templates/otp.html";
 import generateOtpText from "@modules/mail/templates/otp.text";
+import generateOutreachEmail from "@modules/mail/templates/outreach.html";
+import generateOutreachText from "@modules/mail/templates/outreach.text";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
@@ -56,5 +59,29 @@ export class MailService {
     });
 
     await this.sender.send({ to, subject, textContent, htmlContent });
+  }
+
+  async sendLeadOutreachEmail(
+    senderConfig: MailSenderConfig,
+    to: string,
+    subject: string,
+    body: string,
+    branding: { signature: string | null; companyImage?: string | null; primaryColor?: string | null; secondaryColor?: string | null }
+  ): Promise<void> {
+    const { signature } = branding;
+
+    await this.sender.sendWith(senderConfig, {
+      to,
+      subject,
+      textContent: generateOutreachText({ body, signature }),
+      htmlContent: generateOutreachEmail({
+        body,
+        signature,
+        companyName: senderConfig.senderName,
+        companyImage: branding.companyImage,
+        primaryColor: branding.primaryColor ?? OutscoutBranding.PRIMARY_COLOR,
+        secondaryColor: branding.secondaryColor ?? OutscoutBranding.SECONDARY_COLOR
+      })
+    });
   }
 }

@@ -16,6 +16,7 @@ import {
   GetLeadsDto,
   GetLeadsResponseDto,
   ProcessLeadResponseDto,
+  SendOutreachEmailResponseDto,
   UpdateLeadDto,
   UpdateLeadResponseDto
 } from "@repo/dtos/lead";
@@ -142,6 +143,20 @@ export class LeadController {
     const link = await this.leadService.generateWhatsAppLink(id, companyId, query.messagePart);
 
     return { data: { link } };
+  }
+
+  @Post("email/:id")
+  @HttpCode(200)
+  @UseGuards(AuthGuard)
+  async sendOutreachEmail(@User() user: AuthenticatedUser, @Param() { id }: IdDto): Promise<SendOutreachEmailResponseDto> {
+    const companyId = user.companyId;
+    if (!companyId) {
+      throw new ForbiddenException("You do not belong to a company");
+    }
+
+    const { to } = await this.leadService.sendOutreachEmail(id, companyId);
+
+    return { data: { sent: true, to } };
   }
 
   @Post("process-lead/:id")

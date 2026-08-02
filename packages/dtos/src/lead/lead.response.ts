@@ -104,3 +104,13 @@ export const GenerateWhatsAppLinkResponseSchema = z.object({
 });
 
 export class GenerateWhatsAppLinkResponseDto extends createZodDto(GenerateWhatsAppLinkResponseSchema) {}
+
+// Send Outreach Email
+export const SendOutreachEmailResponseSchema = z.object({
+  data: z.object({
+    sent: z.boolean(),
+    to: z.string()
+  })
+});
+
+export class SendOutreachEmailResponseDto extends createZodDto(SendOutreachEmailResponseSchema) {}

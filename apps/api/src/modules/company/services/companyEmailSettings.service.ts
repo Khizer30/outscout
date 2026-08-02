@@ -1,3 +1,4 @@
+import { CompanyEmailNotConfiguredError } from "@modules/company/domain/company.errors";
 import { CompanyEmailSettingsEntity } from "@modules/company/domain/companyEmailSettings.entity";
 import { CompanyEmailSettingsRepository } from "@modules/company/domain/companyEmailSettings.repository";
 import { EncryptionService } from "@modules/encryption/services/encryption.service";
@@ -26,5 +27,27 @@ export class CompanyEmailSettingsService {
     const settings = existing ? existing.update({ ...data, brevoApiKeyCipher }) : CompanyEmailSettingsEntity.create({ companyId, ...data, brevoApiKeyCipher });
 
     return this.companyEmailSettingsRepo.upsert(settings);
+  }
+
+  async getDecryptedSettings(companyId: string): Promise<{
+    apiKey: string;
+    fromEmail: string;
+    emailSignature: string | null;
+    primaryColor: string | null;
+    secondaryColor: string | null;
+  }> {
+    const settings = await this.companyEmailSettingsRepo.findByCompanyId(companyId);
+
+    if (!settings?.brevoApiKeyCipher || !settings.fromEmail) {
+      throw new CompanyEmailNotConfiguredError({ companyId });
+    }
+
+    return {
+      apiKey: this.encryptionService.decrypt(settings.brevoApiKeyCipher),
+      fromEmail: settings.fromEmail,
+      emailSignature: settings.emailSignature,
+      primaryColor: settings.primaryColor,
+      secondaryColor: settings.secondaryColor
+    };
   }
 }

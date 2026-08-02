@@ -161,4 +161,24 @@ export class AiService {
 
     return { leadId: existing.leadId, text };
   }
+
+  async getEmailMessage(id: string, companyId: string): Promise<{ leadId: string; subject: string; text: string }> {
+    const existing = await this.aiGeneratedMessageRepo.findById(id);
+    if (!existing) {
+      throw new AiGeneratedMessageNotFoundError({ id });
+    }
+
+    if (existing.companyId !== companyId) {
+      throw new AiGeneratedMessageAccessDeniedError({ id });
+    }
+
+    if (existing.data.channel !== "EMAIL") {
+      throw new AiGeneratedMessageChannelMismatchError({ id, expected: "EMAIL", actual: existing.data.channel });
+    }
+
+    const { subject, opening, body, callToAction, signOff } = existing.data;
+    const text = [opening, body, callToAction, signOff].join("\n\n");
+
+    return { leadId: existing.leadId, subject, text };
+  }
 }

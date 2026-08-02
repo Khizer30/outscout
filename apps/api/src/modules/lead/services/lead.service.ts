@@ -1,10 +1,14 @@
 import { MessageChannel, MessagePart } from "@modules/ai/domain/ai.types";
 import { AiGeneratedMessageEntity } from "@modules/ai/domain/aiGeneratedMessage.entity";
 import { AiService } from "@modules/ai/services/ai.service";
+import { CompanyNotFoundError } from "@modules/company/domain/company.errors";
+import { CompanyService } from "@modules/company/services/company.service";
+import { CompanyEmailSettingsService } from "@modules/company/services/companyEmailSettings.service";
 import { LeadEntity } from "@modules/lead/domain/lead.entity";
-import { LeadAccessDeniedError, LeadNotEnrichingError, LeadNotFoundError, LeadPhoneMissingError } from "@modules/lead/domain/lead.errors";
+import { LeadAccessDeniedError, LeadEmailMissingError, LeadNotEnrichingError, LeadNotFoundError, LeadPhoneMissingError } from "@modules/lead/domain/lead.errors";
 import { LeadRepository } from "@modules/lead/domain/lead.repository";
 import { LeadSocialLinks, LeadStatus, UpdateLeadProps } from "@modules/lead/domain/lead.types";
+import { MailService } from "@modules/mail/services/mail.service";
 import { MapSearchParams } from "@modules/map/domain/mapPlace.types";
 import { MapService } from "@modules/map/services/map.service";
 import { WebScrapingService } from "@modules/webScraping/services/webScraping.service";
@@ -21,6 +25,9 @@ export class LeadService {
     private readonly mapService: MapService,
     private readonly webScrapingService: WebScrapingService,
     private readonly aiService: AiService,
+    private readonly companyService: CompanyService,
+    private readonly companyEmailSettingsService: CompanyEmailSettingsService,
+    private readonly mailService: MailService,
     @InjectQueue("webScraper") private readonly webScraperQueue: Queue
   ) {}
 
@@ -102,6 +109,32 @@ export class LeadService {
     const cleanedPhone = lead.phone.replace(/\D/g, "");
 
     return `https://wa.me/${cleanedPhone}?text=${encodeURIComponent(text)}`;
+  }
+
+  async sendOutreachEmail(aiMessageId: string, companyId: string): Promise<{ to: string }> {
+    const { leadId, subject, text } = await this.aiService.getEmailMessage(aiMessageId, companyId);
+    const lead = await this.findById(leadId, companyId);
+
+    const [to] = lead.emails;
+    if (!to) {
+      throw new LeadEmailMissingError({ id: leadId });
+    }
+
+    const company = await this.companyService.findById(companyId);
+    if (!company) {
+      throw new CompanyNotFoundError({ id: companyId });
+    }
+
+    const { apiKey, fromEmail, emailSignature, primaryColor, secondaryColor } = await this.companyEmailSettingsService.getDecryptedSettings(companyId);
+
+    await this.mailService.sendLeadOutreachEmail({ apiKey, senderEmail: fromEmail, senderName: company.name }, to, subject, text, {
+      signature: emailSignature,
+      companyImage: company.companyImageURL,
+      primaryColor,
+      secondaryColor
+    });
+
+    return { to };
   }
 
   async processLead(id: string, companyId: string): Promise<LeadEntity> {
