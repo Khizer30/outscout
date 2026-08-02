@@ -157,10 +157,10 @@ CREATE TABLE "verifications" (
 	"createdAt" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "ai_generated_messages" ADD CONSTRAINT "ai_generated_messages_leadId_leadCreatedAt_leads_id_createdAt_fk" FOREIGN KEY ("leadId","leadCreatedAt") REFERENCES "public"."leads"("id","createdAt") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "ai_generated_messages" ADD CONSTRAINT "ai_generated_messages_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "ai_generated_messages" ADD CONSTRAINT "ai_generated_messages_companyMessageRulesId_company_message_rules_id_fk" FOREIGN KEY ("companyMessageRulesId") REFERENCES "public"."company_message_rules"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "ai_generated_messages" ADD CONSTRAINT "ai_generated_messages_createdBy_users_id_fk" FOREIGN KEY ("createdBy") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "ai_generated_messages" ADD CONSTRAINT "ai_generated_messages_leadId_leadCreatedAt_leads_id_createdAt_fk" FOREIGN KEY ("leadId","leadCreatedAt") REFERENCES "public"."leads"("id","createdAt") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_actorId_users_id_fk" FOREIGN KEY ("actorId") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "company_email_settings" ADD CONSTRAINT "company_email_settings_companyId_company_id_fk" FOREIGN KEY ("companyId") REFERENCES "public"."company"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
