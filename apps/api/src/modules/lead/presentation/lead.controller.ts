@@ -78,9 +78,18 @@ export class LeadController {
 
     const { leads, total } = await this.leadService.findByCompany(companyId, { status: dto.status }, { page: dto.page, limit: dto.limit });
 
+    const totalPages = Math.ceil(total / dto.limit);
+
     return {
       data: leads.map(LeadMapper.toResponse),
-      meta: { page: dto.page, limit: dto.limit, total, totalPages: Math.ceil(total / dto.limit) }
+      meta: {
+        page: dto.page,
+        limit: dto.limit,
+        total,
+        totalPages,
+        hasNext: dto.page < totalPages,
+        hasPrevious: dto.page > 1
+      }
     };
   }
 

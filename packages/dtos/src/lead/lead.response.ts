@@ -42,7 +42,9 @@ export const GetLeadsResponseSchema = z.object({
     page: z.number(),
     limit: z.number(),
     total: z.number(),
-    totalPages: z.number()
+    totalPages: z.number(),
+    hasNext: z.boolean(),
+    hasPrevious: z.boolean()
   })
 });
 
