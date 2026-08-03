@@ -5,7 +5,7 @@ import { LeadStatus } from "@modules/lead/domain/lead.types";
 import { LeadMapper } from "@modules/lead/infrastructure/lead.mapper";
 import { Injectable } from "@nestjs/common";
 import { leadsTable } from "@schema/index";
-import { and, count, eq, inArray } from "drizzle-orm";
+import { and, count, desc, eq, inArray } from "drizzle-orm";
 
 @Injectable()
 export class LeadDrizzleRepository extends LeadRepository {
@@ -21,7 +21,7 @@ export class LeadDrizzleRepository extends LeadRepository {
     const rows = await this.databaseService.db
       .insert(leadsTable)
       .values(leads.map(LeadMapper.toPersistence))
-      .onConflictDoNothing({ target: leadsTable.id })
+      .onConflictDoNothing({ target: [leadsTable.id, leadsTable.createdAt] })
       .returning();
 
     return rows.map(LeadMapper.toDomain);
@@ -48,6 +48,7 @@ export class LeadDrizzleRepository extends LeadRepository {
         .select()
         .from(leadsTable)
         .where(where)
+        .orderBy(desc(leadsTable.createdAt))
         .limit(limit)
         .offset((page - 1) * limit),
       this.databaseService.db.select({ total: count() }).from(leadsTable).where(where)

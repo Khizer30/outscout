@@ -1,5 +1,5 @@
 {
-  "id": "16cc631e-9cf6-42c9-a198-8ee11410d346",
+  "id": "c15cbed3-1cf7-4163-9c81-4a85c32c90a6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1016,7 +1016,38 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "leads_id_idx": {
+          "name": "leads_id_idx",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "leads_company_id_idx": {
+          "name": "leads_company_id_idx",
+          "columns": [
+            {
+              "expression": "companyId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "leads_companyId_company_id_fk": {
           "name": "leads_companyId_company_id_fk",
