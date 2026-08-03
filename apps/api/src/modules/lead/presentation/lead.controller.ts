@@ -2,6 +2,7 @@ import { AuthGuard } from "@middleware/auth.guard";
 import { User } from "@middleware/user.decorator";
 import { LeadMapper } from "@modules/lead/infrastructure/lead.mapper";
 import { LeadService } from "@modules/lead/services/lead.service";
+import { LeadCacheService } from "@modules/lead/services/leadCache.service";
 import { Body, Controller, ForbiddenException, Get, HttpCode, MessageEvent, Param, Patch, Post, Query, Sse, UseGuards } from "@nestjs/common";
 import { RedisService } from "@redis/services/redis.service";
 import { IdDto } from "@repo/dtos/common";
@@ -26,7 +27,8 @@ import { Observable } from "rxjs";
 export class LeadController {
   constructor(
     private readonly leadService: LeadService,
-    private readonly redisService: RedisService
+    private readonly redisService: RedisService,
+    private readonly leadCacheService: LeadCacheService
   ) {}
 
   @Sse("stream")
@@ -64,6 +66,8 @@ export class LeadController {
       limit: dto.limit
     });
 
+    await this.leadCacheService.invalidate(companyId);
+
     return { data: leads.map(LeadMapper.toResponse) };
   }
 
@@ -76,11 +80,16 @@ export class LeadController {
       throw new ForbiddenException("You do not belong to a company");
     }
 
+    const cached = await this.leadCacheService.getSearch(companyId, dto);
+    if (cached) {
+      return cached;
+    }
+
     const { leads, total } = await this.leadService.findByCompany(companyId, { status: dto.status }, { page: dto.page, limit: dto.limit });
 
     const totalPages = Math.ceil(total / dto.limit);
 
-    return {
+    const response: GetLeadsResponseDto = {
       data: leads.map(LeadMapper.toResponse),
       meta: {
         page: dto.page,
@@ -91,6 +100,10 @@ export class LeadController {
         hasPrevious: dto.page > 1
       }
     };
+
+    await this.leadCacheService.setSearch(companyId, dto, response);
+
+    return response;
   }
 
   @Get(":id")
@@ -115,6 +128,8 @@ export class LeadController {
     }
 
     const updated = await this.leadService.update(id, companyId, dto);
+
+    await this.leadCacheService.invalidate(companyId);
 
     return { data: LeadMapper.toResponse(updated) };
   }
@@ -178,6 +193,8 @@ export class LeadController {
     }
 
     const lead = await this.leadService.processLead(id, companyId);
+
+    await this.leadCacheService.invalidate(companyId);
 
     return { data: LeadMapper.toResponse(lead) };
   }
