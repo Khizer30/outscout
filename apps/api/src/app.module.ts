@@ -37,7 +37,9 @@ import { AppController } from "@src/app.controller";
           host: configService.getOrThrow<string>("REDIS_HOST"),
           port: +configService.getOrThrow<string>("REDIS_PORT"),
           username: configService.getOrThrow<string>("REDIS_USERNAME"),
-          password: configService.getOrThrow<string>("REDIS_PASSWORD")
+          password: configService.getOrThrow<string>("REDIS_PASSWORD"),
+          tls: configService.get<string>("REDIS_TLS") === "true" ? {} : undefined,
+          maxRetriesPerRequest: null
         }
       }),
       inject: [ConfigService]
