@@ -17,6 +17,7 @@ import {
 import { InvitationRepository } from "@modules/team/domain/invitation.repository";
 import { CompanyInvitationStatus, InvitationTokenPayload, InvitedByUserSummary } from "@modules/team/domain/invitation.types";
 import { InvitationConfig } from "@modules/team/domain/invitation.value-objects";
+import { UserEntity } from "@modules/user/domain/user.entity";
 import { UserService } from "@modules/user/services/user.service";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
@@ -84,7 +85,7 @@ export class TeamService {
       invitation = await this.invitationRepo.create(draft.withToken(token));
     }
 
-    await this.sendInvitationEmail(company, invitation, existingUser !== null);
+    await this.sendInvitationEmail(company, invitation, existingUser);
 
     return invitation;
   }
@@ -229,9 +230,9 @@ export class TeamService {
     return { company, membership, invitation: saved };
   }
 
-  private async sendInvitationEmail(company: CompanyEntity, invitation: CompanyInvitationEntity, isExistingUser: boolean): Promise<void> {
-    const acceptUrl = isExistingUser ? null : `${this.frontendUrl}/auth/signup?token=${invitation.token}`;
+  private async sendInvitationEmail(company: CompanyEntity, invitation: CompanyInvitationEntity, existingUser: UserEntity | null): Promise<void> {
+    const acceptUrl = existingUser ? null : `${this.frontendUrl}/auth/signup?token=${invitation.token}`;
 
-    await this.mailService.sendInvitationEmail(invitation.email, acceptUrl, company.name);
+    await this.mailService.sendInvitationEmail(invitation.email, acceptUrl, company.name, existingUser?.language ?? "EN");
   }
 }

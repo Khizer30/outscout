@@ -14,7 +14,7 @@ function escapeHtml(text: string): string {
 }
 
 function toHtml(text: string): string {
-  return escapeHtml(text).replace(/\n\n/g, "</p><p style=\"margin: 0 0 16px 0;\">").replace(/\n/g, "<br />");
+  return escapeHtml(text).replace(/\n\n/g, '</p><p style="margin: 0 0 16px 0;">').replace(/\n/g, "<br />");
 }
 
 export default function generateOutreachEmail({ body, signature, companyName, companyImage, primaryColor, secondaryColor }: Props): string {

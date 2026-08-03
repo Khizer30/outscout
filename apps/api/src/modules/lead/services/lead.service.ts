@@ -5,7 +5,13 @@ import { CompanyNotFoundError } from "@modules/company/domain/company.errors";
 import { CompanyService } from "@modules/company/services/company.service";
 import { CompanyEmailSettingsService } from "@modules/company/services/companyEmailSettings.service";
 import { LeadEntity } from "@modules/lead/domain/lead.entity";
-import { LeadAccessDeniedError, LeadEmailMissingError, LeadNotEnrichingError, LeadNotFoundError, LeadPhoneMissingError } from "@modules/lead/domain/lead.errors";
+import {
+  LeadAccessDeniedError,
+  LeadEmailMissingError,
+  LeadNotEnrichingError,
+  LeadNotFoundError,
+  LeadPhoneMissingError
+} from "@modules/lead/domain/lead.errors";
 import { LeadRepository } from "@modules/lead/domain/lead.repository";
 import { LeadSocialLinks, LeadStatus, UpdateLeadProps } from "@modules/lead/domain/lead.types";
 import { MailService } from "@modules/mail/services/mail.service";

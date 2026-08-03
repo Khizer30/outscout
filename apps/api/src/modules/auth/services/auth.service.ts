@@ -90,7 +90,7 @@ export class AuthService {
 
     await this.verificationRepo.create(verification);
 
-    await this.mailService.sendVerificationEmail(user.email, user.name, otp);
+    await this.mailService.sendVerificationEmail(user.email, user.name, otp, user.language);
 
     return user;
   }
@@ -276,7 +276,7 @@ export class AuthService {
 
     await this.verificationRepo.create(verification);
 
-    await this.mailService.sendResetEmail(user.email, user.name, otp);
+    await this.mailService.sendResetEmail(user.email, user.name, otp, user.language);
   }
 
   async resetPassword(dto: ResetPasswordDto): Promise<void> {
