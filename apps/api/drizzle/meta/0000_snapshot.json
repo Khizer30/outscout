@@ -1,5 +1,5 @@
 {
-  "id": "2174f929-94a4-4425-bbc6-c83f94aaded8",
+  "id": "c8f95206-16ff-4058-892f-b7402a25a115",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -17,12 +17,6 @@
         "leadId": {
           "name": "leadId",
           "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "leadCreatedAt": {
-          "name": "leadCreatedAt",
-          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
@@ -104,6 +98,19 @@
         }
       },
       "foreignKeys": {
+        "ai_generated_messages_leadId_leads_id_fk": {
+          "name": "ai_generated_messages_leadId_leads_id_fk",
+          "tableFrom": "ai_generated_messages",
+          "tableTo": "leads",
+          "columnsFrom": [
+            "leadId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
         "ai_generated_messages_companyId_company_id_fk": {
           "name": "ai_generated_messages_companyId_company_id_fk",
           "tableFrom": "ai_generated_messages",
@@ -141,21 +148,6 @@
             "id"
           ],
           "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "ai_generated_messages_leadId_leadCreatedAt_leads_id_createdAt_fk": {
-          "name": "ai_generated_messages_leadId_leadCreatedAt_leads_id_createdAt_fk",
-          "tableFrom": "ai_generated_messages",
-          "tableTo": "leads",
-          "columnsFrom": [
-            "leadId",
-            "leadCreatedAt"
-          ],
-          "columnsTo": [
-            "id",
-            "createdAt"
-          ],
-          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -888,7 +880,7 @@
         "id": {
           "name": "id",
           "type": "text",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "companyId": {
@@ -1048,15 +1040,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "leads_id_createdAt_pk": {
-          "name": "leads_id_createdAt_pk",
-          "columns": [
-            "id",
-            "createdAt"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},

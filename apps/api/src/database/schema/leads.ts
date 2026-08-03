@@ -1,6 +1,5 @@
-import cuid from "@common/cuid";
 import { companyTable } from "@schema/company";
-import { pgTable, text, integer, doublePrecision, jsonb, timestamp, pgEnum, primaryKey, index } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, doublePrecision, jsonb, timestamp, pgEnum, index } from "drizzle-orm/pg-core";
 
 export const leadTypeEnum = pgEnum("lead_type", [
   "RESTAURANT",
@@ -31,7 +30,7 @@ export type LeadSocialLinks = {
 export const leadsTable = pgTable(
   "leads",
   {
-    id: cuid().notNull(),
+    id: text().primaryKey(),
     companyId: text()
       .notNull()
       .references(() => companyTable.id, { onDelete: "cascade" }),
@@ -57,7 +56,7 @@ export const leadsTable = pgTable(
       .$onUpdate(() => new Date())
       .notNull()
   },
-  (table) => [primaryKey({ columns: [table.id, table.createdAt] }), index("leads_company_id_idx").on(table.companyId)]
+  (table) => [index("leads_company_id_idx").on(table.companyId)]
 );
 
 export type Lead = typeof leadsTable.$inferSelect;

@@ -21,7 +21,7 @@ export class LeadDrizzleRepository extends LeadRepository {
     const rows = await this.databaseService.db
       .insert(leadsTable)
       .values(leads.map(LeadMapper.toPersistence))
-      .onConflictDoNothing({ target: [leadsTable.id, leadsTable.createdAt] })
+      .onConflictDoNothing({ target: leadsTable.id })
       .returning();
 
     return rows.map(LeadMapper.toDomain);

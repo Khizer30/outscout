@@ -7,7 +7,6 @@ export class AiGeneratedMessageMapper {
     return new AiGeneratedMessageEntity(
       row.id,
       row.leadId,
-      row.leadCreatedAt,
       row.companyId,
       row.companyMessageRulesId,
       row.companyMessageRulesVersion,
@@ -22,7 +21,6 @@ export class AiGeneratedMessageMapper {
     return {
       id: entity.id,
       leadId: entity.leadId,
-      leadCreatedAt: entity.leadCreatedAt,
       companyId: entity.companyId,
       companyMessageRulesId: entity.companyMessageRulesId,
       companyMessageRulesVersion: entity.companyMessageRulesVersion,

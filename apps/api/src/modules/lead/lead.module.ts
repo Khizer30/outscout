@@ -6,7 +6,6 @@ import { LeadRepository } from "@modules/lead/domain/lead.repository";
 import { LeadDrizzleRepository } from "@modules/lead/infrastructure/leadDrizzle.repository";
 import { LeadController } from "@modules/lead/presentation/lead.controller";
 import { LeadService } from "@modules/lead/services/lead.service";
-import { LeadPartitionCronService } from "@modules/lead/services/leadPartitionCron.service";
 import { MailModule } from "@modules/mail/mail.module";
 import { MapModule } from "@modules/map/map.module";
 import { WebScrapingModule } from "@modules/webScraping/webScraping.module";
@@ -29,7 +28,6 @@ import { RedisModule } from "@redis/redis.module";
   controllers: [LeadController],
   providers: [
     LeadService,
-    LeadPartitionCronService,
     {
       provide: LeadRepository,
       useClass: LeadDrizzleRepository

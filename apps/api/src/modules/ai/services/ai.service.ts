@@ -65,7 +65,6 @@ export class AiService {
 
       const entity = AiGeneratedMessageEntity.create({
         leadId: lead.id,
-        leadCreatedAt: lead.createdAt,
         companyId,
         companyMessageRulesId: messageRules?.id ?? null,
         companyMessageRulesVersion: messageRules?.version ?? null,
@@ -116,7 +115,6 @@ export class AiService {
       const updated = AiGeneratedMessageEntity.create({
         id: existing.id,
         leadId: existing.leadId,
-        leadCreatedAt: existing.leadCreatedAt,
         companyId: existing.companyId,
         companyMessageRulesId: existing.companyMessageRulesId,
         companyMessageRulesVersion: existing.companyMessageRulesVersion,
