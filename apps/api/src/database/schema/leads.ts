@@ -57,11 +57,7 @@ export const leadsTable = pgTable(
       .$onUpdate(() => new Date())
       .notNull()
   },
-  (table) => [
-    primaryKey({ columns: [table.id, table.createdAt] }),
-    index("leads_id_idx").on(table.id),
-    index("leads_company_id_idx").on(table.companyId)
-  ]
+  (table) => [primaryKey({ columns: [table.id, table.createdAt] }), index("leads_company_id_idx").on(table.companyId)]
 );
 
 export type Lead = typeof leadsTable.$inferSelect;

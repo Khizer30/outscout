@@ -185,7 +185,6 @@ CREATE UNIQUE INDEX "company_invitation_company_email_pending_unique" ON "compan
 CREATE UNIQUE INDEX "company_invitation_token_unique" ON "company_invitation" USING btree ("token");--> statement-breakpoint
 CREATE UNIQUE INDEX "company_membership_company_user_unique" ON "company_membership" USING btree ("companyId","userId");--> statement-breakpoint
 CREATE UNIQUE INDEX "company_message_rules_company_channel_unique" ON "company_message_rules" USING btree ("companyId","channel");--> statement-breakpoint
-CREATE INDEX "leads_id_idx" ON "leads" USING btree ("id");--> statement-breakpoint
 CREATE INDEX "leads_company_id_idx" ON "leads" USING btree ("companyId");--> statement-breakpoint
 CREATE INDEX "sessions_user_id_idx" ON "sessions" USING btree ("userId");--> statement-breakpoint
 CREATE INDEX "sessions_refresh_token_hash_idx" ON "sessions" USING btree ("refreshTokenHash");--> statement-breakpoint
