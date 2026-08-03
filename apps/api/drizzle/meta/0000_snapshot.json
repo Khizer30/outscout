@@ -1,5 +1,5 @@
 {
-  "id": "c8f95206-16ff-4058-892f-b7402a25a115",
+  "id": "7b0e0a32-30b9-493a-b591-6d3e66221593",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1211,6 +1211,14 @@
           "notNull": true,
           "default": "'UTC'"
         },
+        "language": {
+          "name": "language",
+          "type": "user_language",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'EN'"
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -1467,6 +1475,14 @@
         "ACCOUNTING",
         "GYM",
         "BEAUTY_SALON"
+      ]
+    },
+    "public.user_language": {
+      "name": "user_language",
+      "schema": "public",
+      "values": [
+        "EN",
+        "AR"
       ]
     },
     "public.verification_type": {

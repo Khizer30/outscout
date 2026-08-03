@@ -3,6 +3,7 @@ import { MediaService } from "@modules/media/services/media.service";
 import { UserEntity } from "@modules/user/domain/user.entity";
 import { UserAlreadyExistsError, UserNotFoundError } from "@modules/user/domain/user.errors";
 import { UserRepository } from "@modules/user/domain/user.repository";
+import { UserLanguage } from "@modules/user/domain/user.types";
 import { Injectable } from "@nestjs/common";
 
 interface CreateUser {
@@ -16,6 +17,7 @@ interface UpdateUser {
   name?: string;
   password?: string;
   timezone?: string;
+  language?: UserLanguage;
   profileImageURL?: string | null;
 }
 
@@ -63,6 +65,7 @@ export class UserService {
       name: data.name,
       passwordHash,
       timezone: data.timezone,
+      language: data.language,
       profileImageURL: data.profileImageURL
     });
 

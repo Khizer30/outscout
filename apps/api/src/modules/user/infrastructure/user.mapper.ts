@@ -13,6 +13,7 @@ export class UserMapper {
       row.isSuperAdmin,
       row.profileImageURL,
       row.timezone,
+      row.language,
       row.createdAt,
       row.updatedAt,
       row.deletedAt
@@ -29,6 +30,7 @@ export class UserMapper {
       isSuperAdmin: entity.isSuperAdmin,
       profileImageURL: entity.profileImageURL,
       timezone: entity.timezone,
+      language: entity.language,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       deletedAt: entity.deletedAt
@@ -44,6 +46,7 @@ export class UserMapper {
       isSuperAdmin: entity.isSuperAdmin,
       profileImageURL: entity.profileImageURL,
       timezone: entity.timezone,
+      language: entity.language,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       deletedAt: entity.deletedAt

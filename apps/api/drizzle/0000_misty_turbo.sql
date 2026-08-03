@@ -5,6 +5,7 @@ CREATE TYPE "public"."company_membership_status" AS ENUM('ACTIVE', 'INACTIVE');-
 CREATE TYPE "public"."message_channel" AS ENUM('WHATSAPP', 'EMAIL');--> statement-breakpoint
 CREATE TYPE "public"."lead_status" AS ENUM('ENRICHING', 'READY', 'CONTACTED', 'INTERESTED', 'UNRESPONSIVE', 'REJECTED');--> statement-breakpoint
 CREATE TYPE "public"."lead_type" AS ENUM('RESTAURANT', 'HOTEL', 'HOSPITAL', 'DENTAL_CLINIC', 'REAL_ESTATE_AGENCY', 'ACCOUNTING', 'GYM', 'BEAUTY_SALON');--> statement-breakpoint
+CREATE TYPE "public"."user_language" AS ENUM('EN', 'AR');--> statement-breakpoint
 CREATE TYPE "public"."verification_type" AS ENUM('VERIFY', 'RESET');--> statement-breakpoint
 CREATE TABLE "ai_generated_messages" (
 	"id" text PRIMARY KEY NOT NULL,
@@ -132,6 +133,7 @@ CREATE TABLE "users" (
 	"isSuperAdmin" boolean DEFAULT false NOT NULL,
 	"profileImageURL" text,
 	"timezone" text DEFAULT 'UTC' NOT NULL,
+	"language" "user_language" DEFAULT 'EN' NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now() NOT NULL,
 	"deletedAt" timestamp
