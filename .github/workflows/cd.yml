@@ -6,49 +6,79 @@ on:
       - master
 
 jobs:
-  Dockerize:
+  # Dockerize:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v4
+
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
+
+  #     - name: Login to Docker Hub
+  #       uses: docker/login-action@v3
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  #     - name: Build & Push Image
+  #       uses: docker/build-push-action@v6
+  #       with:
+  #         context: .
+  #         file: Dockerfile
+  #         push: true
+  #         tags: |
+  #           khizer30/outscout-server:latest
+  #           khizer30/outscout-server:${{ github.sha }}
+  #         cache-from: type=gha
+  #         cache-to: type=gha,mode=max
+
+  # API:
+  #   needs: Dockerize
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Deploy to Oracle Cloud
+  #       uses: appleboy/ssh-action@v1.2.0
+  #       with:
+  #         host: ${{ secrets.ORACLE_SSH_HOST }}
+  #         username: ${{ secrets.ORACLE_SSH_USER }}
+  #         key: ${{ secrets.ORACLE_SSH_KEY }}
+  #         port: 22
+  #         script: |
+  #           docker pull khizer30/outscout-server:latest
+  #           docker compose down
+  #           docker compose up -d
+  #           docker image prune -f
+  #           history -c && history -w
+
+  Web:
+    # needs: API
     runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Install Vercel CLI
+        run: pnpm add --global vercel@latest
 
-      - name: Build & Push Image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: |
-            khizer30/outscout-server:latest
-            khizer30/outscout-server:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: Pull Vercel Environment Information
+        working-directory: apps/web
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-  Deploy:
-    needs: Dockerize
-    runs-on: ubuntu-latest
+      - name: Build Project Artifacts
+        working-directory: apps/web
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-    steps:
-      - name: Deploy to Oracle Cloud
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.ORACLE_SSH_HOST }}
-          username: ${{ secrets.ORACLE_SSH_USER }}
-          key: ${{ secrets.ORACLE_SSH_KEY }}
-          port: 22
-          script: |
-            docker pull khizer30/outscout-server:latest
-            docker compose down
-            docker compose up -d
-            docker image prune -f
-            history -c && history -w
+      - name: Deploy Project Artifacts to Vercel
+        working-directory: apps/web
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
