@@ -1,3 +1,4 @@
+import { UserLanguage } from "@modules/user/domain/user.types";
 import { createId } from "@paralleldrive/cuid2";
 
 export class UserEntity {
@@ -10,6 +11,7 @@ export class UserEntity {
     public readonly isSuperAdmin: boolean,
     public readonly profileImageURL: string | null,
     public readonly timezone: string,
+    public readonly language: UserLanguage,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     public readonly deletedAt: Date | null
@@ -24,6 +26,7 @@ export class UserEntity {
     isSuperAdmin?: boolean;
     profileImageURL?: string | null;
     timezone?: string;
+    language?: UserLanguage;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date | null;
@@ -37,6 +40,7 @@ export class UserEntity {
       props.isSuperAdmin ?? false,
       props.profileImageURL ?? null,
       props.timezone ?? "UTC",
+      props.language ?? "EN",
       props.createdAt ?? new Date(),
       props.updatedAt ?? new Date(),
       props.deletedAt ?? null
@@ -50,6 +54,7 @@ export class UserEntity {
     isVerified?: boolean;
     profileImageURL?: string | null;
     timezone?: string;
+    language?: UserLanguage;
   }): UserEntity {
     return new UserEntity(
       this.id,
@@ -60,6 +65,7 @@ export class UserEntity {
       this.isSuperAdmin,
       props.profileImageURL !== undefined ? props.profileImageURL : this.profileImageURL,
       props.timezone ?? this.timezone,
+      props.language ?? this.language,
       this.createdAt,
       new Date(),
       this.deletedAt
@@ -76,6 +82,7 @@ export class UserEntity {
       this.isSuperAdmin,
       this.profileImageURL,
       this.timezone,
+      this.language,
       this.createdAt,
       new Date(),
       new Date()

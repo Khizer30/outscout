@@ -23,3 +23,9 @@ export class CompanyUpdateConflictError extends AppError {
     super("COMPANY_UPDATE_CONFLICT", "Company was deleted or modified before the update could be applied", details, 409);
   }
 }
+
+export class CompanyEmailNotConfiguredError extends AppError {
+  constructor(details?: Record<string, unknown>) {
+    super("COMPANY_EMAIL_NOT_CONFIGURED", "Company has not configured a Brevo email account", details, 409);
+  }
+}

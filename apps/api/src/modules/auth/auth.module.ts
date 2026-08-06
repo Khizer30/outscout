@@ -20,11 +20,11 @@ import { Module } from "@nestjs/common";
   providers: [
     AuthService,
     VerificationCronService,
-    SessionCronService,
     {
       provide: VerificationRepository,
       useClass: VerificationDrizzleRepository
     },
+    SessionCronService,
     {
       provide: SessionRepository,
       useClass: SessionDrizzleRepository

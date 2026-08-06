@@ -17,6 +17,6 @@ import { Module } from "@nestjs/common";
       useClass: UserDrizzleRepository
     }
   ],
-  exports: [UserService, UserRepository]
+  exports: [UserService]
 })
 export class UserModule {}

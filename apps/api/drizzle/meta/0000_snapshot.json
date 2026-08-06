@@ -1,9 +1,146 @@
 {
-  "id": "d94c3c81-61ba-421e-a784-c10ca9f6d81b",
+  "id": "7b0e0a32-30b9-493a-b591-6d3e66221593",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.ai_generated_messages": {
+      "name": "ai_generated_messages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "leadId": {
+          "name": "leadId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "companyId": {
+          "name": "companyId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "companyMessageRulesId": {
+          "name": "companyMessageRulesId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "companyMessageRulesVersion": {
+          "name": "companyMessageRulesVersion",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "data": {
+          "name": "data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "ai_generated_messages_lead_id_idx": {
+          "name": "ai_generated_messages_lead_id_idx",
+          "columns": [
+            {
+              "expression": "leadId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ai_generated_messages_company_id_idx": {
+          "name": "ai_generated_messages_company_id_idx",
+          "columns": [
+            {
+              "expression": "companyId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "ai_generated_messages_leadId_leads_id_fk": {
+          "name": "ai_generated_messages_leadId_leads_id_fk",
+          "tableFrom": "ai_generated_messages",
+          "tableTo": "leads",
+          "columnsFrom": ["leadId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "ai_generated_messages_companyId_company_id_fk": {
+          "name": "ai_generated_messages_companyId_company_id_fk",
+          "tableFrom": "ai_generated_messages",
+          "tableTo": "company",
+          "columnsFrom": ["companyId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "ai_generated_messages_companyMessageRulesId_company_message_rules_id_fk": {
+          "name": "ai_generated_messages_companyMessageRulesId_company_message_rules_id_fk",
+          "tableFrom": "ai_generated_messages",
+          "tableTo": "company_message_rules",
+          "columnsFrom": ["companyMessageRulesId"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "ai_generated_messages_createdBy_users_id_fk": {
+          "name": "ai_generated_messages_createdBy_users_id_fk",
+          "tableFrom": "ai_generated_messages",
+          "tableTo": "users",
+          "columnsFrom": ["createdBy"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.audit_logs": {
       "name": "audit_logs",
       "schema": "",
@@ -811,7 +948,23 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "leads_company_id_idx": {
+          "name": "leads_company_id_idx",
+          "columns": [
+            {
+              "expression": "companyId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "leads_companyId_company_id_fk": {
           "name": "leads_companyId_company_id_fk",
@@ -989,6 +1142,14 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'UTC'"
+        },
+        "language": {
+          "name": "language",
+          "type": "user_language",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'EN'"
         },
         "createdAt": {
           "name": "createdAt",
@@ -1212,6 +1373,11 @@
       "name": "lead_type",
       "schema": "public",
       "values": ["RESTAURANT", "HOTEL", "HOSPITAL", "DENTAL_CLINIC", "REAL_ESTATE_AGENCY", "ACCOUNTING", "GYM", "BEAUTY_SALON"]
+    },
+    "public.user_language": {
+      "name": "user_language",
+      "schema": "public",
+      "values": ["EN", "AR"]
     },
     "public.verification_type": {
       "name": "verification_type",

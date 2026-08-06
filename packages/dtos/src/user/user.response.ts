@@ -2,6 +2,8 @@ import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
 // User
+export const UserLanguageEnum = z.enum(["EN", "AR"]);
+
 export const UserResponseSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -10,6 +12,7 @@ export const UserResponseSchema = z.object({
   isSuperAdmin: z.boolean(),
   profileImageURL: z.string().nullable(),
   timezone: z.string(),
+  language: UserLanguageEnum,
   createdAt: z.date(),
   updatedAt: z.date(),
   deletedAt: z.date().nullable()

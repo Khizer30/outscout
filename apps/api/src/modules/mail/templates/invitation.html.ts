@@ -1,4 +1,5 @@
 import { getContrastColor, isLightColor } from "@common/colour";
+import type { EmailLanguage } from "@modules/mail/domain/mail.types";
 
 interface Props {
   companyName: string;
@@ -6,9 +7,45 @@ interface Props {
   companyImage?: string | null;
   primaryColor: string;
   secondaryColor: string;
+  language?: EmailLanguage;
 }
 
-export default function generateInvitationEmail({ companyName, acceptUrl, companyImage, primaryColor, secondaryColor }: Props): string {
+const COPY = {
+  EN: {
+    dir: "ltr",
+    lang: "en",
+    title: (companyName: string) => `You're invited to join ${companyName}`,
+    intro: (companyName: string, headingColor: string, withUrl: boolean) =>
+      withUrl
+        ? `You've been invited to join <strong style="color: ${headingColor}; font-weight: 600;">${companyName}</strong> on Outscout. Click the button below to accept the invitation and get started.`
+        : `You've been invited to join <strong style="color: ${headingColor}; font-weight: 600;">${companyName}</strong> on Outscout. Log in to your Outscout account to accept the invitation from your dashboard.`,
+    cta: "Accept Invitation &rarr;",
+    noteLabel: "⏰ Note:",
+    noteBody: "This invitation expires in 7 days.",
+    ignoreNote: "If you were not expecting this invitation, you can safely ignore this email.",
+    footer: (companyName: string, bodyTextColor: string) =>
+      `This is an automated message from <strong style="color: ${bodyTextColor}; font-weight: 600;">${companyName}</strong> via Outscout.<br />Please do not reply directly to this email.`
+  },
+  AR: {
+    dir: "rtl",
+    lang: "ar",
+    title: (companyName: string) => `تمت دعوتك للانضمام إلى ${companyName}`,
+    intro: (companyName: string, headingColor: string, withUrl: boolean) =>
+      withUrl
+        ? `تمت دعوتك للانضمام إلى <strong style="color: ${headingColor}; font-weight: 600;">${companyName}</strong> على Outscout. انقر على الزر أدناه لقبول الدعوة والبدء.`
+        : `تمت دعوتك للانضمام إلى <strong style="color: ${headingColor}; font-weight: 600;">${companyName}</strong> على Outscout. سجّل الدخول إلى حساب Outscout الخاص بك لقبول الدعوة من لوحة التحكم.`,
+    cta: "قبول الدعوة &larr;",
+    noteLabel: "⏰ ملاحظة:",
+    noteBody: "تنتهي صلاحية هذه الدعوة خلال 7 أيام.",
+    ignoreNote: "إذا لم تكن تتوقع هذه الدعوة، يمكنك تجاهل هذا البريد الإلكتروني بأمان.",
+    footer: (companyName: string, bodyTextColor: string) =>
+      `هذه رسالة تلقائية من <strong style="color: ${bodyTextColor}; font-weight: 600;">${companyName}</strong> عبر Outscout.<br />يرجى عدم الرد مباشرة على هذا البريد الإلكتروني.`
+  }
+} as const;
+
+export default function generateInvitationEmail({ companyName, acceptUrl, companyImage, primaryColor, secondaryColor, language = "EN" }: Props): string {
+  const copy = COPY[language] ?? COPY.EN;
+
   const isLight = isLightColor(primaryColor);
 
   const outerBg = isLight ? "#F8FAFC" : primaryColor;
@@ -22,17 +59,18 @@ export default function generateInvitationEmail({ companyName, acceptUrl, compan
   const footerBg = isLight ? "#F8FAFC" : "rgba(0, 0, 0, 0.2)";
   const footerBorder = isLight ? "#E2E8F0" : "rgba(255, 255, 255, 0.08)";
   const buttonTextColor = getContrastColor(secondaryColor);
+  const title = copy.title(companyName);
 
   return `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="${copy.lang}" dir="${copy.dir}">
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="x-apple-disable-message-reformatting" />
-      <title>You're invited to join ${companyName}</title>
+      <title>${title}</title>
     </head>
-    <body style="margin: 0; padding: 0; background-color: ${outerBg}; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
+    <body dir="${copy.dir}" style="margin: 0; padding: 0; background-color: ${outerBg}; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
       <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: ${outerBg}; width: 100%;">
         <tr>
           <td align="center" style="padding: 40px 16px;">
@@ -56,7 +94,7 @@ export default function generateInvitationEmail({ companyName, acceptUrl, compan
                         </table>`
                   }
                   <h1 style="margin: 0; color: ${headingColor}; font-size: 26px; font-weight: 700; line-height: 1.35; letter-spacing: -0.3px; text-align: center;">
-                    You're invited to join ${companyName}
+                    ${title}
                   </h1>
                 </td>
               </tr>
@@ -65,11 +103,7 @@ export default function generateInvitationEmail({ companyName, acceptUrl, compan
               <tr>
                 <td style="padding: 0 40px 32px 40px;">
                   <p style="margin: 0 0 28px 0; color: ${bodyTextColor}; font-size: 15px; line-height: 1.65; text-align: center;">
-                    ${
-                      acceptUrl
-                        ? `You've been invited to join <strong style="color: ${headingColor}; font-weight: 600;">${companyName}</strong> on Outscout. Click the button below to accept the invitation and get started.`
-                        : `You've been invited to join <strong style="color: ${headingColor}; font-weight: 600;">${companyName}</strong> on Outscout. Log in to your Outscout account to accept the invitation from your dashboard.`
-                    }
+                    ${copy.intro(companyName, headingColor, acceptUrl !== null)}
                   </p>
 
                   ${
@@ -82,7 +116,7 @@ export default function generateInvitationEmail({ companyName, acceptUrl, compan
                           <tr>
                             <td align="center" style="border-radius: 12px; background-color: ${secondaryColor};">
                               <a href="${acceptUrl}" target="_blank" style="display: inline-block; padding: 14px 36px; color: ${buttonTextColor}; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.05); text-align: center;">
-                                Accept Invitation &rarr;
+                                ${copy.cta}
                               </a>
                             </td>
                           </tr>
@@ -100,8 +134,8 @@ export default function generateInvitationEmail({ companyName, acceptUrl, compan
                         <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                           <tr>
                             <td style="color: ${mutedTextColor}; font-size: 13px; line-height: 1.5; text-align: center;">
-                              <strong style="color: ${headingColor}; font-weight: 600;">⏰ Note:</strong> This invitation expires in 7 days.<br />
-                              If you were not expecting this invitation, you can safely ignore this email.
+                              <strong style="color: ${headingColor}; font-weight: 600;">${copy.noteLabel}</strong> ${copy.noteBody}<br />
+                              ${copy.ignoreNote}
                             </td>
                           </tr>
                         </table>
@@ -115,8 +149,7 @@ export default function generateInvitationEmail({ companyName, acceptUrl, compan
               <tr>
                 <td style="padding: 24px 40px; background-color: ${footerBg}; border-top: 1px solid ${footerBorder}; text-align: center;">
                   <p style="margin: 0; color: ${mutedTextColor}; font-size: 12px; line-height: 1.5;">
-                    This is an automated message from <strong style="color: ${bodyTextColor}; font-weight: 600;">${companyName}</strong> via Outscout.<br />
-                    Please do not reply directly to this email.
+                    ${copy.footer(companyName, bodyTextColor)}
                   </p>
                 </td>
               </tr>

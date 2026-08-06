@@ -33,7 +33,8 @@
         "REDIS_HOST",
         "REDIS_PORT",
         "REDIS_USERNAME",
-        "REDIS_PASSWORD"
+        "REDIS_PASSWORD",
+        "REDIS_TLS"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", "drizzle/**"]

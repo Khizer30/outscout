@@ -1,5 +1,5 @@
 import { getContrastColor, isLightColor } from "@common/colour";
-import type { EmailType } from "@modules/mail/domain/mail.types";
+import type { EmailLanguage, EmailType } from "@modules/mail/domain/mail.types";
 
 interface Props {
   type: EmailType;
@@ -10,11 +10,56 @@ interface Props {
   companyImage?: string;
   primaryColor: string;
   secondaryColor: string;
+  language?: EmailLanguage;
 }
 
-export default function generateOtpEmail({ type, receiverName, otp, senderName, companyName, companyImage, primaryColor, secondaryColor }: Props): string {
-  const title = type === "verify" ? "Verify Your Email" : "Reset Your Password";
-  const message = type === "verify" ? "Use the following OTP code to verify your email address:" : "Use the following OTP code to reset your password:";
+const COPY = {
+  EN: {
+    dir: "ltr",
+    lang: "en",
+    title: { verify: "Verify Your Email", reset: "Reset Your Password" },
+    message: {
+      verify: "Use the following OTP code to verify your email address:",
+      reset: "Use the following OTP code to reset your password:"
+    },
+    greeting: (name: string) => `Hi ${name},`,
+    noteLabel: "⏰ Note:",
+    noteBody: "This OTP will expire in 10 minutes. Please do not share it with anyone.",
+    ignoreNote: "If you did not request this code, you can safely ignore this message.",
+    footer: (name: string) =>
+      `This is an automated security message from <strong style="color: var(--body-text-color); font-weight: 600;">${name}</strong>.<br />Please do not reply directly to this email.`
+  },
+  AR: {
+    dir: "rtl",
+    lang: "ar",
+    title: { verify: "تحقق من بريدك الإلكتروني", reset: "إعادة تعيين كلمة المرور" },
+    message: {
+      verify: "استخدم رمز التحقق التالي للتحقق من عنوان بريدك الإلكتروني:",
+      reset: "استخدم رمز التحقق التالي لإعادة تعيين كلمة المرور الخاصة بك:"
+    },
+    greeting: (name: string) => `مرحبًا ${name}،`,
+    noteLabel: "⏰ ملاحظة:",
+    noteBody: "ستنتهي صلاحية هذا الرمز خلال 10 دقائق. يرجى عدم مشاركته مع أي شخص.",
+    ignoreNote: "إذا لم تطلب هذا الرمز، يمكنك تجاهل هذه الرسالة بأمان.",
+    footer: (name: string) =>
+      `هذه رسالة أمان تلقائية من <strong style="color: var(--body-text-color); font-weight: 600;">${name}</strong>.<br />يرجى عدم الرد مباشرة على هذا البريد الإلكتروني.`
+  }
+} as const;
+
+export default function generateOtpEmail({
+  type,
+  receiverName,
+  otp,
+  senderName,
+  companyName,
+  companyImage,
+  primaryColor,
+  secondaryColor,
+  language = "EN"
+}: Props): string {
+  const copy = COPY[language] ?? COPY.EN;
+  const title = copy.title[type];
+  const message = copy.message[type];
 
   const isLight = isLightColor(primaryColor);
 
@@ -29,17 +74,18 @@ export default function generateOtpEmail({ type, receiverName, otp, senderName, 
   const footerBg = isLight ? "#F8FAFC" : "rgba(0, 0, 0, 0.2)";
   const footerBorder = isLight ? "#E2E8F0" : "rgba(255, 255, 255, 0.08)";
   const otpTextColor = getContrastColor(secondaryColor);
+  const footer = copy.footer(senderName ?? companyName).replace("var(--body-text-color)", bodyTextColor);
 
   return `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-    <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="${copy.lang}" dir="${copy.dir}">
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="x-apple-disable-message-reformatting" />
       <title>${title}</title>
     </head>
-    <body style="margin: 0; padding: 0; background-color: ${outerBg}; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
+    <body dir="${copy.dir}" style="margin: 0; padding: 0; background-color: ${outerBg}; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
       <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: ${outerBg}; width: 100%;">
         <tr>
           <td align="center" style="padding: 40px 16px;">
@@ -72,7 +118,7 @@ export default function generateOtpEmail({ type, receiverName, otp, senderName, 
               <tr>
                 <td style="padding: 0 40px 32px 40px;">
                   <p style="margin: 0 0 12px 0; color: ${headingColor}; font-size: 16px; font-weight: 600; text-align: center;">
-                    Hi ${receiverName},
+                    ${copy.greeting(receiverName)}
                   </p>
                   <p style="margin: 0 0 28px 0; color: ${bodyTextColor}; font-size: 15px; line-height: 1.65; text-align: center;">
                     ${message}
@@ -85,7 +131,7 @@ export default function generateOtpEmail({ type, receiverName, otp, senderName, 
                         <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="background-color: ${secondaryColor}; border-radius: 14px; border: 1px solid rgba(0, 0, 0, 0.05); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);">
                           <tr>
                             <td align="center" style="padding: 18px 36px;">
-                              <span style="font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 32px; font-weight: 700; color: ${otpTextColor}; letter-spacing: 8px; line-height: 1;">
+                              <span dir="ltr" style="font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 32px; font-weight: 700; color: ${otpTextColor}; letter-spacing: 8px; line-height: 1;">
                                 ${otp}
                               </span>
                             </td>
@@ -102,8 +148,8 @@ export default function generateOtpEmail({ type, receiverName, otp, senderName, 
                         <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
                           <tr>
                             <td style="color: ${mutedTextColor}; font-size: 13px; line-height: 1.5; text-align: center;">
-                              <strong style="color: ${headingColor}; font-weight: 600;">⏰ Note:</strong> This OTP will expire in 10 minutes. Please do not share it with anyone.<br />
-                              If you did not request this code, you can safely ignore this message.
+                              <strong style="color: ${headingColor}; font-weight: 600;">${copy.noteLabel}</strong> ${copy.noteBody}<br />
+                              ${copy.ignoreNote}
                             </td>
                           </tr>
                         </table>
@@ -117,8 +163,7 @@ export default function generateOtpEmail({ type, receiverName, otp, senderName, 
               <tr>
                 <td style="padding: 24px 40px; background-color: ${footerBg}; border-top: 1px solid ${footerBorder}; text-align: center;">
                   <p style="margin: 0; color: ${mutedTextColor}; font-size: 12px; line-height: 1.5;">
-                    This is an automated security message from <strong style="color: ${bodyTextColor}; font-weight: 600;">${senderName ?? companyName}</strong>.<br />
-                    Please do not reply directly to this email.
+                    ${footer}
                   </p>
                 </td>
               </tr>

@@ -17,3 +17,15 @@ export class LeadNotEnrichingError extends AppError {
     super("LEAD_NOT_ENRICHING", "Lead must be in ENRICHING status to be processed by AI", details, 409);
   }
 }
+
+export class LeadPhoneMissingError extends AppError {
+  constructor(details?: Record<string, unknown>) {
+    super("LEAD_PHONE_MISSING", "This lead does not have a phone number", details, 409);
+  }
+}
+
+export class LeadEmailMissingError extends AppError {
+  constructor(details?: Record<string, unknown>) {
+    super("LEAD_EMAIL_MISSING", "This lead does not have an email address", details, 409);
+  }
+}

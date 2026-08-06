@@ -23,6 +23,7 @@ export class UserController {
       name: dto.name,
       password: dto.password,
       timezone: dto.timezone,
+      language: dto.language,
       profileImageURL: dto.profileImageURL
     });
 

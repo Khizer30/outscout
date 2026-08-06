@@ -105,7 +105,7 @@
                   "key": "file",
                   "type": "file",
                   "uuid": "062da4f6-55b8-47d1-bb33-d5d7a4a77a76",
-                  "src": "/C:/Users/khizer/Pictures/My Camera/Logo/Syed Muhammad Khizer.png"
+                  "src": "/C:/Users/khizer/Pictures/My Camera/1.png"
                 },
                 {
                   "key": "api_key",
@@ -261,7 +261,7 @@
                 },
                 {
                   "key": "otp",
-                  "value": "555793",
+                  "value": "801400",
                   "type": "text",
                   "uuid": "57c194fa-c4c2-440a-b3b3-ae2d67c1483a"
                 },
@@ -630,6 +630,19 @@
                   "type": "text"
                 },
                 {
+                  "key": "language",
+                  "value": "EN",
+                  "type": "text",
+                  "uuid": "6a22c87c-a0a3-4756-b8ed-8f1d57024b90"
+                },
+                {
+                  "key": "language",
+                  "value": "AR",
+                  "type": "text",
+                  "uuid": "e0b2090a-bd97-49ec-836b-fcfb757f7a66",
+                  "disabled": true
+                },
+                {
                   "key": "profileImageURL",
                   "value": "{{cloudinaryFileEagerURL}}",
                   "type": "text"
@@ -681,12 +694,12 @@
               "urlencoded": [
                 {
                   "key": "name",
-                  "value": "Google",
+                  "value": "CUST",
                   "type": "text"
                 },
                 {
                   "key": "about",
-                  "value": "Great Company!",
+                  "value": "Capital University of Science & Technology abbreviated as is a federally chartered, private university located in Islamabad, Pakistan.",
                   "type": "text"
                 },
                 {
@@ -718,12 +731,12 @@
               "urlencoded": [
                 {
                   "key": "name",
-                  "value": "Google",
+                  "value": "CUST",
                   "type": "text"
                 },
                 {
                   "key": "about",
-                  "value": "Great Company!",
+                  "value": "Capital University of Science & Technology abbreviated as is a federally chartered, private university located in Islamabad, Pakistan.",
                   "type": "text"
                 },
                 {
@@ -752,7 +765,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"brevoApiKey\": \"{{brevoAPIKey}}\",\r\n    \"fromEmail\": \"noreply@outscout.stackpk.com\",\r\n    \"emailSignature\": \"From Company's Email Signature\",\r\n    \"primaryColor\": \"#FFFFFF\",\r\n    \"secondaryColor\": \"#38BDF8\"\r\n}",
+              "raw": "{\r\n    \"brevoApiKey\": \"{{brevoAPIKey}}\",\r\n    \"fromEmail\": \"welcome@asknestor.com\",\r\n    \"emailSignature\": \"Nook Ltd.\",\r\n    \"primaryColor\": \"#FFFFFF\",\r\n    \"secondaryColor\": \"#38BDF8\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -982,6 +995,57 @@
       ]
     },
     {
+      "name": "Map",
+      "item": [
+        {
+          "name": "Query Places",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"query\": \"Saddar\",\r\n    \"latitude\": 33.4929479,\r\n    \"longitude\": 73.0997494,\r\n    \"radius\": 2000,\r\n    \"types\": [\r\n        \"RESTAURANT\"\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/map/autocomplete",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "map",
+                "autocomplete"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Place By ID (Google Maps)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/map/place/{{placeId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "map",
+                "place",
+                "{{placeId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Lead",
       "item": [
         {
@@ -991,7 +1055,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"latitude\": 33.4929479,\r\n    \"longitude\": 73.0997494,\r\n    \"radius\": 2000,\r\n    \"serviceType\": \"RESTAURANT\",\r\n    // \"serviceType\": \"HOTEL\",\r\n    // \"serviceType\": \"HOSPITAL\",\r\n    // \"serviceType\": \"DENTAL_CLINIC\",\r\n    // \"serviceType\": \"REAL_ESTATE_AGENCY\",\r\n    // \"serviceType\": \"ACCOUNTING\",\r\n    // \"serviceType\": \"GYM\",\r\n    // \"serviceType\": \"BEAUTY_SALON\",\r\n    \"limit\": 5\r\n}",
+              "raw": "{\r\n    \"latitude\": 33.4929479,\r\n    \"longitude\": 73.0997494,\r\n    \"radius\": 2000,\r\n    // \"serviceType\": \"RESTAURANT\",\r\n    // \"serviceType\": \"HOTEL\",\r\n    // \"serviceType\": \"HOSPITAL\",\r\n    // \"serviceType\": \"DENTAL_CLINIC\",\r\n    \"serviceType\": \"REAL_ESTATE_AGENCY\",\r\n    // \"serviceType\": \"ACCOUNTING\",\r\n    // \"serviceType\": \"GYM\",\r\n    // \"serviceType\": \"BEAUTY_SALON\",\r\n    \"limit\": 5\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1012,13 +1076,37 @@
           "response": []
         },
         {
+          "name": "Get Company's Leads (SSE)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/event-stream",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/lead/stream",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "stream"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Get Company's Leads",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"status\": [\r\n        \"ENRICHING\",\r\n        \"READY\",\r\n        \"CONTACTED\",\r\n        \"INTERESTED\",\r\n        \"UNRESPONSIVE\",\r\n        \"REJECTED\"\r\n    ],\r\n    \"page\": 1,\r\n    \"limit\": 20\r\n}",
+              "raw": "{\r\n    \"status\": [\r\n        \"ENRICHING\",\r\n        \"READY\",\r\n        \"CONTACTED\",\r\n        \"INTERESTED\",\r\n        \"UNRESPONSIVE\",\r\n        \"REJECTED\"\r\n    ],\r\n    \"page\": 1,\r\n    \"limit\": 5\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1101,12 +1189,195 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Generate Outreach Message",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/lead/outreach-message/{{leadId}}?channel=EMAIL",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "outreach-message",
+                "{{leadId}}"
+              ],
+              "query": [
+                {
+                  "key": "channel",
+                  "value": "WHATSAPP",
+                  "disabled": true
+                },
+                {
+                  "key": "channel",
+                  "value": "EMAIL"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get WhatsApp Message Link",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/lead/whatsapp-link/{{aiMessageId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "whatsapp-link",
+                "{{aiMessageId}}"
+              ],
+              "query": [
+                {
+                  "key": "messagePart",
+                  "value": "greetings",
+                  "disabled": true
+                },
+                {
+                  "key": "messagePart",
+                  "value": "opening",
+                  "disabled": true
+                },
+                {
+                  "key": "messagePart",
+                  "value": "body",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "messagePart",
+                  "value": "callToAction",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Email to Lead",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/lead/email/{{aiMessageId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "email",
+                "{{aiMessageId}}"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
       "name": "AI",
-      "item": []
+      "item": [
+        {
+          "name": "Get Messages By Lead",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/ai/lead/{{leadId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "ai",
+                "lead",
+                "{{leadId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rewrite Outreach Message",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "prompt",
+                  "value": "Improve this!",
+                  "type": "text",
+                  "uuid": "a58f48c3-a5fb-4385-bef5-8f4f14228ae0"
+                },
+                {
+                  "key": "messagePart",
+                  "value": "greetings",
+                  "type": "text",
+                  "uuid": "3355290e-53f4-4121-a4ea-c523097f96fc",
+                  "disabled": true
+                },
+                {
+                  "key": "messagePart",
+                  "value": "subject",
+                  "type": "text",
+                  "uuid": "7442dc56-043a-46c1-8fa4-ef0f08780eb3",
+                  "disabled": true
+                },
+                {
+                  "key": "messagePart",
+                  "value": "opening",
+                  "type": "text",
+                  "uuid": "f7d3ee89-2b4b-438b-85a4-03b0d6ff35f9",
+                  "disabled": true
+                },
+                {
+                  "key": "messagePart",
+                  "value": "body",
+                  "type": "text",
+                  "uuid": "50149370-10a2-4c81-91e2-7f1197da15a0"
+                },
+                {
+                  "key": "messagePart",
+                  "value": "callToAction",
+                  "type": "text",
+                  "uuid": "698f7268-7031-4f65-a1ee-d2801e7fe5e2",
+                  "disabled": true
+                },
+                {
+                  "key": "messagePart",
+                  "value": "signOff",
+                  "type": "text",
+                  "uuid": "a643a1bb-853b-4829-ace9-83f6b4537162",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/ai/rewrite/{{aiMessageId}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "ai",
+                "rewrite",
+                "{{aiMessageId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "auth": {
@@ -1190,7 +1461,7 @@
     },
     {
       "key": "accessToken",
-      "value": ""
+      "secret": true
     },
     {
       "key": "membershipId",
@@ -1209,7 +1480,15 @@
       "value": ""
     },
     {
+      "key": "placeId",
+      "value": ""
+    },
+    {
       "key": "leadId",
+      "value": ""
+    },
+    {
+      "key": "aiMessageId",
       "value": ""
     }
   ]

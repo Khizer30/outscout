@@ -1,12 +1,23 @@
 services:
   api:
-    container_name: turbo-server
-    image: khizer30/turbo-server:latest
+    container_name: outscout-server
+    image: khizer30/outscout-server:latest
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
+    env_file:
+      - apps/api/.env.production
+    restart: unless-stopped
+
+  worker:
+    container_name: outscout-worker
+    image: khizer30/outscout-server:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["node", "dist/src/worker.js"]
     env_file:
       - apps/api/.env.production
     restart: unless-stopped

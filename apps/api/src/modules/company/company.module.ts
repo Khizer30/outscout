@@ -19,28 +19,21 @@ import { Module } from "@nestjs/common";
   controllers: [CompanyController],
   providers: [
     CompanyService,
-    CompanyEmailSettingsService,
-    CompanyMessageRulesService,
     {
       provide: CompanyRepository,
       useClass: CompanyDrizzleRepository
     },
+    CompanyEmailSettingsService,
     {
       provide: CompanyEmailSettingsRepository,
       useClass: CompanyEmailSettingsDrizzleRepository
     },
+    CompanyMessageRulesService,
     {
       provide: CompanyMessageRulesRepository,
       useClass: CompanyMessageRulesDrizzleRepository
     }
   ],
-  exports: [
-    CompanyService,
-    CompanyRepository,
-    CompanyEmailSettingsService,
-    CompanyEmailSettingsRepository,
-    CompanyMessageRulesService,
-    CompanyMessageRulesRepository
-  ]
+  exports: [CompanyService, CompanyEmailSettingsService, CompanyMessageRulesService]
 })
 export class CompanyModule {}

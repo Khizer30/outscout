@@ -1,4 +1,5 @@
 export type EmailType = "verify" | "reset";
+export type EmailLanguage = "EN" | "AR";
 
 export interface MailSendOptions {
   to: string;

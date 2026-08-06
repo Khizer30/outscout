@@ -12,6 +12,10 @@ interface UpdateCompanyMessageRulesData {
 export class CompanyMessageRulesService {
   constructor(private readonly companyMessageRulesRepo: CompanyMessageRulesRepository) {}
 
+  async findByCompanyAndChannel(companyId: string, channel: MessageChannel): Promise<CompanyMessageRulesEntity | null> {
+    return this.companyMessageRulesRepo.findByCompanyAndChannel(companyId, channel);
+  }
+
   async updateRules(companyId: string, channel: MessageChannel, data: UpdateCompanyMessageRulesData, updatedBy: string): Promise<CompanyMessageRulesEntity> {
     const existing = await this.companyMessageRulesRepo.findByCompanyAndChannel(companyId, channel);
 

@@ -9,7 +9,14 @@ import { Module } from "@nestjs/common";
 @Module({
   imports: [JWTModule],
   controllers: [MediaController],
-  providers: [CloudinaryProvider, { provide: MediaRepository, useClass: MediaCloudinaryRepository }, MediaService],
+  providers: [
+    CloudinaryProvider,
+    MediaService,
+    {
+      provide: MediaRepository,
+      useClass: MediaCloudinaryRepository
+    }
+  ],
   exports: [MediaService]
 })
 export class MediaModule {}

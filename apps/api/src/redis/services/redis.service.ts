@@ -12,7 +12,8 @@ export class RedisService implements OnModuleDestroy {
       host: this.configService.getOrThrow<string>("REDIS_HOST"),
       port: +this.configService.getOrThrow<string>("REDIS_PORT"),
       username: this.configService.getOrThrow<string>("REDIS_USERNAME"),
-      password: this.configService.getOrThrow<string>("REDIS_PASSWORD")
+      password: this.configService.getOrThrow<string>("REDIS_PASSWORD"),
+      tls: this.configService.get<string>("REDIS_TLS") === "true" ? {} : undefined
     });
   }
 
@@ -31,6 +32,31 @@ export class RedisService implements OnModuleDestroy {
     });
 
     return subscriber;
+  }
+
+  async get<T>(key: string): Promise<T | null> {
+    const value = await this.client.get(key);
+    return value ? (JSON.parse(value) as T) : null;
+  }
+
+  set(key: string, value: unknown, ttlSeconds?: number): Promise<"OK"> {
+    const serialized = JSON.stringify(value);
+    return ttlSeconds ? this.client.set(key, serialized, "EX", ttlSeconds) : this.client.set(key, serialized);
+  }
+
+  async deleteByPattern(pattern: string): Promise<void> {
+    const keys: string[] = [];
+    let cursor = "0";
+
+    do {
+      const [nextCursor, found] = await this.client.scan(cursor, "MATCH", pattern, "COUNT", 100);
+      cursor = nextCursor;
+      keys.push(...found);
+    } while (cursor !== "0");
+
+    if (keys.length > 0) {
+      await this.client.del(...keys);
+    }
   }
 
   onModuleDestroy(): void {
