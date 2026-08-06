@@ -1,13 +1,12 @@
-name: Continuous Integration
+name: CI
 
 on:
-  push:
+  pull_request:
     branches:
       - master
-  pull_request:
 
 jobs:
-  validate:
+  Validate:
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
