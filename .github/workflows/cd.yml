@@ -65,6 +65,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
