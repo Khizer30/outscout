@@ -1,8 +1,8 @@
-# Outscout — Business Logic
+# OutScout — Business Logic
 
-## What is Outscout?
+## What is OutScout?
 
-Outscout is a geo-targeted B2B lead generation and outreach platform built for freelancers, agencies, and sales teams who need to find, qualify, and contact local businesses fast. It is designed specifically for markets where WhatsApp is the dominant communication channel (Pakistan, Gulf countries, and similar regions).
+OutScout is a geo-targeted B2B lead generation and outreach platform built for freelancers, agencies, and sales teams who need to find, qualify, and contact local businesses fast. It is designed specifically for markets where WhatsApp is the dominant communication channel (Pakistan, Gulf countries, and similar regions).
 
 ---
 
@@ -15,14 +15,14 @@ Finding local business leads manually is time-consuming:
 - Manually crafting individual outreach messages
 - Switching between tools to send emails and WhatsApp messages
 
-Outscout eliminates all of this into a single workflow.
+OutScout eliminates all of this into a single workflow.
 
 ---
 
 ## Core Workflow
 
 1. **Define Target** — The user selects a region (city, area, or radius) and a business category (e.g. restaurants, software houses, hotels, clinics).
-2. **Fetch Leads** — Outscout queries the Google Places API and returns a list of matching businesses with name, address, phone number, website, rating, and opening hours.
+2. **Fetch Leads** — OutScout queries the Google Places API and returns a list of matching businesses with name, address, phone number, website, rating, and opening hours.
 3. **Review & Filter** — The user reviews the leads table, filters by rating, presence of phone/email/website, and selects which leads to pursue.
 4. **Outreach** — For each selected lead, the user can:
    - **WhatsApp** — One click opens WhatsApp Web with a personalised, pre-filled message ready to send. The user reviews and hits Send. No WhatsApp API is used.
@@ -34,7 +34,7 @@ Outscout eliminates all of this into a single workflow.
 
 ## Key Differentiators
 
-| Feature                 | Outscout                 | Apollo.io / Hunter.io     |
+| Feature                 | OutScout                 | Apollo.io / Hunter.io     |
 | ----------------------- | ------------------------ | ------------------------- |
 | Geo-targeted search     | ✅ City / area level     | ❌ Domain / industry only |
 | WhatsApp outreach       | ✅ Semi-automated        | ❌ Not supported          |
@@ -48,7 +48,7 @@ Outscout eliminates all of this into a single workflow.
 
 ### WhatsApp
 
-- No WhatsApp Business API is used. Outscout generates `wa.me` deep links with the phone number and a URL-encoded pre-filled message.
+- No WhatsApp Business API is used. OutScout generates `wa.me` deep links with the phone number and a URL-encoded pre-filled message.
 - The user sends from their own personal or business WhatsApp — this is fully compliant with Meta's policies.
 - Messages are personalised per business (name, category, website) using a template engine.
 

@@ -10,7 +10,7 @@ const COPY = {
   EN: {
     title: (companyName: string) => `You're invited to join ${companyName}`,
     withUrl: (companyName: string, acceptUrl: string) => `
-    You've been invited to join ${companyName} on Outscout.
+    You've been invited to join ${companyName} on OutScout.
 
     Accept your invitation here:
     ${acceptUrl}
@@ -19,9 +19,9 @@ const COPY = {
 
     This invitation link will expire in 7 days.`,
     withoutUrl: (companyName: string) => `
-    You've been invited to join ${companyName} on Outscout.
+    You've been invited to join ${companyName} on OutScout.
 
-    Log in to your Outscout account and accept the invitation from your dashboard to get started.
+    Log in to your OutScout account and accept the invitation from your dashboard to get started.
 
     ${"-".repeat(60)}
 
@@ -32,7 +32,7 @@ const COPY = {
   AR: {
     title: (companyName: string) => `تمت دعوتك للانضمام إلى ${companyName}`,
     withUrl: (companyName: string, acceptUrl: string) => `
-    تمت دعوتك للانضمام إلى ${companyName} على Outscout.
+    تمت دعوتك للانضمام إلى ${companyName} على OutScout.
 
     اقبل دعوتك من هنا:
     ${acceptUrl}
@@ -41,9 +41,9 @@ const COPY = {
 
     ستنتهي صلاحية رابط الدعوة هذا خلال 7 أيام.`,
     withoutUrl: (companyName: string) => `
-    تمت دعوتك للانضمام إلى ${companyName} على Outscout.
+    تمت دعوتك للانضمام إلى ${companyName} على OutScout.
 
-    سجّل الدخول إلى حساب Outscout الخاص بك واقبل الدعوة من لوحة التحكم للبدء.
+    سجّل الدخول إلى حساب OutScout الخاص بك واقبل الدعوة من لوحة التحكم للبدء.
 
     ${"-".repeat(60)}
 

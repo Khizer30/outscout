@@ -77,7 +77,7 @@ export default function generateOutreachEmail({ body, signature, companyName, co
               <tr>
                 <td style="padding: 24px 40px; background-color: ${footerBg}; border-top: 1px solid ${footerBorder}; text-align: center;">
                   <p style="margin: 0; color: ${mutedTextColor}; font-size: 12px; line-height: 1.5;">
-                    Sent by <strong style="color: ${bodyTextColor}; font-weight: 600;">${escapeHtml(companyName)}</strong> via Outscout.
+                    Sent by <strong style="color: ${bodyTextColor}; font-weight: 600;">${escapeHtml(companyName)}</strong> via OutScout.
                   </p>
                 </td>
               </tr>
