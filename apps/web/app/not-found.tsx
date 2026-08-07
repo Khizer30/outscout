@@ -1,3 +1,4 @@
+import { ROUTES } from "@shared/lib/routes";
 import { MapPinOff } from "lucide-react";
 import Link from "next/link";
 
@@ -15,7 +16,7 @@ export default function NotFound() {
       </div>
 
       <Link
-        href="/"
+        href={ROUTES.home}
         className="inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
       >
         Back to home
