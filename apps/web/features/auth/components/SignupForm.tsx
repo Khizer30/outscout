@@ -1,13 +1,16 @@
 "use client";
 import { useSignup } from "@features/auth/api/auth.api";
+import { useInvitationEmail } from "@features/team/api/team.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignupSchema } from "@repo/dtos/auth";
 import { Button } from "@shared/components/ui/button";
 import { Input } from "@shared/components/ui/input";
 import { Label } from "@shared/components/ui/label";
 import { ROUTES } from "@shared/lib/routes";
+import { getErrorMessage } from "@shared/lib/utils";
 import Link from "next/link";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import type { z } from "zod";
@@ -15,17 +18,36 @@ import type { z } from "zod";
 type SignupFormValues = z.infer<typeof SignupSchema>;
 
 export default function SignupForm() {
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token") || undefined;
+  const { data: invitationEmail, error: invitationError } = useInvitationEmail(token ?? "");
+  const invitedEmail = invitationEmail?.data.email;
+
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
   const signup = useSignup();
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, dirtyFields }
   } = useForm<SignupFormValues>({
     resolver: zodResolver(SignupSchema),
-    mode: "onTouched"
+    mode: "onTouched",
+    defaultValues: {
+      invitationToken: token,
+      email: ""
+    }
   });
+
+  useEffect(() => {
+    if (token) {
+      setValue("invitationToken", token);
+    }
+    if (invitedEmail) {
+      setValue("email", invitedEmail);
+    }
+  }, [token, invitedEmail, setValue]);
 
   const onSubmit = (data: SignupFormValues) => {
     signup.mutate(data, {
@@ -34,8 +56,7 @@ export default function SignupForm() {
         setSubmittedEmail(data.email);
       },
       onError: (error) => {
-        const message = error instanceof Error ? error.message : "Something went wrong. Please try again.";
-        toast.error(message);
+        toast.error(getErrorMessage(error));
       }
     });
   };
@@ -53,6 +74,13 @@ export default function SignupForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+      {token && invitationError && (
+        <div className="rounded-md bg-destructive/10 p-3 text-xs text-destructive">{getErrorMessage(invitationError)}</div>
+      )}
+      {token && !invitationError && (
+        <div className="rounded-md bg-muted p-3 text-xs text-muted-foreground">You are signing up via a team invitation.</div>
+      )}
+
       <div className="space-y-1.5">
         <Label htmlFor="name">Name</Label>
         <Input
@@ -73,6 +101,7 @@ export default function SignupForm() {
           type="email"
           autoComplete="email"
           placeholder="khizer@company.com"
+          disabled={!!invitedEmail}
           aria-invalid={!!(dirtyFields.email && errors.email)}
           {...register("email")}
         />

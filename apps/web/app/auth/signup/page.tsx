@@ -1,6 +1,7 @@
 import SignupForm from "@features/auth/components/SignupForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shared/components/ui/card";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Sign up"
@@ -15,7 +16,9 @@ export default function SignupPage() {
           <CardDescription>Start finding and reaching out to local leads.</CardDescription>
         </CardHeader>
         <CardContent>
-          <SignupForm />
+          <Suspense>
+            <SignupForm />
+          </Suspense>
         </CardContent>
       </Card>
     </div>
