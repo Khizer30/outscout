@@ -1,4 +1,5 @@
-﻿import { cn } from "@shared/lib/utils";
+﻿import Navbar from "@shared/components/layout/Navbar";
+import { cn } from "@shared/lib/utils";
 import I18nProvider from "@shared/providers/I18nProvider";
 import QueryProvider from "@shared/providers/QueryClientProvider";
 import ThemeProvider from "@shared/providers/ThemeProvider";
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: Children) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <I18nProvider>
             <QueryProvider>
+              <Navbar />
               {children}
               <Toaster position="top-right" />
             </QueryProvider>
