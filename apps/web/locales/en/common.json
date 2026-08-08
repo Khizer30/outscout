@@ -14,5 +14,21 @@
     "arabic": "Arabic",
     "light": "Light",
     "dark": "Dark"
+  },
+  "signup": {
+    "title": "Create your account",
+    "description": "Start finding and reaching out to local leads.",
+    "name": "Name",
+    "namePlaceholder": "Muhammad Khizer",
+    "email": "Email",
+    "emailPlaceholder": "khizer@company.com",
+    "password": "Password",
+    "submit": "Create account",
+    "submitting": "Creating account…",
+    "loginPrompt": "Already have an account?",
+    "login": "Log in",
+    "invitationNotice": "You are signing up via a team invitation.",
+    "verificationSent": "We've sent a verification code to <bold>{{email}}</bold>.",
+    "verificationInstructions": "Check your inbox to verify your account."
   }
 }

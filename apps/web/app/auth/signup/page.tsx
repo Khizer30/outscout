@@ -1,5 +1,6 @@
+import SignupCardHeader from "@features/auth/components/SignupCardHeader";
 import SignupForm from "@features/auth/components/SignupForm";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shared/components/ui/card";
+import { Card, CardContent } from "@shared/components/ui/card";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -11,10 +12,7 @@ export default function SignupPage() {
   return (
     <div className="flex min-h-screen flex-1 items-center justify-center bg-background px-4 py-12">
       <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">Create your account</CardTitle>
-          <CardDescription>Start finding and reaching out to local leads.</CardDescription>
-        </CardHeader>
+        <SignupCardHeader />
         <CardContent>
           <Suspense>
             <SignupForm />
