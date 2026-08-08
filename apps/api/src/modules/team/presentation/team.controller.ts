@@ -61,9 +61,9 @@ export class TeamController {
     return { message: "Invitation revoked successfully" };
   }
 
-  @Get("invitations/:id/email")
-  async getEmail(@Param() { id }: IdDto): Promise<InvitationEmailResponseDto> {
-    const email = await this.teamService.getInvitationEmail(id);
+  @Get("invitations/:token/email")
+  async getEmail(@Param("token") token: string): Promise<InvitationEmailResponseDto> {
+    const email = await this.teamService.getInvitationEmail(token);
 
     return { data: { email } };
   }
