@@ -6,8 +6,8 @@ import { SignupSchema } from "@repo/dtos/auth";
 import { Button } from "@shared/components/ui/button";
 import { Input } from "@shared/components/ui/input";
 import { Label } from "@shared/components/ui/label";
+import { getErrorMessage } from "@shared/lib/error";
 import { ROUTES } from "@shared/lib/routes";
-import { getErrorMessage } from "@shared/lib/utils";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -30,7 +30,7 @@ export default function SignupForm() {
     register,
     handleSubmit,
     setValue,
-    formState: { errors, dirtyFields }
+    formState: { errors, dirtyFields, isSubmitted }
   } = useForm<SignupFormValues>({
     resolver: zodResolver(SignupSchema),
     mode: "onTouched",
@@ -74,12 +74,8 @@ export default function SignupForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-      {token && invitationError && (
-        <div className="rounded-md bg-destructive/10 p-3 text-xs text-destructive">{getErrorMessage(invitationError)}</div>
-      )}
-      {token && !invitationError && (
-        <div className="rounded-md bg-muted p-3 text-xs text-muted-foreground">You are signing up via a team invitation.</div>
-      )}
+      {token && invitationError && <div className="rounded-md bg-destructive/10 p-3 text-xs text-destructive">{getErrorMessage(invitationError)}</div>}
+      {token && !invitationError && <div className="rounded-md bg-muted p-3 text-xs text-muted-foreground">You are signing up via a team invitation.</div>}
 
       <div className="space-y-1.5">
         <Label htmlFor="name">Name</Label>
@@ -88,10 +84,10 @@ export default function SignupForm() {
           type="text"
           autoComplete="name"
           placeholder="Muhammad Khizer"
-          aria-invalid={!!(dirtyFields.name && errors.name)}
+          aria-invalid={!!((isSubmitted || dirtyFields.name) && errors.name)}
           {...register("name")}
         />
-        <p className="min-h-4 text-xs text-destructive">{dirtyFields.name && errors.name?.message}</p>
+        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.name) && errors.name?.message}</p>
       </div>
 
       <div className="space-y-1.5">
@@ -102,10 +98,10 @@ export default function SignupForm() {
           autoComplete="email"
           placeholder="khizer@company.com"
           disabled={!!invitedEmail}
-          aria-invalid={!!(dirtyFields.email && errors.email)}
+          aria-invalid={!!((isSubmitted || dirtyFields.email) && errors.email)}
           {...register("email")}
         />
-        <p className="min-h-4 text-xs text-destructive">{dirtyFields.email && errors.email?.message}</p>
+        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.email) && errors.email?.message}</p>
       </div>
 
       <div className="space-y-1.5">
@@ -115,10 +111,10 @@ export default function SignupForm() {
           type="password"
           autoComplete="newPassword"
           placeholder="••••••••"
-          aria-invalid={!!(dirtyFields.password && errors.password)}
+          aria-invalid={!!((isSubmitted || dirtyFields.password) && errors.password)}
           {...register("password")}
         />
-        <p className="min-h-4 text-xs text-destructive">{dirtyFields.password && errors.password?.message}</p>
+        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.password) && errors.password?.message}</p>
       </div>
 
       <Button type="submit" className="w-full" size="lg" disabled={signup.isPending}>

@@ -22,7 +22,7 @@ export default function Navbar() {
   };
 
   return (
-    <header dir="ltr" className="flex h-20 items-center justify-between px-16">
+    <header dir="ltr" className="flex h-20 items-center justify-between px-16 py-4">
       <Link href={ROUTES.home}>
         <Image src={logoDark} alt="Outscout" className="h-14 w-auto dark:hidden" draggable={false} priority />
         <Image src={logoLight} alt="Outscout" className="hidden h-14 w-auto dark:block" draggable={false} priority />

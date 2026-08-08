@@ -23,7 +23,7 @@ export default function RootLayout({ children }: Children) {
             <QueryProvider>
               <Navbar />
               {children}
-              <Toaster position="top-right" />
+              <Toaster position="top-center" />
             </QueryProvider>
           </I18nProvider>
         </ThemeProvider>

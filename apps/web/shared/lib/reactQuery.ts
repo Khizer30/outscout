@@ -1,4 +1,4 @@
-import { getErrorMessage } from "@shared/lib/utils";
+import { getErrorMessage } from "@shared/lib/error";
 import { QueryCache, QueryClient, defaultShouldDehydrateQuery } from "@tanstack/react-query";
 
 function makeQueryClient() {
