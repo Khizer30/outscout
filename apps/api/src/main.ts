@@ -25,7 +25,7 @@ import { ZodValidationPipe } from "nestjs-zod";
   app.use(cookieParser());
   app.use(helmet());
   app.enableCors({
-    origin: isProduction && corsOrigins ? corsOrigins : "*",
+    origin: corsOrigins ? corsOrigins : "*",
     credentials: true
   });
   app.useLogger(isProduction ? ["error", "warn"] : ["log", "error", "warn", "debug", "verbose"]);
