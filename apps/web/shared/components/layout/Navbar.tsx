@@ -7,11 +7,17 @@ import { Languages, Moon, Sun } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function Navbar() {
   const { t, i18n } = useTranslation();
   const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleLanguage = () => {
     i18n.changeLanguage(i18n.resolvedLanguage === "ar" ? "en" : "ar");
@@ -20,6 +26,8 @@ export default function Navbar() {
   const toggleTheme = () => {
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   return (
     <header dir="ltr" className="flex h-20 items-center justify-between px-16 py-4">
@@ -43,10 +51,10 @@ export default function Navbar() {
           variant="ghost"
           size="icon-sm"
           aria-label={t("navbar.theme")}
-          title={resolvedTheme === "dark" ? t("navbar.light") : t("navbar.dark")}
+          title={isDark ? t("navbar.light") : t("navbar.dark")}
           onClick={toggleTheme}
         >
-          {resolvedTheme === "dark" ? <Sun /> : <Moon />}
+          {isDark ? <Sun /> : <Moon />}
         </Button>
       </div>
     </header>
