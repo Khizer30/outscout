@@ -36,5 +36,14 @@
     "invitationNotice": "أنت تسجّل عبر دعوة فريق.",
     "verificationSent": "لقد أرسلنا رمز التحقق إلى <bold>{{email}}</bold>.",
     "verificationInstructions": "تحقق من صندوق الوارد لتفعيل حسابك."
+  },
+  "verifyOtp": {
+    "title": "تحقق من بريدك الإلكتروني",
+    "description": "أدخل الرمز المكون من 6 أرقام المُرسَل إلى <bold>{{email}}</bold>.",
+    "otp": "رمز التحقق",
+    "otpPlaceholder": "123456",
+    "submit": "تحقق",
+    "submitting": "جارٍ التحقق…",
+    "backToSignup": "العودة إلى إنشاء الحساب"
   }
 }

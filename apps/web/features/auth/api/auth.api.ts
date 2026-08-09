@@ -34,7 +34,7 @@ export const useSignup = () =>
 export const useVerifyUser = () =>
   useMutation({
     mutationFn: async (data: z.infer<typeof VerifyUserSchema>) => {
-      const res = await api.post<z.infer<typeof VerifyUserResponseSchema>>("/auth/verify", data);
+      const res = await api.post<z.infer<typeof VerifyUserResponseSchema>>("/auth/verify-user", data);
       return res.data;
     }
   });

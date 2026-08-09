@@ -1,5 +1,7 @@
 "use client";
 import { useSignup } from "@features/auth/api/auth.api";
+import VerifyOtpForm from "@features/auth/components/VerifyOtpForm";
+import { useSignupContext } from "@features/auth/context/SignupContext";
 import { useInvitationEmail } from "@features/team/api/team.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignupSchema } from "@repo/dtos/auth";
@@ -10,22 +12,22 @@ import { getErrorMessage } from "@shared/lib/error";
 import { ROUTES } from "@shared/lib/routes";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import type { z } from "zod";
 
 type SignupFormValues = z.infer<typeof SignupSchema>;
 
 export default function SignupForm() {
   const { t } = useTranslation();
+  const { setIsVerifyStep, submittedEmail, setSubmittedEmail, setInvitationToken } = useSignupContext();
   const searchParams = useSearchParams();
-  const token = searchParams.get("token") || undefined;
-  const { data: invitationEmail, error: invitationError } = useInvitationEmail(token ?? "");
+  const searchToken = searchParams.get("token") || undefined;
+  const { data: invitationEmail, error: invitationError } = useInvitationEmail(searchToken ?? "");
   const invitedEmail = invitationEmail?.data.email;
 
-  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
   const signup = useSignup();
 
   const {
@@ -37,25 +39,27 @@ export default function SignupForm() {
     resolver: zodResolver(SignupSchema),
     mode: "onTouched",
     defaultValues: {
-      invitationToken: token,
+      invitationToken: searchToken,
       email: ""
     }
   });
 
   useEffect(() => {
-    if (token) {
-      setValue("invitationToken", token);
+    if (searchToken) {
+      setValue("invitationToken", searchToken);
+      setInvitationToken(searchToken);
     }
     if (invitedEmail) {
       setValue("email", invitedEmail);
     }
-  }, [token, invitedEmail, setValue]);
+  }, [searchToken, invitedEmail, setValue, setInvitationToken]);
 
   const onSubmit = (data: SignupFormValues) => {
     signup.mutate(data, {
       onSuccess: (res) => {
         toast.success(res.message);
         setSubmittedEmail(data.email);
+        setIsVerifyStep(true);
       },
       onError: (error) => {
         toast.error(getErrorMessage(error));
@@ -64,20 +68,13 @@ export default function SignupForm() {
   };
 
   if (submittedEmail) {
-    return (
-      <div className="space-y-2 text-center">
-        <p className="text-sm text-foreground">
-          <Trans i18nKey="signup.verificationSent" values={{ email: submittedEmail }} components={{ bold: <span className="font-medium" /> }} />
-        </p>
-        <p className="text-sm text-muted-foreground">{t("signup.verificationInstructions")}</p>
-      </div>
-    );
+    return <VerifyOtpForm />;
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-      {token && invitationError && <div className="rounded-md bg-destructive/10 p-3 text-xs text-destructive">{getErrorMessage(invitationError)}</div>}
-      {token && !invitationError && <div className="rounded-md bg-muted p-3 text-xs text-muted-foreground">{t("signup.invitationNotice")}</div>}
+      {searchToken && invitationError && <div className="rounded-md bg-destructive/10 p-3 text-xs text-destructive">{getErrorMessage(invitationError)}</div>}
+      {searchToken && !invitationError && <div className="rounded-md bg-muted p-3 text-xs text-muted-foreground">{t("signup.invitationNotice")}</div>}
 
       <div className="space-y-1.5">
         <Label htmlFor="name">{t("signup.name")}</Label>
