@@ -8,7 +8,9 @@ services:
     ports:
       - "5000:5000"
     env_file:
-      - apps/api/.env.production
+      - apps/api/.env
+    depends_on:
+      - redis
     restart: unless-stopped
 
   worker:
@@ -19,5 +21,30 @@ services:
       dockerfile: Dockerfile
     command: ["node", "dist/src/worker.js"]
     env_file:
-      - apps/api/.env.production
+      - apps/api/.env
+    depends_on:
+      - redis
     restart: unless-stopped
+
+  prometheus:
+    container_name: outscout-prometheus
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    restart: unless-stopped
+
+  redis:
+    container_name: outscout-redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  prometheus_data:
+  redis_data:
