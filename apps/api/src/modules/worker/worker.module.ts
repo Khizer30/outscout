@@ -14,23 +14,30 @@ import { LoggerModule } from "nestjs-pino";
     }),
     LoggerModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        pinoHttp: {
-          level: configService.get<string>("LOG_LEVEL", "info"),
-          transport:
-            configService.get<string>("NODE_ENV") === "production"
-              ? {
-                  target: "@axiomhq/pino",
-                  options: {
-                    dataset: configService.getOrThrow<string>("AXIOM_DATASET"),
-                    token: configService.getOrThrow<string>("AXIOM_TOKEN")
-                  },
-                  level: "info"
-                }
-              : { target: "pino-pretty", options: { singleLine: true, colorize: true } },
-          customProps: () => ({ context: "Worker" })
+      useFactory: (configService: ConfigService) => {
+        const dataset = configService.getOrThrow<string>("AXIOM_DATASET");
+        const token = configService.getOrThrow<string>("AXIOM_TOKEN");
+
+        const targets: Array<{ target: string; options?: Record<string, unknown>; level?: string }> = [
+          { target: "pino-pretty", options: { singleLine: true, colorize: true } }
+        ];
+
+        if (configService.get<string>("NODE_ENV") === "production") {
+          targets.push({
+            target: "@axiomhq/pino",
+            options: { dataset, token },
+            level: "info"
+          });
         }
-      }),
+
+        return {
+          pinoHttp: {
+            level: configService.get<string>("LOG_LEVEL", "info"),
+            transport: { targets },
+            customProps: () => ({ context: "Worker" })
+          }
+        };
+      },
       inject: [ConfigService]
     }),
     BullModule.forRootAsync({
