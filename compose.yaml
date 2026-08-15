@@ -1,4 +1,13 @@
 services:
+  redis:
+    container_name: outscout-redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
   api:
     container_name: outscout-server
     image: khizer30/outscout-server:latest
@@ -8,7 +17,7 @@ services:
     ports:
       - "5000:5000"
     env_file:
-      - apps/api/.env.production
+      - apps/api/.env
     depends_on:
       - redis
     restart: unless-stopped
@@ -21,7 +30,7 @@ services:
       dockerfile: Dockerfile
     command: ["node", "dist/src/worker.js"]
     env_file:
-      - apps/api/.env.production
+      - apps/api/.env
     depends_on:
       - redis
     restart: unless-stopped
@@ -36,15 +45,21 @@ services:
       - prometheus_data:/prometheus
     restart: unless-stopped
 
-  redis:
-    container_name: outscout-redis
-    image: redis:latest
+  grafana:
+    container_name: outscout-grafana
+    image: grafana/grafana:latest
     ports:
-      - "6379:6379"
+      - "3001:3000"
     volumes:
-      - redis_data:/data
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+    depends_on:
+      - prometheus
     restart: unless-stopped
 
 volumes:
-  prometheus_data:
   redis_data:
+  prometheus_data:
+  grafana_data:
