@@ -18,6 +18,7 @@
     "start:worker": "node dist/src/worker"
   },
   "dependencies": {
+    "@axiomhq/pino": "^2.0.0",
     "@getbrevo/brevo": "^6.0.2",
     "@langchain/core": "^1.2.3",
     "@langchain/google": "^0.2.1",

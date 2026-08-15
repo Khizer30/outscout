@@ -18,9 +18,16 @@ import { LoggerModule } from "nestjs-pino";
         pinoHttp: {
           level: configService.get<string>("LOG_LEVEL", "info"),
           transport:
-            configService.get<string>("NODE_ENV") !== "production"
-              ? { target: "pino-pretty", options: { singleLine: true, colorize: true } }
-              : undefined,
+            configService.get<string>("NODE_ENV") === "production"
+              ? {
+                  target: "@axiomhq/pino",
+                  options: {
+                    dataset: configService.getOrThrow<string>("AXIOM_DATASET"),
+                    token: configService.getOrThrow<string>("AXIOM_TOKEN")
+                  },
+                  level: "info"
+                }
+              : { target: "pino-pretty", options: { singleLine: true, colorize: true } },
           customProps: () => ({ context: "Worker" })
         }
       }),
