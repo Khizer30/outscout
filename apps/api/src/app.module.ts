@@ -1,5 +1,5 @@
+import type { IncomingMessage, ServerResponse } from "node:http";
 import { DatabaseModule } from "@database/database.module";
-import { LoggerMiddleware } from "@middleware/logger.middleware";
 import { AiModule } from "@modules/ai/ai.module";
 import { AuthModule } from "@modules/auth/auth.module";
 import { CompanyModule } from "@modules/company/company.module";
@@ -13,13 +13,14 @@ import { TeamModule } from "@modules/team/team.module";
 import { UserModule } from "@modules/user/user.module";
 import { WebScrapingModule } from "@modules/webScraping/webScraping.module";
 import { BullModule } from "@nestjs/bullmq";
-import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { ScheduleModule } from "@nestjs/schedule";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { AppController } from "@src/app.controller";
 import { PrometheusModule } from "@willsoto/nestjs-prometheus";
+import { LoggerModule } from "nestjs-pino";
 
 @Module({
   imports: [
@@ -30,6 +31,27 @@ import { PrometheusModule } from "@willsoto/nestjs-prometheus";
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ".env"
+    }),
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        forRoutes: ["*path"],
+        pinoHttp: {
+          level: configService.get<string>("LOG_LEVEL", "info"),
+          transport:
+            configService.get<string>("NODE_ENV") !== "production"
+              ? { target: "pino-pretty", options: { singleLine: true, colorize: true } }
+              : undefined,
+          redact: ["req.headers.authorization", "req.headers.cookie"],
+          autoLogging: true,
+          customProps: () => ({ context: "HTTP" }),
+          serializers: {
+            req: (req: IncomingMessage) => ({ method: req.method, url: req.url }),
+            res: (res: ServerResponse) => ({ statusCode: res.statusCode })
+          }
+        }
+      }),
+      inject: [ConfigService]
     }),
     ScheduleModule.forRoot({}),
     BullModule.forRootAsync({
@@ -71,8 +93,4 @@ import { PrometheusModule } from "@willsoto/nestjs-prometheus";
     }
   ]
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes("*path");
-  }
-}
+export class AppModule {}

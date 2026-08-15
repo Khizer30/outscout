@@ -13,6 +13,7 @@
       "env": [
         "PORT",
         "NODE_ENV",
+        "LOG_LEVEL",
         "CORS_ORIGINS",
         "FRONTEND_URL",
         "ENCRYPTION_KEY",
