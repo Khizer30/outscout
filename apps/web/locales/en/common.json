@@ -45,5 +45,16 @@
     "submit": "Verify",
     "submitting": "Verifying…",
     "backToSignup": "Back to sign up"
+  },
+  "login": {
+    "title": "Welcome back",
+    "description": "Log in to find and reach out to local leads.",
+    "email": "Email",
+    "emailPlaceholder": "khizer@company.com",
+    "password": "Password",
+    "submit": "Log in",
+    "submitting": "Logging in…",
+    "signupPrompt": "Don't have an account?",
+    "signup": "Sign up"
   }
 }

@@ -45,5 +45,16 @@
     "submit": "تحقق",
     "submitting": "جارٍ التحقق…",
     "backToSignup": "العودة إلى إنشاء الحساب"
+  },
+  "login": {
+    "title": "مرحبًا بعودتك",
+    "description": "سجّل الدخول لإيجاد العملاء المحليين والتواصل معهم.",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "khizer@company.com",
+    "password": "كلمة المرور",
+    "submit": "تسجيل الدخول",
+    "submitting": "جارٍ تسجيل الدخول…",
+    "signupPrompt": "ليس لديك حساب؟",
+    "signup": "إنشاء حساب"
   }
 }

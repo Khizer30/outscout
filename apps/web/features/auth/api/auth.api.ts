@@ -17,7 +17,6 @@ import type {
 } from "@repo/dtos/auth";
 import useAxios from "@shared/hooks/useAxios";
 import { api } from "@shared/lib/axios";
-import { useAuthStore } from "@shared/stores/authStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import type { z } from "zod";
 
@@ -45,9 +44,6 @@ export const useLogin = () =>
     mutationFn: async (data: z.infer<typeof LoginSchema>) => {
       const res = await api.post<z.infer<typeof LoginResponseSchema>>("/auth/login", data);
       return res.data;
-    },
-    onSuccess: (res) => {
-      useAuthStore.getState().setCredentials(res.data.user, res.data.accessToken);
     }
   });
 
@@ -59,9 +55,6 @@ export const useLogout = () => {
     mutationFn: async () => {
       const res = await axios.post<z.infer<typeof LogoutResponseSchema>>("/auth/logout");
       return res.data;
-    },
-    onSuccess: () => {
-      useAuthStore.getState().logout();
     }
   });
 };
@@ -72,9 +65,6 @@ export const useRefresh = () =>
     mutationFn: async () => {
       const res = await api.post<z.infer<typeof RefreshResponseSchema>>("/auth/refresh");
       return res.data;
-    },
-    onSuccess: (res) => {
-      useAuthStore.getState().setCredentials(res.data.user, res.data.accessToken);
     }
   });
 
@@ -118,9 +108,6 @@ export const useSwitchCompany = () => {
     mutationFn: async (data: z.infer<typeof SwitchCompanySchema>) => {
       const res = await axios.post<z.infer<typeof SwitchCompanyResponseSchema>>("/auth/switch-company", data);
       return res.data;
-    },
-    onSuccess: (res) => {
-      useAuthStore.getState().setCredentials(res.data.user, res.data.accessToken);
     }
   });
 };
