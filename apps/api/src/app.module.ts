@@ -19,9 +19,11 @@ import { APP_GUARD } from "@nestjs/core";
 import { ScheduleModule } from "@nestjs/schedule";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { AppController } from "@src/app.controller";
+import { PrometheusModule } from "@willsoto/nestjs-prometheus";
 
 @Module({
   imports: [
+    PrometheusModule.register(),
     ThrottlerModule.forRoot({
       throttlers: [{ ttl: 60000, limit: 100 }]
     }),
