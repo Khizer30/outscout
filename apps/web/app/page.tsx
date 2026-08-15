@@ -7,10 +7,15 @@ import { useEffect } from "react";
 export default function Home() {
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
+  const isInitialized = useAuthStore((s) => s.isInitialized);
 
   useEffect(() => {
+    if (!isInitialized) {
+      return;
+    }
+
     router.replace(user ? ROUTES.dashboard : ROUTES.auth.login);
-  }, [user, router]);
+  }, [isInitialized, user, router]);
 
   return null;
 }
