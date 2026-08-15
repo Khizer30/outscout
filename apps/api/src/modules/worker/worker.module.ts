@@ -4,12 +4,27 @@ import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { RedisModule } from "@redis/redis.module";
+import { LoggerModule } from "nestjs-pino";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ".env"
+    }),
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        pinoHttp: {
+          level: configService.get<string>("LOG_LEVEL", "info"),
+          transport:
+            configService.get<string>("NODE_ENV") !== "production"
+              ? { target: "pino-pretty", options: { singleLine: true, colorize: true } }
+              : undefined,
+          customProps: () => ({ context: "Worker" })
+        }
+      }),
+      inject: [ConfigService]
     }),
     BullModule.forRootAsync({
       imports: [ConfigModule],
