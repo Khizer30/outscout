@@ -8,9 +8,7 @@ export const useInvitationEmail = (invitationToken: string) =>
   useQuery({
     queryKey: ["team", "invitations", invitationToken, "email"],
     queryFn: async () => {
-      const res = await api.get<z.infer<typeof InvitationEmailResponseSchema>>(
-        `/team/invitations/${invitationToken}/email`
-      );
+      const res = await api.get<z.infer<typeof InvitationEmailResponseSchema>>(`/team/invitations/${invitationToken}/email`);
       return res.data;
     },
     enabled: !!invitationToken

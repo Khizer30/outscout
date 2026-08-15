@@ -47,13 +47,7 @@ export default function Navbar() {
           <Languages />
         </Button>
 
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label={t("navbar.theme")}
-          title={isDark ? t("navbar.light") : t("navbar.dark")}
-          onClick={toggleTheme}
-        >
+        <Button variant="ghost" size="icon-sm" aria-label={t("navbar.theme")} title={isDark ? t("navbar.light") : t("navbar.dark")} onClick={toggleTheme}>
           {isDark ? <Sun /> : <Moon />}
         </Button>
       </div>

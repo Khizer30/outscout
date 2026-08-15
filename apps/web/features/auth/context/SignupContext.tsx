@@ -18,9 +18,7 @@ export function SignupProvider({ children }: { children: ReactNode }) {
   const [invitationToken, setInvitationToken] = useState<string | undefined>(undefined);
 
   return (
-    <SignupContext.Provider
-      value={{ isVerifyStep, setIsVerifyStep, submittedEmail, setSubmittedEmail, invitationToken, setInvitationToken }}
-    >
+    <SignupContext.Provider value={{ isVerifyStep, setIsVerifyStep, submittedEmail, setSubmittedEmail, invitationToken, setInvitationToken }}>
       {children}
     </SignupContext.Provider>
   );
