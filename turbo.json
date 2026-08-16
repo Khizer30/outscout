@@ -1,7 +1,7 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
-  "globalEnv": ["CI", "GRAFANA_ADMIN_USER", "GRAFANA_ADMIN_PASSWORD"],
+  "globalEnv": ["CI"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -12,6 +12,7 @@
       "dependsOn": ["^build"],
       "env": [
         "PORT",
+        "METRICS_PORT",
         "NODE_ENV",
         "LOG_LEVEL",
         "CORS_ORIGINS",
@@ -37,7 +38,9 @@
         "REDIS_PASSWORD",
         "REDIS_TLS",
         "AXIOM_DATASET",
-        "AXIOM_TOKEN"
+        "AXIOM_TOKEN",
+        "GRAFANA_ADMIN_USER",
+        "GRAFANA_ADMIN_PASSWORD"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", "drizzle/**"]

@@ -7,8 +7,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
+    expose:
+      - "9464"
     env_file:
-      - .env
+      - apps/api/.env
     restart: unless-stopped
 
   worker:
@@ -19,7 +21,7 @@ services:
       dockerfile: Dockerfile
     command: ["node", "dist/src/worker.js"]
     env_file:
-      - .env
+      - apps/api/.env
     restart: unless-stopped
 
   node-exporter:
