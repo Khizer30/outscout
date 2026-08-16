@@ -17,14 +17,14 @@ const COPY = {
     title: (companyName: string) => `You're invited to join ${companyName}`,
     intro: (companyName: string, headingColor: string, withUrl: boolean) =>
       withUrl
-        ? `You've been invited to join <strong style="color: ${headingColor}; font-weight: 600;">${companyName}</strong> on Outscout. Click the button below to accept the invitation and get started.`
-        : `You've been invited to join <strong style="color: ${headingColor}; font-weight: 600;">${companyName}</strong> on Outscout. Log in to your Outscout account to accept the invitation from your dashboard.`,
+        ? `You've been invited to join <strong style="color: ${headingColor}; font-weight: 600;">${companyName}</strong> on OutScout. Click the button below to accept the invitation and get started.`
+        : `You've been invited to join <strong style="color: ${headingColor}; font-weight: 600;">${companyName}</strong> on OutScout. Log in to your OutScout account to accept the invitation from your dashboard.`,
     cta: "Accept Invitation &rarr;",
     noteLabel: "⏰ Note:",
     noteBody: "This invitation expires in 7 days.",
     ignoreNote: "If you were not expecting this invitation, you can safely ignore this email.",
     footer: (companyName: string, bodyTextColor: string) =>
-      `This is an automated message from <strong style="color: ${bodyTextColor}; font-weight: 600;">${companyName}</strong> via Outscout.<br />Please do not reply directly to this email.`
+      `This is an automated message from <strong style="color: ${bodyTextColor}; font-weight: 600;">${companyName}</strong> via OutScout.<br />Please do not reply directly to this email.`
   },
   AR: {
     dir: "rtl",
@@ -32,14 +32,14 @@ const COPY = {
     title: (companyName: string) => `تمت دعوتك للانضمام إلى ${companyName}`,
     intro: (companyName: string, headingColor: string, withUrl: boolean) =>
       withUrl
-        ? `تمت دعوتك للانضمام إلى <strong style="color: ${headingColor}; font-weight: 600;">${companyName}</strong> على Outscout. انقر على الزر أدناه لقبول الدعوة والبدء.`
-        : `تمت دعوتك للانضمام إلى <strong style="color: ${headingColor}; font-weight: 600;">${companyName}</strong> على Outscout. سجّل الدخول إلى حساب Outscout الخاص بك لقبول الدعوة من لوحة التحكم.`,
+        ? `تمت دعوتك للانضمام إلى <strong style="color: ${headingColor}; font-weight: 600;">${companyName}</strong> على OutScout. انقر على الزر أدناه لقبول الدعوة والبدء.`
+        : `تمت دعوتك للانضمام إلى <strong style="color: ${headingColor}; font-weight: 600;">${companyName}</strong> على OutScout. سجّل الدخول إلى حساب OutScout الخاص بك لقبول الدعوة من لوحة التحكم.`,
     cta: "قبول الدعوة &larr;",
     noteLabel: "⏰ ملاحظة:",
     noteBody: "تنتهي صلاحية هذه الدعوة خلال 7 أيام.",
     ignoreNote: "إذا لم تكن تتوقع هذه الدعوة، يمكنك تجاهل هذا البريد الإلكتروني بأمان.",
     footer: (companyName: string, bodyTextColor: string) =>
-      `هذه رسالة تلقائية من <strong style="color: ${bodyTextColor}; font-weight: 600;">${companyName}</strong> عبر Outscout.<br />يرجى عدم الرد مباشرة على هذا البريد الإلكتروني.`
+      `هذه رسالة تلقائية من <strong style="color: ${bodyTextColor}; font-weight: 600;">${companyName}</strong> عبر OutScout.<br />يرجى عدم الرد مباشرة على هذا البريد الإلكتروني.`
   }
 } as const;
 

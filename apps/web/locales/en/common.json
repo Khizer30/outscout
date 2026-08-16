@@ -6,5 +6,55 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "confirm": "Confirm"
+  },
+  "notFound": {
+    "code": "404",
+    "title": "This location isn't on the map",
+    "description": "The page you're looking for doesn't exist or may have moved.",
+    "backToHome": "Back to home"
+  },
+  "navbar": {
+    "language": "Language",
+    "theme": "Theme",
+    "english": "English",
+    "arabic": "Arabic",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "signup": {
+    "title": "Create your account",
+    "description": "Start finding and reaching out to local leads.",
+    "name": "Name",
+    "namePlaceholder": "Muhammad Khizer",
+    "email": "Email",
+    "emailPlaceholder": "khizer@company.com",
+    "password": "Password",
+    "submit": "Create account",
+    "submitting": "Creating account…",
+    "loginPrompt": "Already have an account?",
+    "login": "Log in",
+    "invitationNotice": "You are signing up via a team invitation.",
+    "verificationSent": "We've sent a verification code to <bold>{{email}}</bold>.",
+    "verificationInstructions": "Check your inbox to verify your account."
+  },
+  "verifyOtp": {
+    "title": "Verify your email",
+    "description": "Enter the 6-digit code sent to <bold>{{email}}</bold>.",
+    "otp": "Verification code",
+    "otpPlaceholder": "123456",
+    "submit": "Verify",
+    "submitting": "Verifying…",
+    "backToSignup": "Back to sign up"
+  },
+  "login": {
+    "title": "Welcome back",
+    "description": "Log in to find and reach out to local leads.",
+    "email": "Email",
+    "emailPlaceholder": "khizer@company.com",
+    "password": "Password",
+    "submit": "Log in",
+    "submitting": "Logging in…",
+    "signupPrompt": "Don't have an account?",
+    "signup": "Sign up"
   }
 }

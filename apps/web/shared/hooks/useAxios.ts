@@ -12,7 +12,11 @@ const useAxios = () => {
   const accessToken = useAuthStore((state) => state.accessToken);
 
   const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!
+    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL!,
+    withCredentials: true,
+    headers: {
+      "Content-Type": "application/json"
+    }
   });
 
   // Adds bearer token
@@ -24,7 +28,7 @@ const useAxios = () => {
     return config;
   });
 
-  // refreshes access token
+  // Refreshes access token
   api.interceptors.response.use(
     (response) => response,
     async (error: AxiosError) => {

@@ -1,0 +1,60 @@
+{
+  "common": {
+    "loading": "جارٍ التحميل...",
+    "error": "حدث خطأ ما",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "confirm": "تأكيد"
+  },
+  "notFound": {
+    "code": "404",
+    "title": "هذا الموقع غير موجود على الخريطة",
+    "description": "الصفحة التي تبحث عنها غير موجودة أو ربما تم نقلها.",
+    "backToHome": "العودة إلى الرئيسية"
+  },
+  "navbar": {
+    "language": "اللغة",
+    "theme": "المظهر",
+    "english": "الإنجليزية",
+    "arabic": "العربية",
+    "light": "فاتح",
+    "dark": "داكن"
+  },
+  "signup": {
+    "title": "أنشئ حسابك",
+    "description": "ابدأ في إيجاد العملاء المحليين والتواصل معهم.",
+    "name": "الاسم",
+    "namePlaceholder": "محمد خيزر",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "khizer@company.com",
+    "password": "كلمة المرور",
+    "submit": "إنشاء حساب",
+    "submitting": "جارٍ الإنشاء…",
+    "loginPrompt": "هل لديك حساب بالفعل؟",
+    "login": "تسجيل الدخول",
+    "invitationNotice": "أنت تسجّل عبر دعوة فريق.",
+    "verificationSent": "لقد أرسلنا رمز التحقق إلى <bold>{{email}}</bold>.",
+    "verificationInstructions": "تحقق من صندوق الوارد لتفعيل حسابك."
+  },
+  "verifyOtp": {
+    "title": "تحقق من بريدك الإلكتروني",
+    "description": "أدخل الرمز المكون من 6 أرقام المُرسَل إلى <bold>{{email}}</bold>.",
+    "otp": "رمز التحقق",
+    "otpPlaceholder": "123456",
+    "submit": "تحقق",
+    "submitting": "جارٍ التحقق…",
+    "backToSignup": "العودة إلى إنشاء الحساب"
+  },
+  "login": {
+    "title": "مرحبًا بعودتك",
+    "description": "سجّل الدخول لإيجاد العملاء المحليين والتواصل معهم.",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "khizer@company.com",
+    "password": "كلمة المرور",
+    "submit": "تسجيل الدخول",
+    "submitting": "جارٍ تسجيل الدخول…",
+    "signupPrompt": "ليس لديك حساب؟",
+    "signup": "إنشاء حساب"
+  }
+}

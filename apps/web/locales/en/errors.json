@@ -1,0 +1,39 @@
+{
+  "VALIDATION_ERROR": "Validation failed",
+  "INTERNAL_SERVER_ERROR": "An unexpected error occurred",
+
+  "AI_GENERATION_FAILED": "Failed to generate AI response",
+  "AI_GENERATED_MESSAGE_NOT_FOUND": "AI generated message not found",
+  "AI_GENERATED_MESSAGE_ACCESS_DENIED": "You do not have access to this AI generated message",
+  "INVALID_MESSAGE_PART": "The given message part is not valid for this message's channel",
+  "AI_GENERATED_MESSAGE_CHANNEL_MISMATCH": "This AI generated message is not for the expected channel",
+
+  "INVALID_OTP": "Invalid OTP code",
+  "EXPIRED_OTP": "OTP code has expired",
+  "INVALID_CREDENTIALS": "Invalid email or password",
+  "USER_NOT_VERIFIED": "Please verify your email first",
+  "INVALID_SESSION": "Invalid or expired session",
+
+  "COMPANY_NOT_FOUND": "Company not found",
+  "USER_ALREADY_HAS_COMPANY": "User is already associated with a company",
+  "COMPANY_MEMBERSHIP_NOT_FOUND": "Active company membership not found",
+  "COMPANY_UPDATE_CONFLICT": "Company was deleted or modified before the update could be applied",
+  "COMPANY_EMAIL_NOT_CONFIGURED": "Company has not configured a Brevo email account",
+
+  "LEAD_NOT_FOUND": "Lead not found",
+  "LEAD_ACCESS_DENIED": "You do not have access to this lead",
+  "LEAD_NOT_ENRICHING": "Lead must be in ENRICHING status to be processed by AI",
+  "LEAD_PHONE_MISSING": "This lead does not have a phone number",
+  "LEAD_EMAIL_MISSING": "This lead does not have an email address",
+
+  "INVITATION_NOT_FOUND": "Invitation not found",
+  "INVITATION_EXPIRED": "This invitation has expired",
+  "INVITATION_ALREADY_PROCESSED": "This invitation has already been accepted or is no longer valid",
+  "INVITATION_PENDING_EXISTS": "An active invitation already exists for this email",
+  "INVITATION_EMAIL_MISMATCH": "This invitation was sent to a different email address",
+  "INVITATION_TOKEN_INVALID": "Invalid or expired invitation link",
+  "USER_ALREADY_COMPANY_MEMBER": "User is already a member of this company",
+
+  "USER_NOT_FOUND": "User not found",
+  "USER_ALREADY_EXISTS": "User already exists"
+}

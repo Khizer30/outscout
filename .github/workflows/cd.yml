@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
   Dockerize:
@@ -54,7 +55,6 @@ jobs:
             history -c && history -w
 
   Web:
-    needs: API
     runs-on: ubuntu-latest
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

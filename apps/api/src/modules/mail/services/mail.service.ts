@@ -1,6 +1,6 @@
 import { MailRepository } from "@modules/mail/domain/mail.repository";
 import type { EmailLanguage, MailSenderConfig } from "@modules/mail/domain/mail.types";
-import { OutscoutBranding } from "@modules/mail/domain/mail.value-objects";
+import { OutScoutBranding } from "@modules/mail/domain/mail.value-objects";
 import generateInvitationEmail from "@modules/mail/templates/invitation.html";
 import generateInvitationText from "@modules/mail/templates/invitation.text";
 import generateOtpEmail from "@modules/mail/templates/otp.html";
@@ -25,9 +25,9 @@ export class MailService {
         receiverName,
         otp,
         companyName: this.sender.senderName,
-        companyImage: OutscoutBranding.LOGO_URL,
-        primaryColor: OutscoutBranding.PRIMARY_COLOR,
-        secondaryColor: OutscoutBranding.SECONDARY_COLOR,
+        companyImage: OutScoutBranding.LOGO_URL,
+        primaryColor: OutScoutBranding.PRIMARY_COLOR,
+        secondaryColor: OutScoutBranding.SECONDARY_COLOR,
         language
       })
     });
@@ -45,23 +45,23 @@ export class MailService {
         receiverName,
         otp,
         companyName: this.sender.senderName,
-        companyImage: OutscoutBranding.LOGO_URL,
-        primaryColor: OutscoutBranding.PRIMARY_COLOR,
-        secondaryColor: OutscoutBranding.SECONDARY_COLOR,
+        companyImage: OutScoutBranding.LOGO_URL,
+        primaryColor: OutScoutBranding.PRIMARY_COLOR,
+        secondaryColor: OutScoutBranding.SECONDARY_COLOR,
         language
       })
     });
   }
 
   async sendInvitationEmail(to: string, acceptUrl: string | null, companyName: string, language: EmailLanguage = "EN"): Promise<void> {
-    const subject = language === "AR" ? `تمت دعوتك للانضمام إلى ${companyName} على Outscout` : `You've been invited to join ${companyName} on Outscout`;
+    const subject = language === "AR" ? `تمت دعوتك للانضمام إلى ${companyName} على OutScout` : `You've been invited to join ${companyName} on OutScout`;
     const textContent = generateInvitationText({ companyName, acceptUrl, language });
     const htmlContent = generateInvitationEmail({
       companyName,
       acceptUrl,
-      companyImage: OutscoutBranding.LOGO_URL,
-      primaryColor: OutscoutBranding.PRIMARY_COLOR,
-      secondaryColor: OutscoutBranding.SECONDARY_COLOR,
+      companyImage: OutScoutBranding.LOGO_URL,
+      primaryColor: OutScoutBranding.PRIMARY_COLOR,
+      secondaryColor: OutScoutBranding.SECONDARY_COLOR,
       language
     });
 
@@ -86,8 +86,8 @@ export class MailService {
         signature,
         companyName: senderConfig.senderName,
         companyImage: branding.companyImage,
-        primaryColor: branding.primaryColor ?? OutscoutBranding.PRIMARY_COLOR,
-        secondaryColor: branding.secondaryColor ?? OutscoutBranding.SECONDARY_COLOR
+        primaryColor: branding.primaryColor ?? OutScoutBranding.PRIMARY_COLOR,
+        secondaryColor: branding.secondaryColor ?? OutScoutBranding.SECONDARY_COLOR
       })
     });
   }

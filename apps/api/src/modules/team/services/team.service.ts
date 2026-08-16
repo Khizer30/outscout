@@ -101,11 +101,8 @@ export class TeamService {
     return invitations.filter((invitation) => !invitation.isExpired());
   }
 
-  async getInvitationEmail(invitationId: string): Promise<string> {
-    const invitation = await this.invitationRepo.findById(invitationId);
-    if (!invitation) {
-      throw new InvitationNotFoundError({ id: invitationId });
-    }
+  async getInvitationEmail(token: string): Promise<string> {
+    const invitation = await this.validateToken(token);
 
     return invitation.email;
   }

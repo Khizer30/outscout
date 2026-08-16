@@ -1,0 +1,39 @@
+{
+  "VALIDATION_ERROR": "فشل التحقق من صحة البيانات",
+  "INTERNAL_SERVER_ERROR": "حدث خطأ غير متوقع",
+
+  "AI_GENERATION_FAILED": "فشل إنشاء رد الذكاء الاصطناعي",
+  "AI_GENERATED_MESSAGE_NOT_FOUND": "لم يتم العثور على الرسالة المُنشأة بالذكاء الاصطناعي",
+  "AI_GENERATED_MESSAGE_ACCESS_DENIED": "ليس لديك صلاحية الوصول إلى هذه الرسالة المُنشأة بالذكاء الاصطناعي",
+  "INVALID_MESSAGE_PART": "جزء الرسالة المحدد غير صالح لقناة هذه الرسالة",
+  "AI_GENERATED_MESSAGE_CHANNEL_MISMATCH": "هذه الرسالة المُنشأة بالذكاء الاصطناعي ليست للقناة المتوقعة",
+
+  "INVALID_OTP": "رمز التحقق غير صالح",
+  "EXPIRED_OTP": "انتهت صلاحية رمز التحقق",
+  "INVALID_CREDENTIALS": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+  "USER_NOT_VERIFIED": "يرجى التحقق من بريدك الإلكتروني أولاً",
+  "INVALID_SESSION": "الجلسة غير صالحة أو منتهية الصلاحية",
+
+  "COMPANY_NOT_FOUND": "لم يتم العثور على الشركة",
+  "USER_ALREADY_HAS_COMPANY": "المستخدم مرتبط بالفعل بشركة",
+  "COMPANY_MEMBERSHIP_NOT_FOUND": "لم يتم العثور على عضوية نشطة في الشركة",
+  "COMPANY_UPDATE_CONFLICT": "تم حذف الشركة أو تعديلها قبل إتمام التحديث",
+  "COMPANY_EMAIL_NOT_CONFIGURED": "لم تقم الشركة بإعداد حساب بريد Brevo",
+
+  "LEAD_NOT_FOUND": "لم يتم العثور على العميل المحتمل",
+  "LEAD_ACCESS_DENIED": "ليس لديك صلاحية الوصول إلى هذا العميل المحتمل",
+  "LEAD_NOT_ENRICHING": "يجب أن تكون حالة العميل المحتمل \"قيد الإثراء\" لمعالجته بالذكاء الاصطناعي",
+  "LEAD_PHONE_MISSING": "لا يحتوي هذا العميل المحتمل على رقم هاتف",
+  "LEAD_EMAIL_MISSING": "لا يحتوي هذا العميل المحتمل على بريد إلكتروني",
+
+  "INVITATION_NOT_FOUND": "لم يتم العثور على الدعوة",
+  "INVITATION_EXPIRED": "انتهت صلاحية هذه الدعوة",
+  "INVITATION_ALREADY_PROCESSED": "تم قبول هذه الدعوة بالفعل أو لم تعد صالحة",
+  "INVITATION_PENDING_EXISTS": "توجد بالفعل دعوة نشطة لهذا البريد الإلكتروني",
+  "INVITATION_EMAIL_MISMATCH": "تم إرسال هذه الدعوة إلى بريد إلكتروني مختلف",
+  "INVITATION_TOKEN_INVALID": "رابط الدعوة غير صالح أو منتهي الصلاحية",
+  "USER_ALREADY_COMPANY_MEMBER": "المستخدم عضو بالفعل في هذه الشركة",
+
+  "USER_NOT_FOUND": "لم يتم العثور على المستخدم",
+  "USER_ALREADY_EXISTS": "المستخدم موجود بالفعل"
+}

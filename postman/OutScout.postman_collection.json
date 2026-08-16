@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "a47d2258-9e8f-48d5-8b68-64c05a4b0588",
-    "name": "Outscout",
+    "name": "OutScout",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "28609001"
   },
@@ -792,7 +792,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"channel\": \"WHATSAPP\",\r\n    // \"channel\": \"EMAIL\",\r\n    \"rules\": \"- Language: English - Write a cold outreach EMAIL — it must have a subject line and a proper email body - Address the recipient as the business owner/team, not by a personal name - Keep the body under 200 words - Tone: professional, human, and warm — not salesy, not pushy, not spammy - Subject line: concise, curiosity-driven, relevant to their business type — no clickbait - Opening line: a genuine, specific observation about their business (from their website if available, otherwise from their business type/location) - Mention 1-2 services most relevant to their specific business type - If the business has no website, specifically mention that we can build one for them - If a website URL is provided, pull one concrete specific detail from it (product, service, tagline, design style) to personalise the opening — do not fabricate; if inaccessible, note that - End with a single soft call-to-action — invite a reply or a quick call, nothing aggressive - Sign off as: Outscout Marketing Agency - Do NOT use emojis - Do NOT mention Google Map ratings - Do NOT use generic filler phrases like 'I hope this email finds you well' or 'I came across your business'\",\r\n    \"greeting\": \"Assalam Wallikum\"\r\n}",
+              "raw": "{\r\n    \"channel\": \"WHATSAPP\",\r\n    // \"channel\": \"EMAIL\",\r\n    \"rules\": \"- Language: English - Write a cold outreach EMAIL — it must have a subject line and a proper email body - Address the recipient as the business owner/team, not by a personal name - Keep the body under 200 words - Tone: professional, human, and warm — not salesy, not pushy, not spammy - Subject line: concise, curiosity-driven, relevant to their business type — no clickbait - Opening line: a genuine, specific observation about their business (from their website if available, otherwise from their business type/location) - Mention 1-2 services most relevant to their specific business type - If the business has no website, specifically mention that we can build one for them - If a website URL is provided, pull one concrete specific detail from it (product, service, tagline, design style) to personalise the opening — do not fabricate; if inaccessible, note that - End with a single soft call-to-action — invite a reply or a quick call, nothing aggressive - Sign off as: OutScout Marketing Agency - Do NOT use emojis - Do NOT mention Google Map ratings - Do NOT use generic filler phrases like 'I hope this email finds you well' or 'I came across your business'\",\r\n    \"greeting\": \"Assalam Wallikum\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"

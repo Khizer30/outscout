@@ -7,15 +7,17 @@ import { type NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "@src/app.module";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
+import { Logger } from "nestjs-pino";
 import { ZodValidationPipe } from "nestjs-zod";
 
 // Bootstrap
 (async (): Promise<undefined> => {
-  const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bufferLogs: true
+  });
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>("PORT", 5000);
-  const isProduction = configService.get<string>("NODE_ENV") === "production";
   const corsOrigins = configService.get<string>("CORS_ORIGINS")?.split(" ");
 
   app.set("trust proxy", "loopback");
@@ -25,10 +27,10 @@ import { ZodValidationPipe } from "nestjs-zod";
   app.use(cookieParser());
   app.use(helmet());
   app.enableCors({
-    origin: isProduction && corsOrigins ? corsOrigins : "*",
+    origin: corsOrigins ? corsOrigins : "*",
     credentials: true
   });
-  app.useLogger(isProduction ? ["error", "warn"] : ["log", "error", "warn", "debug", "verbose"]);
+  app.useLogger(app.get(Logger));
   app.useGlobalPipes(new ZodValidationPipe());
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());

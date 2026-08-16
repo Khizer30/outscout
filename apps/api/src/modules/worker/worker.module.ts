@@ -4,12 +4,41 @@ import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { RedisModule } from "@redis/redis.module";
+import { LoggerModule } from "nestjs-pino";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ".env"
+    }),
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => {
+        const dataset = configService.getOrThrow<string>("AXIOM_DATASET");
+        const token = configService.getOrThrow<string>("AXIOM_TOKEN");
+
+        const targets: Array<{ target: string; options?: Record<string, unknown>; level?: string }> = [
+          { target: "pino-pretty", options: { singleLine: true, colorize: true } }
+        ];
+
+        if (configService.get<string>("NODE_ENV") === "production") {
+          targets.push({
+            target: "@axiomhq/pino",
+            options: { dataset, token },
+            level: "info"
+          });
+        }
+
+        return {
+          pinoHttp: {
+            level: configService.get<string>("LOG_LEVEL", "info"),
+            transport: { targets },
+            customProps: () => ({ context: "Worker" })
+          }
+        };
+      },
+      inject: [ConfigService]
     }),
     BullModule.forRootAsync({
       imports: [ConfigModule],

@@ -1,5 +1,5 @@
+import { getErrorMessage } from "@shared/lib/error";
 import { QueryCache, QueryClient, defaultShouldDehydrateQuery } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -16,10 +16,7 @@ function makeQueryClient() {
     },
     queryCache: new QueryCache({
       onError: (error) => {
-        const err = error as AxiosError<{ error?: unknown; message?: unknown }>;
-        const raw = err.response?.data?.error ?? err.response?.data?.message;
-        const message = typeof raw === "string" ? raw : "Something went wrong";
-        console.error(message);
+        console.error(getErrorMessage(error, "Something went wrong"));
       }
     })
   });
