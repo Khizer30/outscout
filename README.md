@@ -85,9 +85,10 @@ Zod schemas live in `packages/dtos/src` and are consumed by both the NestJS back
 
 ## Environment Variables
 
-See the example files for all required variables:
+Three separate `.env` files, each scoped to what consumes it. Copy the matching example file before running locally:
 
-- [`apps/api/.env.example`](apps/api/.env.example)
+- [`.env.example`](.env.example) — Docker Compose only, substituted into `compose.yaml` for the `grafana` service. Not read by either app.
+- [`apps/api/.env.example`](apps/api/.env.example) — also the `env_file` loaded by the `api` and `worker` services in `compose.yaml`.
 - [`apps/web/.env.example`](apps/web/.env.example)
 
 ---
