@@ -24,13 +24,20 @@ type RequestDurationMetric = {
   labels(labels: HttpMetricLabels): LabelledHistogram;
 };
 
+type InFlightRequestsMetric = {
+  inc(value?: number): void;
+  dec(value?: number): void;
+};
+
 @Injectable()
 export class PrometheusMetricsMiddleware implements NestMiddleware {
   constructor(
     @InjectMetric("http_requests_total")
     private readonly requestCounter: RequestCounterMetric,
     @InjectMetric("http_request_duration_seconds")
-    private readonly requestDurationHistogram: RequestDurationMetric
+    private readonly requestDurationHistogram: RequestDurationMetric,
+    @InjectMetric("http_requests_in_flight")
+    private readonly inFlightRequestsGauge: InFlightRequestsMetric
   ) {}
 
   use(request: Request, response: Response, next: NextFunction) {
@@ -40,6 +47,8 @@ export class PrometheusMetricsMiddleware implements NestMiddleware {
     }
 
     const startedAt = process.hrtime.bigint();
+
+    this.inFlightRequestsGauge.inc();
 
     response.on("finish", () => {
       const labels: HttpMetricLabels = {
@@ -51,6 +60,7 @@ export class PrometheusMetricsMiddleware implements NestMiddleware {
 
       this.requestCounter.labels(labels).inc();
       this.requestDurationHistogram.labels(labels).observe(durationInSeconds);
+      this.inFlightRequestsGauge.dec();
     });
 
     next();

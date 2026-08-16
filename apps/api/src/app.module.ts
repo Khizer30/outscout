@@ -20,7 +20,7 @@ import { APP_GUARD } from "@nestjs/core";
 import { ScheduleModule } from "@nestjs/schedule";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { AppController } from "@src/app.controller";
-import { PrometheusModule, makeCounterProvider, makeHistogramProvider } from "@willsoto/nestjs-prometheus";
+import { PrometheusModule, makeCounterProvider, makeGaugeProvider, makeHistogramProvider } from "@willsoto/nestjs-prometheus";
 import { LoggerModule } from "nestjs-pino";
 
 @Module({
@@ -113,6 +113,10 @@ import { LoggerModule } from "nestjs-pino";
       help: "HTTP request duration in seconds",
       labelNames: ["method", "route", "status_code"],
       buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10]
+    }),
+    makeGaugeProvider({
+      name: "http_requests_in_flight",
+      help: "Number of HTTP requests currently being processed"
     }),
     {
       provide: APP_GUARD,
