@@ -1,13 +1,4 @@
 services:
-  redis:
-    container_name: outscout-redis
-    image: redis:latest
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    restart: unless-stopped
-
   api:
     container_name: outscout-server
     image: khizer30/outscout-server:latest
@@ -17,9 +8,7 @@ services:
     ports:
       - "5000:5000"
     env_file:
-      - apps/api/.env
-    depends_on:
-      - redis
+      - .env
     restart: unless-stopped
 
   worker:
@@ -30,9 +19,24 @@ services:
       dockerfile: Dockerfile
     command: ["node", "dist/src/worker.js"]
     env_file:
-      - apps/api/.env
-    depends_on:
-      - redis
+      - .env
+    restart: unless-stopped
+
+  node-exporter:
+    container_name: outscout-node-exporter
+    image: prom/node-exporter:latest
+    pid: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--path.rootfs=/host/rootfs"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    ports:
+      - "9100:9100"
     restart: unless-stopped
 
   prometheus:
