@@ -22,7 +22,7 @@ A geo-targeted B2B lead generation and outreach platform. Find local businesses 
 | Auth     | JWT, bcrypt                                   |
 | DevOps   | Docker, Docker Compose, GitHub Actions CI     |
 
-See [BUSINESS_LOGIC.md](./BUSINESS_LOGIC.md) for a full breakdown of the product concept, workflow, and outreach rules.
+See [BUSINESS_LOGIC.md](./docs/BUSINESS_LOGIC.md) for a full breakdown of the product concept, workflow, and outreach rules.
 
 ---
 
@@ -57,13 +57,14 @@ outscout/
 │           ├── providers/
 │           ├── stores/
 │           └── types/
+├── docs/
+│   └── BUSINESS_LOGIC.md   # Product concept and business rules
 ├── packages/
 │   ├── dtos/               # Shared Zod DTOs
 │   ├── eslint-config/      # Shared ESLint config
 │   └── typescript-config/  # Shared TypeScript config
 ├── Dockerfile              # Multi-stage Docker build for the API
 ├── compose.yaml            # Docker Compose for production API
-├── BUSINESS_LOGIC.md       # Product concept and business rules
 └── turbo.json
 ```
 
