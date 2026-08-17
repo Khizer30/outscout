@@ -41,11 +41,6 @@ export class PrometheusMetricsMiddleware implements NestMiddleware {
   ) {}
 
   use(request: Request, response: Response, next: NextFunction) {
-    if (this.isMetricsEndpoint(request)) {
-      next();
-      return;
-    }
-
     const startedAt = process.hrtime.bigint();
 
     this.inFlightRequestsGauge.inc();
@@ -78,9 +73,5 @@ export class PrometheusMetricsMiddleware implements NestMiddleware {
     }
 
     return `${request.baseUrl}${routePath}` || "/";
-  }
-
-  private isMetricsEndpoint(request: Request): boolean {
-    return request.path === "/api/metrics";
   }
 }
