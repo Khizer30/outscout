@@ -38,9 +38,7 @@
         "REDIS_PASSWORD",
         "REDIS_TLS",
         "AXIOM_DATASET",
-        "AXIOM_TOKEN",
-        "GRAFANA_ADMIN_USER",
-        "GRAFANA_ADMIN_PASSWORD"
+        "AXIOM_TOKEN"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", "drizzle/**"]

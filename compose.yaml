@@ -43,27 +43,17 @@ services:
   prometheus:
     container_name: outscout-prometheus
     image: prom/prometheus:latest
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.config.file=/etc/prometheus/web.yml"
     ports:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheusWeb.yml:/etc/prometheus/web.yml
       - prometheus_data:/prometheus
-    restart: unless-stopped
-
-  grafana:
-    container_name: outscout-grafana
-    image: grafana/grafana:latest
-    ports:
-      - "3001:3000"
-    volumes:
-      - grafana_data:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
-    depends_on:
-      - prometheus
     restart: unless-stopped
 
 volumes:
   prometheus_data:
-  grafana_data:
