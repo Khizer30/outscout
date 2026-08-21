@@ -1,28 +1,4 @@
 services:
-  api:
-    container_name: outscout-server
-    image: khizer30/outscout-server:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "5000:5000"
-      - "9464:9464"
-    env_file:
-      - apps/api/.env
-    restart: unless-stopped
-
-  worker:
-    container_name: outscout-worker
-    image: khizer30/outscout-server:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: ["node", "dist/src/worker.js"]
-    env_file:
-      - apps/api/.env
-    restart: unless-stopped
-
   node-exporter:
     container_name: outscout-node-exporter
     image: prom/node-exporter:latest
@@ -37,7 +13,69 @@ services:
       - "--path.rootfs=/host/rootfs"
       - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
     ports:
-      - "9100:9100"
+      - "9101:9100"
+    restart: unless-stopped
+
+  postgres:
+    container_name: outscout-postgres
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "6001:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+  redis:
+    container_name: outscout-redis
+    image: redis:8.8.2
+    restart: unless-stopped
+    environment:
+      REDIS_USERNAME: ${REDIS_USERNAME}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    command: >
+      sh -c '
+      redis-server
+      --requirepass "$$REDIS_PASSWORD"
+      --user "$$REDIS_USERNAME" on ">$$REDIS_PASSWORD" "~*" "&*" "+@all"
+      --user default off
+      '
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  api:
+    container_name: outscout-api
+    image: khizer30/outscout:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+      - "9465:9464"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  worker:
+    container_name: outscout-worker
+    image: khizer30/outscout:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["node", "dist/src/worker.js"]
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
     restart: unless-stopped
 
   prometheus:
@@ -46,14 +84,47 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
-      - "--web.config.file=/etc/prometheus/web.yml"
-    ports:
-      - "9090:9090"
+      - "--storage.tsdb.retention.time=15d"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./prometheusWeb.yml:/etc/prometheus/web.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
+    ports:
+      - "9091:9090"
+    depends_on:
+      - api
+      - worker
+      - node-exporter
+    restart: unless-stopped
+
+  loki:
+    container_name: outscout-loki
+    image: grafana/loki:3.7.6
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./lokiConfig.yaml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    ports:
+      - "3101:3100"
+    restart: unless-stopped
+
+  grafana:
+    container_name: outscout-grafana
+    image: grafana/grafana:latest
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3002:3000"
+    depends_on:
+      - prometheus
+      - loki
     restart: unless-stopped
 
 volumes:
+  postgres_data:
+  redis_data:
   prometheus_data:
+  loki_data:
+  grafana_data:
