@@ -14,7 +14,7 @@
     "debug": "nest start --debug --watch",
     "dev": "nest start --watch",
     "dev:worker": "nest start --watch --entryFile worker",
-    "start": "pnpm db:migrate && node dist/src/main",
+    "start": "npx drizzle-kit migrate && node dist/src/main",
     "start:worker": "node dist/src/worker"
   },
   "dependencies": {

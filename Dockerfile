@@ -27,10 +27,8 @@ FROM mcr.microsoft.com/playwright:v1.61.0-jammy
 
 WORKDIR /app
 
-RUN corepack enable
-
 COPY --from=builder /deploy/api ./
 
 EXPOSE 5000
 
-CMD ["pnpm", "start"]
+CMD ["npm", "start"]
