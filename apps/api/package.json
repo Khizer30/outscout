@@ -10,7 +10,7 @@
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
-    "build": "pnpm db:generate && nest build",
+    "build": "pnpm db:migrate && nest build",
     "debug": "nest start --debug --watch",
     "dev": "nest start --watch",
     "dev:worker": "nest start --watch --entryFile worker",
