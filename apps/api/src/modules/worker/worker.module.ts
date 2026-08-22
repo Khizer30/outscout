@@ -10,7 +10,7 @@ import { LoggerModule } from "nestjs-pino";
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ".env"
+      envFilePath: [".env", "../../.env"]
     }),
     LoggerModule.forRootAsync({
       imports: [ConfigModule],
