@@ -30,8 +30,8 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            khizer30/outscout-server:latest
-            khizer30/outscout-server:${{ github.sha }}
+            khizer30/outscout:latest
+            khizer30/outscout:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -40,19 +40,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to Oracle Cloud
+      - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.ORACLE_SSH_HOST }}
-          username: ${{ secrets.ORACLE_SSH_USER }}
-          key: ${{ secrets.ORACLE_SSH_KEY }}
+          host: ${{ secrets.VPS_SSH_HOST }}
+          username: ${{ secrets.VPS_SSH_USER }}
+          password: ${{ secrets.VPS_SSH_PASSWORD }}
           port: 22
           script: |
-            docker pull khizer30/outscout-server:latest
+            docker pull khizer30/outscout:latest
             docker compose down
             docker compose up -d
             docker image prune -f
-            history -c && history -w
 
   Web:
     runs-on: ubuntu-latest
