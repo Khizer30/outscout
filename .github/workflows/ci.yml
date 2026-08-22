@@ -30,13 +30,10 @@ jobs:
       - name: Install Root Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Create .env files
+      - name: Create .env file
         env:
-          WEB_ENV_FILE: ${{ secrets.WEB_ENV_FILE }}
-          API_ENV_FILE: ${{ secrets.API_ENV_FILE }}
-        run: |
-          printf "%s" "$WEB_ENV_FILE" > apps/web/.env
-          printf "%s" "$API_ENV_FILE" > apps/api/.env
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+        run: printf "%s" "$ENV_FILE" > .env
 
       - name: Lint Check
         run: pnpm lint
