@@ -118,6 +118,8 @@ services:
     ports:
       - "3002:3000"
     depends_on:
+      - postgres
+      - redis
       - prometheus
       - loki
     restart: unless-stopped
