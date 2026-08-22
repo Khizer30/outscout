@@ -31,4 +31,4 @@ COPY --from=builder /deploy/api ./
 
 EXPOSE 5000
 
-CMD ["node", "dist/src/main.js"]
+CMD ["npm", "start"]

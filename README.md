@@ -86,11 +86,7 @@ Zod schemas live in `packages/dtos/src` and are consumed by both the NestJS back
 
 ## Environment Variables
 
-Three separate `.env` files, each scoped to what consumes it. Copy the matching example file before running locally:
-
-- [`.env.example`](.env.example) — Docker Compose only, substituted into `compose.yaml` for the `grafana` service. Not read by either app.
-- [`apps/api/.env.example`](apps/api/.env.example) — also the `env_file` loaded by the `api` and `worker` services in `compose.yaml`.
-- [`apps/web/.env.example`](apps/web/.env.example)
+A single root [`.env`](.env) file, read by both apps and by Docker Compose. Copy [`.env.example`](.env.example) before running locally. It's also the `env_file` loaded by the `api` and `worker` services in `compose.yaml`.
 
 ---
 
@@ -137,7 +133,7 @@ GitHub Actions runs on every push to `main` and on all pull requests (`.github/w
 **Steps:**
 
 1. Install dependencies (`pnpm install --frozen-lockfile`)
-2. Inject `.env` files from repository secrets (`WEB_ENV_FILE`, `API_ENV_FILE`)
+2. Inject `.env` file from repository secret (`ENV_FILE`)
 3. Lint check
 4. Format check
 5. TypeScript check

@@ -30,23 +30,26 @@ import { LoggerModule } from "nestjs-pino";
     }),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ".env"
+      envFilePath: [".env", "../../.env"]
     }),
     LoggerModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const dataset = configService.getOrThrow<string>("AXIOM_DATASET");
-        const token = configService.getOrThrow<string>("AXIOM_TOKEN");
+        const lokiHost = configService.get<string>("LOKI_HOST");
 
         const targets: Array<{ target: string; options?: Record<string, unknown>; level?: string }> = [
           { target: "pino-pretty", options: { singleLine: true, colorize: true } }
         ];
 
-        if (configService.get<string>("NODE_ENV") === "production") {
+        if (lokiHost) {
           targets.push({
-            target: "@axiomhq/pino",
-            options: { dataset, token },
-            level: "info"
+            target: "pino-loki",
+            options: {
+              host: lokiHost,
+              labels: { app: "OutScout - API" },
+              batching: true,
+              interval: 5
+            }
           });
         }
 

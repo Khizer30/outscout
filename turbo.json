@@ -1,7 +1,7 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
-  "globalEnv": ["CI"],
+  "globalEnv": ["CI", "POSTGRES_USER", "POSTGRES_PASSWORD", "POSTGRES_DB", "REDIS_USERNAME", "REDIS_PASSWORD", "GRAFANA_ADMIN_USER", "GRAFANA_ADMIN_PASSWORD"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -17,6 +17,7 @@
         "LOG_LEVEL",
         "CORS_ORIGINS",
         "FRONTEND_URL",
+        "LOKI_HOST",
         "ENCRYPTION_KEY",
         "JWT_SECRET",
         "JWT_EXPIRE_TIME",
@@ -36,9 +37,7 @@
         "REDIS_PORT",
         "REDIS_USERNAME",
         "REDIS_PASSWORD",
-        "REDIS_TLS",
-        "AXIOM_DATASET",
-        "AXIOM_TOKEN"
+        "REDIS_TLS"
       ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", "drizzle/**"]
