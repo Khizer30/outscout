@@ -59,12 +59,7 @@ import { LoggerModule } from "nestjs-pino";
             level: configService.get<string>("LOG_LEVEL", "info"),
             transport: { targets },
             redact: ["req.headers.authorization", "req.headers.cookie"],
-            autoLogging: true,
-            customProps: () => ({ context: "HTTP" }),
-            serializers: {
-              req: (req: IncomingMessage) => ({ method: req.method, url: req.url }),
-              res: (res: ServerResponse) => ({ statusCode: res.statusCode })
-            }
+            autoLogging: true
           }
         };
       },
