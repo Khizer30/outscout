@@ -1,4 +1,5 @@
-﻿import { EncryptionService } from "@modules/encryption/services/encryption.service";
+﻿import { AuditService } from "@modules/audit/services/audit.service";
+import { EncryptionService } from "@modules/encryption/services/encryption.service";
 import { MediaService } from "@modules/media/services/media.service";
 import { UserEntity } from "@modules/user/domain/user.entity";
 import { UserAlreadyExistsError, UserNotFoundError } from "@modules/user/domain/user.errors";
@@ -26,7 +27,8 @@ export class UserService {
   constructor(
     private readonly userRepo: UserRepository,
     private readonly encryptionService: EncryptionService,
-    private readonly mediaService: MediaService
+    private readonly mediaService: MediaService,
+    private readonly auditService: AuditService
   ) {}
 
   async createUser(data: CreateUser): Promise<UserEntity> {
@@ -44,7 +46,10 @@ export class UserService {
       timezone: data.timezone
     });
 
-    return this.userRepo.create(user);
+    const created = await this.userRepo.create(user);
+    await this.auditService.log({ action: "USER_CREATED", actorId: created.id });
+
+    return created;
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
@@ -95,6 +100,8 @@ export class UserService {
       await this.mediaService.deleteImageByPublicId(publicId);
     }
 
+    await this.auditService.log({ action: "USER_UPDATED", actorId: userId });
+
     return updatedUser;
   }
 
@@ -110,5 +117,6 @@ export class UserService {
     }
 
     await this.userRepo.update(user.delete());
+    await this.auditService.log({ action: "USER_DELETED", actorId: userId });
   }
 }
