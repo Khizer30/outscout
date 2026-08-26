@@ -1,3 +1,4 @@
+import { AuditService } from "@modules/audit/services/audit.service";
 import { CompanyMessageRulesEntity } from "@modules/company/domain/companyMessageRules.entity";
 import { CompanyMessageRulesRepository } from "@modules/company/domain/companyMessageRules.repository";
 import { MessageChannel } from "@modules/company/domain/companyMessageRules.types";
@@ -10,7 +11,10 @@ interface UpdateCompanyMessageRulesData {
 
 @Injectable()
 export class CompanyMessageRulesService {
-  constructor(private readonly companyMessageRulesRepo: CompanyMessageRulesRepository) {}
+  constructor(
+    private readonly companyMessageRulesRepo: CompanyMessageRulesRepository,
+    private readonly auditService: AuditService
+  ) {}
 
   async findByCompanyAndChannel(companyId: string, channel: MessageChannel): Promise<CompanyMessageRulesEntity | null> {
     return this.companyMessageRulesRepo.findByCompanyAndChannel(companyId, channel);
@@ -21,6 +25,10 @@ export class CompanyMessageRulesService {
 
     const entity = existing ? existing.update({ ...data, updatedBy }) : CompanyMessageRulesEntity.create({ companyId, channel, ...data, updatedBy });
 
-    return this.companyMessageRulesRepo.upsert(entity, existing);
+    const saved = await this.companyMessageRulesRepo.upsert(entity, existing);
+
+    await this.auditService.log({ action: existing ? "RULE_UPDATED" : "RULE_CREATED", actorId: updatedBy, companyId });
+
+    return saved;
   }
 }

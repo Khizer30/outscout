@@ -63,11 +63,15 @@ export class CompanyController {
       throw new ForbiddenException("You do not belong to a company");
     }
 
-    const updated = await this.companyService.updateCompany(id, {
-      name: dto.name,
-      about: dto.about,
-      ...(dto.companyImageURL !== undefined ? { companyImageURL: dto.companyImageURL } : {})
-    });
+    const updated = await this.companyService.updateCompany(
+      id,
+      {
+        name: dto.name,
+        about: dto.about,
+        ...(dto.companyImageURL !== undefined ? { companyImageURL: dto.companyImageURL } : {})
+      },
+      user.id
+    );
 
     return { data: CompanyMapper.toResponse(updated) };
   }
@@ -81,7 +85,7 @@ export class CompanyController {
       throw new ForbiddenException("You do not belong to a company");
     }
 
-    await this.companyService.deleteCompany(id);
+    await this.companyService.deleteCompany(id, user.id);
 
     return { message: "Company deleted successfully" };
   }
@@ -95,7 +99,7 @@ export class CompanyController {
       throw new ForbiddenException("You do not belong to a company");
     }
 
-    const updated = await this.companyEmailSettingsService.updateSettings(id, dto);
+    const updated = await this.companyEmailSettingsService.updateSettings(id, dto, user.id);
 
     return { data: CompanyEmailSettingsMapper.toResponse(updated) };
   }

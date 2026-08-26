@@ -1,4 +1,5 @@
-﻿import { CompanyEntity } from "@modules/company/domain/company.entity";
+﻿import { AuditService } from "@modules/audit/services/audit.service";
+import { CompanyEntity } from "@modules/company/domain/company.entity";
 import { CompanyNotFoundError, CompanyUpdateConflictError } from "@modules/company/domain/company.errors";
 import { CompanyRepository } from "@modules/company/domain/company.repository";
 import { CompanyMembershipEntity } from "@modules/company/domain/companyMembership.entity";
@@ -18,7 +19,8 @@ export class CompanyService {
 
   constructor(
     private readonly companyRepo: CompanyRepository,
-    private readonly mediaService: MediaService
+    private readonly mediaService: MediaService,
+    private readonly auditService: AuditService
   ) {}
 
   async createCompany(userId: string, data: CreateCompanyData): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }> {
@@ -35,7 +37,10 @@ export class CompanyService {
       status: "ACTIVE"
     });
 
-    return await this.companyRepo.create(company, membership);
+    const created = await this.companyRepo.create(company, membership);
+    await this.auditService.log({ action: "COMPANY_CREATED", actorId: userId, companyId: created.company.id });
+
+    return created;
   }
 
   async findById(id: string): Promise<CompanyEntity | null> {
@@ -53,7 +58,7 @@ export class CompanyService {
     return this.companyRepo.addMembership(membership);
   }
 
-  async updateCompany(id: string, data: { name?: string; about?: string | null; companyImageURL?: string | null }): Promise<CompanyEntity> {
+  async updateCompany(id: string, data: { name?: string; about?: string | null; companyImageURL?: string | null }, actorId: string): Promise<CompanyEntity> {
     const company = await this.companyRepo.findById(id);
     if (!company) {
       throw new CompanyNotFoundError({ id });
@@ -77,10 +82,12 @@ export class CompanyService {
       }
     }
 
+    await this.auditService.log({ action: "COMPANY_UPDATED", actorId, companyId: id });
+
     return saved;
   }
 
-  async deleteCompany(id: string): Promise<void> {
+  async deleteCompany(id: string, actorId: string): Promise<void> {
     const company = await this.companyRepo.findById(id);
     if (!company) {
       throw new CompanyNotFoundError({ id });
@@ -92,5 +99,7 @@ export class CompanyService {
     if (!saved) {
       throw new CompanyUpdateConflictError({ id });
     }
+
+    await this.auditService.log({ action: "COMPANY_DELETED", actorId, companyId: id });
   }
 }

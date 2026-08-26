@@ -1,4 +1,5 @@
 import { DatabaseModule } from "@database/database.module";
+import { AuditModule } from "@modules/audit/audit.module";
 import { CompanyRepository } from "@modules/company/domain/company.repository";
 import { CompanyEmailSettingsRepository } from "@modules/company/domain/companyEmailSettings.repository";
 import { CompanyMessageRulesRepository } from "@modules/company/domain/companyMessageRules.repository";
@@ -15,7 +16,7 @@ import { MediaModule } from "@modules/media/media.module";
 import { Module } from "@nestjs/common";
 
 @Module({
-  imports: [DatabaseModule, JWTModule, MediaModule, EncryptionModule],
+  imports: [DatabaseModule, JWTModule, MediaModule, EncryptionModule, AuditModule],
   controllers: [CompanyController],
   providers: [
     CompanyService,
