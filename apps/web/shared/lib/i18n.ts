@@ -16,6 +16,7 @@ i18n
     fallbackLng: "en",
     supportedLngs,
     defaultNS,
+    ns: ["common", "errors"],
     resources: {
       en: { common: enCommon, errors: enErrors },
       ar: { common: arCommon, errors: arErrors }

@@ -87,7 +87,7 @@ export default function SignupForm() {
           {...register("name")}
         />
         <p className="min-h-4 text-xs text-destructive">
-          {(isSubmitted || dirtyFields.name) && errors.name?.message && t(errors.name.message, { ns: "errors" })}
+          {(isSubmitted || dirtyFields.name) && errors.name?.message && t(`errors:${errors.name.message}`)}
         </p>
       </div>
 
@@ -103,7 +103,7 @@ export default function SignupForm() {
           {...register("email")}
         />
         <p className="min-h-4 text-xs text-destructive">
-          {(isSubmitted || dirtyFields.email) && errors.email?.message && t(errors.email.message, { ns: "errors" })}
+          {(isSubmitted || dirtyFields.email) && errors.email?.message && t(`errors:${errors.email.message}`)}
         </p>
       </div>
 
@@ -118,7 +118,7 @@ export default function SignupForm() {
           {...register("password")}
         />
         <p className="min-h-4 text-xs text-destructive">
-          {(isSubmitted || dirtyFields.password) && errors.password?.message && t(errors.password.message, { ns: "errors" })}
+          {(isSubmitted || dirtyFields.password) && errors.password?.message && t(`errors:${errors.password.message}`)}
         </p>
       </div>
 

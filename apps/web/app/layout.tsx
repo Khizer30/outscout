@@ -1,4 +1,4 @@
-﻿import Navbar from "@shared/components/layout/Navbar";
+import Navbar from "@shared/components/layout/Navbar";
 import { cn } from "@shared/lib/utils";
 import AuthProvider from "@shared/providers/AuthProvider";
 import I18nProvider from "@shared/providers/I18nProvider";

@@ -67,7 +67,7 @@ export default function VerifyOtpForm() {
           aria-invalid={!!((isSubmitted || dirtyFields.otp) && errors.otp)}
           {...register("otp")}
         />
-        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.otp) && errors.otp?.message && t(errors.otp.message, { ns: "errors" })}</p>
+        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.otp) && errors.otp?.message && t(`errors:${errors.otp.message}`)}</p>
       </div>
 
       <Button type="submit" className="w-full" size="lg" disabled={verifyUser.isPending}>
