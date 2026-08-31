@@ -62,7 +62,12 @@ export default function LoginForm() {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="password">{t("login.password")}</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="password">{t("login.password")}</Label>
+          <Link href={ROUTES.auth.forgotPassword} className="text-xs text-primary hover:underline">
+            {t("login.forgotPassword")}
+          </Link>
+        </div>
         <Input
           id="password"
           type="password"
