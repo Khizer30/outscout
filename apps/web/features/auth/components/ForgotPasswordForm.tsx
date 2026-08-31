@@ -56,9 +56,7 @@ export default function ForgotPasswordForm() {
           aria-invalid={!!((isSubmitted || dirtyFields.email) && errors.email)}
           {...register("email")}
         />
-        <p className="min-h-4 text-xs text-destructive">
-          {(isSubmitted || dirtyFields.email) && errors.email?.message && t(`errors:${errors.email.message}`)}
-        </p>
+        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.email) && errors.email?.message && t(`errors:${errors.email.message}`)}</p>
       </div>
 
       <Button type="submit" className="w-full" size="lg" disabled={forgotPassword.isPending}>

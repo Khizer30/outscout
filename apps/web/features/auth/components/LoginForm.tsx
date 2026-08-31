@@ -56,9 +56,7 @@ export default function LoginForm() {
           aria-invalid={!!((isSubmitted || dirtyFields.email) && errors.email)}
           {...register("email")}
         />
-        <p className="min-h-4 text-xs text-destructive">
-          {(isSubmitted || dirtyFields.email) && errors.email?.message && t(`errors:${errors.email.message}`)}
-        </p>
+        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.email) && errors.email?.message && t(`errors:${errors.email.message}`)}</p>
       </div>
 
       <div className="space-y-1.5">

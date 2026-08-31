@@ -1,4 +1,3 @@
-import type { IncomingMessage, ServerResponse } from "node:http";
 import { DatabaseModule } from "@database/database.module";
 import { PrometheusMetricsMiddleware } from "@middleware/prometheusMetrics.middleware";
 import { AiModule } from "@modules/ai/ai.module";

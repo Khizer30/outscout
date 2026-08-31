@@ -67,9 +67,7 @@ export default function ResetPasswordForm() {
           aria-invalid={!!((isSubmitted || dirtyFields.otp) && errors.otp)}
           {...register("otp")}
         />
-        <p className="min-h-4 text-xs text-destructive">
-          {(isSubmitted || dirtyFields.otp) && errors.otp?.message && t(`errors:${errors.otp.message}`)}
-        </p>
+        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.otp) && errors.otp?.message && t(`errors:${errors.otp.message}`)}</p>
       </div>
 
       <div className="space-y-1.5">
