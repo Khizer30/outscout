@@ -25,6 +25,24 @@
     "dashboard": "Dashboard",
     "logout": "Log out"
   },
+  "settings": {
+    "title": "Account settings",
+    "description": "Update your profile and preferences.",
+    "name": "Name",
+    "email": "Email",
+    "language": "Language",
+    "uploadImage": "Upload photo",
+    "removeImage": "Remove",
+    "imageHint": "JPG, PNG or GIF. Max 5MB.",
+    "invalidImage": "Please select a valid image file.",
+    "imageTooLarge": "Image must be smaller than 5MB.",
+    "newPassword": "New password",
+    "newPasswordHint": "Leave blank to keep your current password.",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "success": "Your settings have been updated."
+  },
   "signup": {
     "title": "Create your account",
     "description": "Start finding and reaching out to local leads.",

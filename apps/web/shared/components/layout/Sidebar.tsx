@@ -127,7 +127,15 @@ export default function Sidebar() {
           <AppearanceControls className={cn(collapsed && "flex-col")} />
         </div>
 
-        <div className={cn("flex items-center gap-3 rounded-md px-1", collapsed && "justify-center")}>
+        <Link
+          href={ROUTES.settings}
+          title={collapsed ? user?.name : undefined}
+          className={cn(
+            "flex w-full items-center gap-3 rounded-md px-1 py-1.5 text-start transition-colors hover:bg-muted",
+            pathname === ROUTES.settings && "bg-muted",
+            collapsed && "justify-center"
+          )}
+        >
           {user?.profileImage ? (
             <Image src={user.profileImage} alt={user.name} width={36} height={36} unoptimized className="size-9 shrink-0 rounded-full object-cover" />
           ) : (
@@ -150,7 +158,7 @@ export default function Sidebar() {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </Link>
 
         <Button
           variant="ghost"
