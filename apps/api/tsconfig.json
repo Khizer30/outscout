@@ -12,9 +12,7 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "ignoreDeprecations": "5.0",
     "outDir": "./dist",
-    "baseUrl": "./",
     "paths": {
       "@common/*": ["./src/common/*"],
       "@schema/*": ["./src/database/schema/*"],
