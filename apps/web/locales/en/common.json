@@ -46,6 +46,26 @@
     "submitting": "Verifying…",
     "backToSignup": "Back to sign up"
   },
+  "forgotPassword": {
+    "title": "Forgot your password?",
+    "description": "Enter your email address and we'll send you a reset code.",
+    "email": "Email",
+    "emailPlaceholder": "khizer@company.com",
+    "submit": "Send reset code",
+    "submitting": "Sending…",
+    "success": "Reset code sent. Check your inbox.",
+    "backToLogin": "Back to log in"
+  },
+  "resetPassword": {
+    "title": "Reset your password",
+    "description": "Enter the 6-digit code sent to <bold>{{email}}</bold> and choose a new password.",
+    "otp": "Verification code",
+    "otpPlaceholder": "123456",
+    "newPassword": "New password",
+    "submit": "Reset password",
+    "submitting": "Resetting…",
+    "backToForgotPassword": "Back"
+  },
   "login": {
     "title": "Welcome back",
     "description": "Log in to find and reach out to local leads.",
@@ -55,6 +75,7 @@
     "submit": "Log in",
     "submitting": "Logging in…",
     "signupPrompt": "Don't have an account?",
-    "signup": "Sign up"
+    "signup": "Sign up",
+    "forgotPassword": "Forgot password?"
   }
 }

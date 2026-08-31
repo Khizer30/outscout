@@ -46,6 +46,26 @@
     "submitting": "جارٍ التحقق…",
     "backToSignup": "العودة إلى إنشاء الحساب"
   },
+  "forgotPassword": {
+    "title": "هل نسيت كلمة المرور؟",
+    "description": "أدخل بريدك الإلكتروني وسنرسل لك رمز إعادة التعيين.",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "khizer@company.com",
+    "submit": "إرسال رمز الإعادة",
+    "submitting": "جارٍ الإرسال…",
+    "success": "تم إرسال رمز الإعادة. تحقق من صندوق الوارد.",
+    "backToLogin": "العودة إلى تسجيل الدخول"
+  },
+  "resetPassword": {
+    "title": "إعادة تعيين كلمة المرور",
+    "description": "أدخل الرمز المكون من 6 أرقام المُرسَل إلى <bold>{{email}}</bold> واختر كلمة مرور جديدة.",
+    "otp": "رمز التحقق",
+    "otpPlaceholder": "123456",
+    "newPassword": "كلمة المرور الجديدة",
+    "submit": "إعادة التعيين",
+    "submitting": "جارٍ الإعادة…",
+    "backToForgotPassword": "رجوع"
+  },
   "login": {
     "title": "مرحبًا بعودتك",
     "description": "سجّل الدخول لإيجاد العملاء المحليين والتواصل معهم.",
@@ -55,6 +75,7 @@
     "submit": "تسجيل الدخول",
     "submitting": "جارٍ تسجيل الدخول…",
     "signupPrompt": "ليس لديك حساب؟",
-    "signup": "إنشاء حساب"
+    "signup": "إنشاء حساب",
+    "forgotPassword": "هل نسيت كلمة المرور؟"
   }
 }
