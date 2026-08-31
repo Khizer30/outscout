@@ -1,6 +1,7 @@
 {
   "VALIDATION_ERROR": "Validation failed",
   "INTERNAL_SERVER_ERROR": "An unexpected error occurred",
+  "SOMETHING_WENT_WRONG": "Something went wrong. Please try again.",
 
   "VALIDATION_NAME_REQUIRED": "Name is required",
   "VALIDATION_EMAIL_INVALID": "Enter a valid email address",

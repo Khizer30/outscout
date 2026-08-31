@@ -21,6 +21,10 @@
     "light": "Light",
     "dark": "Dark"
   },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "logout": "Log out"
+  },
   "signup": {
     "title": "Create your account",
     "description": "Start finding and reaching out to local leads.",

@@ -2,7 +2,7 @@
 import i18n from "@shared/lib/i18n";
 import { isAxiosError } from "axios";
 
-export function getErrorMessage(error: unknown, fallback = "Something went wrong. Please try again."): string {
+export function getErrorMessage(error: unknown, fallback?: string): string {
   if (isAxiosError<{ code?: unknown; message?: unknown }>(error)) {
     const code = error.response?.data?.code;
     if (typeof code === "string" && i18n.exists(code, { ns: "errors" })) {
@@ -15,5 +15,5 @@ export function getErrorMessage(error: unknown, fallback = "Something went wrong
     }
   }
 
-  return fallback;
+  return fallback ?? i18n.t("SOMETHING_WENT_WRONG", { ns: "errors" });
 }
