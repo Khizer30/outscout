@@ -8,6 +8,7 @@ import { Input } from "@shared/components/ui/input";
 import { Label } from "@shared/components/ui/label";
 import { getErrorMessage } from "@shared/lib/error";
 import i18n from "@shared/lib/i18n";
+import { useAuthStore } from "@shared/stores/authStore";
 import { Loader2, Trash2, Upload } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -153,7 +154,9 @@ export default function UserSettingsForm() {
     updateMe.mutate(payload, {
       onSuccess: (updated) => {
         toast.success(t("settings.success"));
-        refresh.mutate();
+        refresh.mutate(undefined, {
+          onSuccess: (res) => useAuthStore.getState().setCredentials(res.data.user, res.data.accessToken)
+        });
 
         const nextLng = updated.language.toLowerCase();
         if (i18n.resolvedLanguage !== nextLng) {
