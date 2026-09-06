@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import type { z } from "zod";
 
-const PROFILE_IMAGE_FOLDER = "outscout/profile";
+const PROFILE_IMAGE_FOLDER = "outscout/users";
 
 type SignedUrlResponse = z.infer<typeof GenerateSignedUrlResponseSchema>;
 
