@@ -6,5 +6,6 @@ export const ROUTES = {
     forgotPassword: "/auth/forgot-password"
   },
   dashboard: "/dashboard",
+  team: "/dashboard/team",
   settings: "/dashboard/settings"
 } as const;

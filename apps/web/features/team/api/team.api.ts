@@ -5,6 +5,7 @@ import type {
   InviteUserSchema,
   ListInvitationsResponseSchema,
   ListInvitationsSchema,
+  ListTeamMembersResponseSchema,
   MyInvitationsResponseSchema,
   RejectInvitationResponseSchema,
   RevokeInvitationResponseSchema
@@ -112,6 +113,19 @@ export const useRejectMyInvitation = () => {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["team", "invitations"] });
+    }
+  });
+};
+
+// List Team Members
+export const useTeamMembers = () => {
+  const api = useAxios();
+
+  return useQuery({
+    queryKey: ["team", "members"],
+    queryFn: async () => {
+      const res = await api.get<z.infer<typeof ListTeamMembersResponseSchema>>("/team/members");
+      return res.data.data;
     }
   });
 };
