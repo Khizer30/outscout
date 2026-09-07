@@ -71,6 +71,16 @@ export class CompanyDrizzleRepository extends CompanyRepository {
     return CompanyMembershipMapper.toDomain(row);
   }
 
+  async findMembershipsByCompanyId(companyId: string, filters?: { status?: CompanyMembershipStatus[] }): Promise<CompanyMembershipEntity[]> {
+    const rows = await this.databaseService.db
+      .select()
+      .from(companyMembershipTable)
+      .where(and(eq(companyMembershipTable.companyId, companyId), inArray(companyMembershipTable.status, filters?.status ?? ["ACTIVE"])))
+      .orderBy(asc(companyMembershipTable.joinedAt));
+
+    return rows.map(CompanyMembershipMapper.toDomain);
+  }
+
   async update(company: CompanyEntity): Promise<CompanyEntity | null> {
     const [row] = await this.databaseService.db
       .update(companyTable)

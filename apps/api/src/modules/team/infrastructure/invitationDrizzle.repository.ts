@@ -5,7 +5,7 @@ import { CompanyInvitationStatus } from "@modules/team/domain/invitation.types";
 import { InvitationMapper } from "@modules/team/infrastructure/invitation.mapper";
 import { Injectable } from "@nestjs/common";
 import { companyInvitationTable, usersTable } from "@schema/index";
-import { eq, and, ilike, inArray } from "drizzle-orm";
+import { eq, and, ilike, inArray, gt, lte } from "drizzle-orm";
 
 @Injectable()
 export class InvitationDrizzleRepository extends InvitationRepository {
@@ -46,7 +46,10 @@ export class InvitationDrizzleRepository extends InvitationRepository {
     });
   }
 
-  async findByCompany(companyId: string, filters?: { email?: string; status?: CompanyInvitationStatus[] }): Promise<CompanyInvitationEntity[]> {
+  async findByCompany(
+    companyId: string,
+    filters?: { email?: string; status?: CompanyInvitationStatus[]; expired?: boolean }
+  ): Promise<CompanyInvitationEntity[]> {
     const rows = await this.databaseService.db
       .select({
         invitation: companyInvitationTable,
@@ -63,7 +66,12 @@ export class InvitationDrizzleRepository extends InvitationRepository {
         and(
           eq(companyInvitationTable.companyId, companyId),
           inArray(companyInvitationTable.status, filters?.status ?? ["PENDING"]),
-          filters?.email ? eq(companyInvitationTable.email, filters.email) : undefined
+          filters?.email ? eq(companyInvitationTable.email, filters.email) : undefined,
+          filters?.expired === undefined
+            ? undefined
+            : filters.expired
+              ? lte(companyInvitationTable.expiresAt, new Date())
+              : gt(companyInvitationTable.expiresAt, new Date())
         )
       );
 
@@ -75,7 +83,7 @@ export class InvitationDrizzleRepository extends InvitationRepository {
     );
   }
 
-  async findByEmail(email: string, filters?: { status?: CompanyInvitationStatus[] }): Promise<CompanyInvitationEntity[]> {
+  async findByEmail(email: string, filters?: { status?: CompanyInvitationStatus[]; expired?: boolean }): Promise<CompanyInvitationEntity[]> {
     const rows = await this.databaseService.db
       .select({
         invitation: companyInvitationTable,
@@ -88,7 +96,17 @@ export class InvitationDrizzleRepository extends InvitationRepository {
       })
       .from(companyInvitationTable)
       .leftJoin(usersTable, eq(companyInvitationTable.invitedBy, usersTable.id))
-      .where(and(inArray(companyInvitationTable.status, filters?.status ?? ["PENDING"]), ilike(companyInvitationTable.email, email)));
+      .where(
+        and(
+          inArray(companyInvitationTable.status, filters?.status ?? ["PENDING"]),
+          ilike(companyInvitationTable.email, email),
+          filters?.expired === undefined
+            ? undefined
+            : filters.expired
+              ? lte(companyInvitationTable.expiresAt, new Date())
+              : gt(companyInvitationTable.expiresAt, new Date())
+        )
+      );
 
     return rows.map((row) =>
       InvitationMapper.toDomain({

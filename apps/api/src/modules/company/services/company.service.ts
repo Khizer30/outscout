@@ -58,6 +58,10 @@ export class CompanyService {
     return this.companyRepo.addMembership(membership);
   }
 
+  async findMembershipsByCompany(companyId: string, filters?: { status?: CompanyMembershipStatus[] }): Promise<CompanyMembershipEntity[]> {
+    return this.companyRepo.findMembershipsByCompanyId(companyId, { status: ["ACTIVE"], ...filters });
+  }
+
   async updateCompany(id: string, data: { name?: string; about?: string | null; companyImageURL?: string | null }, actorId: string): Promise<CompanyEntity> {
     const company = await this.companyRepo.findById(id);
     if (!company) {

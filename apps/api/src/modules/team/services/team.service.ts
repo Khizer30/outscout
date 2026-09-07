@@ -94,11 +94,30 @@ export class TeamService {
     return this.invitationRepo.findByCompany(companyId, { status });
   }
 
-  async listMyInvitations(userId: string): Promise<CompanyInvitationEntity[]> {
-    const user = await this.userService.getUserById(userId);
-    const invitations = await this.invitationRepo.findByEmail(user.email, { status: ["PENDING"] });
+  async listMembers(companyId: string): Promise<{ membership: CompanyMembershipEntity; user: UserEntity }[]> {
+    const memberships = await this.companyService.findMembershipsByCompany(companyId);
 
-    return invitations.filter((invitation) => !invitation.isExpired());
+    const users = await this.userService.findByIds(memberships.map((membership) => membership.userId));
+    const usersById = new Map(users.map((user) => [user.id, user]));
+
+    return memberships
+      .map((membership) => {
+        const user = usersById.get(membership.userId);
+        return user ? { membership, user } : null;
+      })
+      .filter((member): member is { membership: CompanyMembershipEntity; user: UserEntity } => member !== null);
+  }
+
+  async listMyInvitations(userId: string): Promise<{ invitation: CompanyInvitationEntity; companyName: string }[]> {
+    const user = await this.userService.getUserById(userId);
+    const invitations = await this.invitationRepo.findByEmail(user.email, { status: ["PENDING"], expired: false });
+
+    return Promise.all(
+      invitations.map(async (invitation) => {
+        const company = await this.companyService.findById(invitation.companyId);
+        return { invitation, companyName: company?.name ?? "Unknown company" };
+      })
+    );
   }
 
   async getInvitationEmail(token: string): Promise<string> {

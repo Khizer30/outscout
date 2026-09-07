@@ -60,6 +60,10 @@ export class UserService {
     return this.userRepo.findById(id);
   }
 
+  async findByIds(ids: string[]): Promise<UserEntity[]> {
+    return this.userRepo.findByIds(ids);
+  }
+
   async updateUserEntity(user: UserEntity, data: UpdateUser): Promise<UserEntity> {
     let passwordHash = user.passwordHash;
     if (data.password) {
