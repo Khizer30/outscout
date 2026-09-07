@@ -9,7 +9,7 @@ import { Button } from "@shared/components/ui/button";
 import { ROUTES } from "@shared/lib/routes";
 import { cn } from "@shared/lib/utils";
 import { useAuthStore } from "@shared/stores/authStore";
-import { ChevronLeft, LayoutDashboard, LogOut, Users } from "lucide-react";
+import { ChevronLeft, LayoutDashboard, LogOut, Users, Building2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 
 const NAV_LINKS = [
   { href: ROUTES.dashboard, labelKey: "sidebar.dashboard", icon: LayoutDashboard },
+  { href: ROUTES.company, labelKey: "sidebar.company", icon: Building2 },
   { href: ROUTES.team, labelKey: "sidebar.team", icon: Users }
 ] as const;
 

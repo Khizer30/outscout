@@ -23,6 +23,7 @@
   },
   "sidebar": {
     "dashboard": "Dashboard",
+    "company": "Company",
     "team": "Team",
     "logout": "Log out"
   },
