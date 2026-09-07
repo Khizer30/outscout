@@ -23,6 +23,7 @@
   },
   "sidebar": {
     "dashboard": "لوحة التحكم",
+    "team": "الفريق",
     "logout": "تسجيل الخروج"
   },
   "settings": {
@@ -42,6 +43,51 @@
     "saving": "جارٍ الحفظ…",
     "cancel": "إلغاء",
     "success": "تم تحديث إعداداتك."
+  },
+  "team": {
+    "title": "الفريق",
+    "description": "إدارة أعضاء فريقك والدعوات.",
+    "tabs": {
+      "members": "فريقي",
+      "invitations": "دعواتي"
+    },
+    "invite": "دعوة عضو",
+    "inviteDialog": {
+      "title": "دعوة عضو جديد",
+      "description": "سيصلهم بريد إلكتروني للانضمام إلى فريقك.",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "teammate@company.com",
+      "submit": "إرسال الدعوة",
+      "submitting": "جارٍ الإرسال…",
+      "success": "تم إرسال الدعوة بنجاح."
+    },
+    "members": {
+      "empty": "لا يوجد أعضاء في الفريق بعد.",
+      "you": "أنت",
+      "roleAdmin": "مسؤول",
+      "roleUser": "عضو",
+      "joined": "انضم في {{date}}",
+      "headerMember": "العضو",
+      "headerRole": "الدور",
+      "headerJoined": "تاريخ الانضمام"
+    },
+    "pendingInvitations": {
+      "title": "الدعوات المعلقة",
+      "empty": "لا توجد دعوات معلقة.",
+      "revoke": "إلغاء",
+      "revokeSuccess": "تم إلغاء الدعوة.",
+      "invitedBy": "دعوة من {{name}}",
+      "expires": "تنتهي في {{date}}",
+      "headerActions": "إجراءات"
+    },
+    "myInvitations": {
+      "empty": "ليس لديك أي دعوات معلقة.",
+      "invitedBy": "دعوة من {{name}}",
+      "accept": "قبول",
+      "reject": "رفض",
+      "acceptSuccess": "لقد انضممت إلى {{company}}.",
+      "rejectSuccess": "تم رفض الدعوة."
+    }
   },
   "signup": {
     "title": "أنشئ حسابك",

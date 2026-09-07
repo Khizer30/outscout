@@ -23,6 +23,7 @@
   },
   "sidebar": {
     "dashboard": "Dashboard",
+    "team": "Team",
     "logout": "Log out"
   },
   "settings": {
@@ -42,6 +43,51 @@
     "saving": "Saving…",
     "cancel": "Cancel",
     "success": "Your settings have been updated."
+  },
+  "team": {
+    "title": "Team",
+    "description": "Manage your teammates and invitations.",
+    "tabs": {
+      "members": "My Team",
+      "invitations": "My Invitations"
+    },
+    "invite": "Invite member",
+    "inviteDialog": {
+      "title": "Invite a teammate",
+      "description": "They'll receive an email invitation to join your team.",
+      "email": "Email",
+      "emailPlaceholder": "teammate@company.com",
+      "submit": "Send invitation",
+      "submitting": "Sending…",
+      "success": "Invitation sent successfully."
+    },
+    "members": {
+      "empty": "No teammates yet.",
+      "you": "You",
+      "roleAdmin": "Admin",
+      "roleUser": "Member",
+      "joined": "Joined {{date}}",
+      "headerMember": "Member",
+      "headerRole": "Role",
+      "headerJoined": "Joined"
+    },
+    "pendingInvitations": {
+      "title": "Pending invitations",
+      "empty": "No pending invitations.",
+      "revoke": "Revoke",
+      "revokeSuccess": "Invitation revoked.",
+      "invitedBy": "Invited by {{name}}",
+      "expires": "Expires {{date}}",
+      "headerActions": "Actions"
+    },
+    "myInvitations": {
+      "empty": "You have no pending invitations.",
+      "invitedBy": "Invited by {{name}}",
+      "accept": "Accept",
+      "reject": "Reject",
+      "acceptSuccess": "You've joined {{company}}.",
+      "rejectSuccess": "Invitation declined."
+    }
   },
   "signup": {
     "title": "Create your account",
