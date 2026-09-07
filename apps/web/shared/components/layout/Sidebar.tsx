@@ -18,8 +18,8 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const NAV_LINKS = [
-  { href: ROUTES.dashboard, labelKey: "sidebar.dashboard", icon: LayoutDashboard, requiresCompany: false },
-  { href: ROUTES.team, labelKey: "sidebar.team", icon: Users, requiresCompany: true }
+  { href: ROUTES.dashboard, labelKey: "sidebar.dashboard", icon: LayoutDashboard },
+  { href: ROUTES.team, labelKey: "sidebar.team", icon: Users }
 ] as const;
 
 const EXPANDED_WIDTH = 256;
@@ -91,7 +91,7 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 space-y-1 px-3 py-4">
-        {NAV_LINKS.filter((link) => !link.requiresCompany || !!user?.companyId).map((link) => {
+        {NAV_LINKS.map((link) => {
           const active = pathname === link.href;
           const Icon = link.icon;
 
