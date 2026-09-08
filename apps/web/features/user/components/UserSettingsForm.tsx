@@ -185,7 +185,7 @@ export default function UserSettingsForm() {
       <div className="flex items-center gap-4">
         <div className="relative flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-2xl font-medium text-primary">
           {profileImageURL ? (
-            <Image src={profileImageURL} alt={user.name} fill sizes="80px" unoptimized className="object-cover" />
+            <Image src={profileImageURL} alt={user.name} fill sizes="80px" unoptimized className="object-cover" draggable={false} />
           ) : (
             (user.name.charAt(0).toUpperCase() ?? "?")
           )}

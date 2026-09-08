@@ -87,7 +87,7 @@ export default function CompanySwitcher({ collapsed }: CompanySwitcherProps) {
                 >
                   <span className="relative flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-md bg-primary/10 text-xs font-semibold text-primary!">
                     {company.companyImageURL ? (
-                      <Image src={company.companyImageURL} alt={company.name} fill sizes="28px" unoptimized className="object-cover" />
+                      <Image src={company.companyImageURL} alt={company.name} fill sizes="28px" unoptimized className="object-cover" draggable={false} />
                     ) : (
                       company.name.charAt(0).toUpperCase()
                     )}

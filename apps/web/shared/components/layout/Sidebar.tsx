@@ -146,7 +146,15 @@ export default function Sidebar() {
           )}
         >
           {user?.profileImage ? (
-            <Image src={user.profileImage} alt={user.name} width={36} height={36} unoptimized className="size-9 shrink-0 rounded-full object-cover" />
+            <Image
+              src={user.profileImage}
+              alt={user.name}
+              width={36}
+              height={36}
+              unoptimized
+              className="size-9 shrink-0 rounded-full object-cover"
+              draggable={false}
+            />
           ) : (
             <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-medium text-primary">
               {user?.name?.charAt(0).toUpperCase() ?? "?"}

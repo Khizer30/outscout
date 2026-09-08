@@ -24,7 +24,7 @@ export default function CompanyDetailsCard() {
         <div className="flex items-center gap-4">
           <div className="relative flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-primary/10 text-2xl font-medium text-primary">
             {companyImageURL ? (
-              <Image src={companyImageURL} alt={watch("name") || "Company"} fill sizes="80px" unoptimized className="object-cover" />
+              <Image src={companyImageURL} alt={watch("name") || "Company"} fill sizes="80px" unoptimized className="object-cover" draggable={false} />
             ) : (
               (watch("name")?.charAt(0).toUpperCase() ?? "?")
             )}
