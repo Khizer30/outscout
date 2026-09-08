@@ -4,7 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import type { z } from "zod";
 
-const PROFILE_IMAGE_FOLDER = "outscout/users";
+export const PROFILE_IMAGE_FOLDER = "outscout/users";
+export const COMPANY_IMAGE_FOLDER = "outscout/companies";
 
 type SignedUrlResponse = z.infer<typeof GenerateSignedUrlResponseSchema>;
 
@@ -14,13 +15,13 @@ interface CloudinaryUploadResponse {
 }
 
 // Upload Image
-export const useUploadImage = () => {
+export const useUploadImage = (folder: string = PROFILE_IMAGE_FOLDER) => {
   const api = useAxios();
 
   return useMutation({
     mutationFn: async (file: File): Promise<string> => {
-      const signed = await api.post<SignedUrlResponse>("/media/image/signed-url", { folder: PROFILE_IMAGE_FOLDER });
-      const { signature, timestamp, apiKey, cloudName, eager, folder } = signed.data.data;
+      const signed = await api.post<SignedUrlResponse>("/media/image/signed-url", { folder });
+      const { signature, timestamp, apiKey, cloudName, eager, folder: signedFolder } = signed.data.data;
 
       const form = new FormData();
       form.append("file", file);
@@ -28,7 +29,7 @@ export const useUploadImage = () => {
       form.append("timestamp", String(timestamp));
       form.append("signature", signature);
       form.append("eager", eager);
-      form.append("folder", folder);
+      form.append("folder", signedFolder);
 
       const res = await axios.post<CloudinaryUploadResponse>(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, form);
 

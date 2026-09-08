@@ -1,4 +1,5 @@
 import type {
+  CompanySettingsResponseSchema,
   CreateCompanyResponseSchema,
   CreateCompanySchema,
   DeleteCompanyResponseSchema,
@@ -24,6 +25,20 @@ export const useMyCompanies = () => {
       const res = await api.get<z.infer<typeof GetUserCompaniesResponseSchema>>("/company");
       return res.data.data;
     }
+  });
+};
+
+// Get Company Settings
+export const useCompanySettings = (enabled: boolean = true) => {
+  const api = useAxios();
+
+  return useQuery({
+    queryKey: ["company", "settings"],
+    queryFn: async () => {
+      const res = await api.get<z.infer<typeof CompanySettingsResponseSchema>>("/company/settings");
+      return res.data.data;
+    },
+    enabled
   });
 };
 

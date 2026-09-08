@@ -98,3 +98,17 @@ export const DeleteCompanyResponseSchema = z.object({
 });
 
 export class DeleteCompanyResponseDto extends createZodDto(DeleteCompanyResponseSchema) {}
+
+// Get Company Settings
+export const CompanySettingsResponseSchema = z.object({
+  data: z.object({
+    company: CompanyResponseSchema,
+    emailSettings: CompanyEmailSettingsResponseSchema,
+    messageRules: z.object({
+      WHATSAPP: CompanyMessageRulesResponseSchema.nullable(),
+      EMAIL: CompanyMessageRulesResponseSchema.nullable()
+    })
+  })
+});
+
+export class CompanySettingsResponseDto extends createZodDto(CompanySettingsResponseSchema) {}

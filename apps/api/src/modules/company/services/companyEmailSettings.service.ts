@@ -21,6 +21,11 @@ export class CompanyEmailSettingsService {
     private readonly auditService: AuditService
   ) {}
 
+  async getSettings(companyId: string): Promise<CompanyEmailSettingsEntity> {
+    const existing = await this.companyEmailSettingsRepo.findByCompanyId(companyId);
+    return existing ?? CompanyEmailSettingsEntity.create({ companyId });
+  }
+
   async updateSettings(companyId: string, data: UpdateCompanyEmailSettingsData, actorId: string): Promise<CompanyEmailSettingsEntity> {
     const existing = await this.companyEmailSettingsRepo.findByCompanyId(companyId);
 
