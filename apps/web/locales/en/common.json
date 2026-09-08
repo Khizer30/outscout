@@ -27,6 +27,21 @@
     "team": "Team",
     "logout": "Log out"
   },
+  "companySwitcher": {
+    "selectCompany": "Select company",
+    "yourCompanies": "Your companies",
+    "createCompany": "Create company",
+    "switchSuccess": "Switched to {{company}}.",
+    "createDialog": {
+      "title": "Create a company",
+      "description": "Set up a new company to start inviting teammates and managing leads.",
+      "name": "Company name",
+      "namePlaceholder": "Acme Inc.",
+      "submit": "Create company",
+      "submitting": "Creating…",
+      "success": "Company created successfully."
+    }
+  },
   "settings": {
     "title": "Account settings",
     "description": "Update your profile and preferences.",

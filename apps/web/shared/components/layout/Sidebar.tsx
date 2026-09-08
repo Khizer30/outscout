@@ -1,5 +1,6 @@
 "use client";
 import { useLogout } from "@features/auth/api/auth.api";
+import CompanySwitcher from "@features/company/components/CompanySwitcher";
 import iconDark from "@shared/assets/images/icon_dark.webp";
 import iconLight from "@shared/assets/images/icon_light.webp";
 import logoDark from "@shared/assets/images/logo_dark.webp";
@@ -89,6 +90,10 @@ export default function Sidebar() {
             </>
           )}
         </Link>
+      </div>
+
+      <div className="px-3">
+        <CompanySwitcher collapsed={collapsed} />
       </div>
 
       <nav className="flex-1 space-y-1 px-3 py-4">

@@ -27,6 +27,21 @@
     "team": "الفريق",
     "logout": "تسجيل الخروج"
   },
+  "companySwitcher": {
+    "selectCompany": "اختر شركة",
+    "yourCompanies": "شركاتك",
+    "createCompany": "إنشاء شركة",
+    "switchSuccess": "تم التبديل إلى {{company}}.",
+    "createDialog": {
+      "title": "إنشاء شركة",
+      "description": "أنشئ شركة جديدة لبدء دعوة زملائك وإدارة العملاء المحتملين.",
+      "name": "اسم الشركة",
+      "namePlaceholder": "شركة أكمي",
+      "submit": "إنشاء شركة",
+      "submitting": "جارٍ الإنشاء…",
+      "success": "تم إنشاء الشركة بنجاح."
+    }
+  },
   "settings": {
     "title": "إعدادات الحساب",
     "description": "قم بتحديث ملفك الشخصي وتفضيلاتك.",
