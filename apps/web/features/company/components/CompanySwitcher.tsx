@@ -5,6 +5,7 @@ import CreateCompanyDialog from "@features/company/components/CreateCompanyDialo
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -13,7 +14,7 @@ import {
 import { getErrorMessage } from "@shared/lib/error";
 import { cn } from "@shared/lib/utils";
 import { useAuthStore } from "@shared/stores/authStore";
-import { Building2, ChevronsUpDown, Plus } from "lucide-react";
+import { Building2, Check, ChevronsUpDown, Plus } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
@@ -69,21 +70,34 @@ export default function CompanySwitcher({ collapsed }: CompanySwitcherProps) {
             </>
           )}
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-64">
-          <DropdownMenuLabel>{t("companySwitcher.yourCompanies")}</DropdownMenuLabel>
-          {companies?.map(({ company, membership }) => (
-            <DropdownMenuItem
-              key={membership.id}
-              data-active={company.id === user?.companyId}
-              className="data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
-              onClick={() => handleSwitch(membership.id, company.id, company.name)}
-            >
-              <span className="truncate">{company.name}</span>
-            </DropdownMenuItem>
-          ))}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setCreateOpen(true)}>
-            <Plus className="size-4" />
+        <DropdownMenuContent align="start" className="w-72 p-1.5">
+          <DropdownMenuGroup>
+            <DropdownMenuLabel className="px-2 py-1.5 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
+              {t("companySwitcher.yourCompanies")}
+            </DropdownMenuLabel>
+            {companies?.map(({ company, membership }) => {
+              const isActive = company.id === user?.companyId;
+              return (
+                <DropdownMenuItem
+                  key={membership.id}
+                  data-active={isActive}
+                  className="gap-2.5 rounded-lg py-2 data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
+                  onClick={() => handleSwitch(membership.id, company.id, company.name)}
+                >
+                  <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-xs font-semibold text-primary">
+                    {company.name.charAt(0).toUpperCase()}
+                  </span>
+                  <span className="min-w-0 flex-1 truncate font-medium">{company.name}</span>
+                  {isActive && <Check className="size-4 shrink-0 text-primary" />}
+                </DropdownMenuItem>
+              );
+            })}
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator className="my-1.5" />
+          <DropdownMenuItem className="gap-2.5 rounded-lg py-2 font-medium text-primary focus:text-primary" onClick={() => setCreateOpen(true)}>
+            <span className="flex size-7 shrink-0 items-center justify-center rounded-md border border-dashed border-primary/40">
+              <Plus className="size-4" />
+            </span>
             {t("companySwitcher.createCompany")}
           </DropdownMenuItem>
         </DropdownMenuContent>
