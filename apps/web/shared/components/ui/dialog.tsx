@@ -13,7 +13,7 @@ function DialogContent({ className, children, ...props }: DialogPrimitive.Popup.
       <DialogPrimitive.Backdrop className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-[3px] transition-opacity duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0 dark:bg-slate-950/70" />
       <DialogPrimitive.Popup
         className={cn(
-          "fixed inset-s-1/2 top-1/2 z-50 grid w-full max-w-md -translate-x-1/2 -translate-y-1/2 gap-5 rounded-2xl border border-border bg-card p-6 shadow-2xl transition-all duration-200 ease-(--ease-out-quint) data-ending-style:scale-[0.98] data-ending-style:opacity-0 data-starting-style:scale-[0.98] data-starting-style:opacity-0",
+          "fixed inset-s-1/2 top-1/2 z-50 grid w-full max-w-md -translate-x-1/2 -translate-y-1/2 gap-5 rounded-2xl border border-border bg-card p-6 shadow-2xl transition-all duration-200 ease-out-quint data-ending-style:scale-[0.98] data-ending-style:opacity-0 data-starting-style:scale-[0.98] data-starting-style:opacity-0",
           className
         )}
         {...props}
