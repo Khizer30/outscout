@@ -5,8 +5,21 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: "Roboto Variable", sans-serif;
-  --font-heading: "Roboto Variable", sans-serif;
+  --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: "Outfit Variable", "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --shadow-2xs: var(--elevation-2xs);
+  --shadow-xs: var(--elevation-xs);
+  --shadow-sm: var(--elevation-sm);
+  --shadow-md: var(--elevation-md);
+  --shadow-lg: var(--elevation-lg);
+  --shadow-xl: var(--elevation-xl);
+  --shadow-2xl: var(--elevation-2xl);
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-snappy: cubic-bezier(0.32, 0.72, 0, 1);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -71,7 +84,7 @@
   --chart-3: #f59e0b;
   --chart-4: #16a34a;
   --chart-5: #f97316;
-  --radius: 0.625rem;
+  --radius: 0.75rem;
   --sidebar: #ffffff;
   --sidebar-foreground: #0f172a;
   --sidebar-primary: #2563eb;
@@ -80,6 +93,14 @@
   --sidebar-accent-foreground: #0f172a;
   --sidebar-border: #e2e8f0;
   --sidebar-ring: #2563eb;
+
+  --elevation-2xs: 0 1px 1px 0 rgb(15 23 42 / 0.04);
+  --elevation-xs: 0 1px 2px -1px rgb(15 23 42 / 0.06), 0 1px 3px 0 rgb(15 23 42 / 0.04);
+  --elevation-sm: 0 1px 2px -1px rgb(15 23 42 / 0.07), 0 3px 6px -2px rgb(15 23 42 / 0.05);
+  --elevation-md: 0 2px 4px -2px rgb(15 23 42 / 0.06), 0 8px 16px -4px rgb(15 23 42 / 0.08);
+  --elevation-lg: 0 4px 8px -4px rgb(15 23 42 / 0.06), 0 16px 32px -8px rgb(15 23 42 / 0.1);
+  --elevation-xl: 0 8px 16px -8px rgb(15 23 42 / 0.08), 0 28px 56px -12px rgb(15 23 42 / 0.16);
+  --elevation-2xl: 0 12px 24px -12px rgb(15 23 42 / 0.1), 0 40px 80px -16px rgb(15 23 42 / 0.22);
 }
 
 .dark {
@@ -114,19 +135,109 @@
   --sidebar-accent-foreground: #f8fafc;
   --sidebar-border: #334155;
   --sidebar-ring: #38bdf8;
+
+  --elevation-2xs: 0 1px 1px 0 rgb(0 0 0 / 0.3);
+  --elevation-xs: 0 1px 2px -1px rgb(0 0 0 / 0.4), 0 1px 3px 0 rgb(0 0 0 / 0.3);
+  --elevation-sm: 0 1px 2px -1px rgb(0 0 0 / 0.45), 0 3px 6px -2px rgb(0 0 0 / 0.35);
+  --elevation-md: 0 2px 4px -2px rgb(0 0 0 / 0.45), 0 8px 16px -4px rgb(0 0 0 / 0.45);
+  --elevation-lg: 0 4px 8px -4px rgb(0 0 0 / 0.45), 0 16px 32px -8px rgb(0 0 0 / 0.5);
+  --elevation-xl: 0 8px 16px -8px rgb(0 0 0 / 0.5), 0 28px 56px -12px rgb(0 0 0 / 0.6);
+  --elevation-2xl: 0 12px 24px -12px rgb(0 0 0 / 0.5), 0 40px 80px -16px rgb(0 0 0 / 0.7);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-    font-family: "Roboto Variable", sans-serif;
-  }
+
   html {
     @apply font-sans;
+    -webkit-tap-highlight-color: transparent;
+    scrollbar-gutter: stable;
   }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-optical-sizing: auto;
+    font-synthesis-weight: none;
+    letter-spacing: -0.006em;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  .font-heading {
+    letter-spacing: -0.02em;
+  }
+
+  /* Numbers line up in tables, stats and money/phone fields. */
+  table,
+  [data-slot="table"],
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--font-mono);
+    font-feature-settings: "calt" 0;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklch, var(--primary) 22%, transparent);
+    color: var(--foreground);
+  }
+
+  ::placeholder {
+    letter-spacing: -0.005em;
+  }
+
+  /* Slim, theme-aware scrollbars instead of the default chrome. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--foreground) 18%, transparent) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: color-mix(in oklch, var(--foreground) 16%, transparent);
+    border: 3px solid transparent;
+    border-radius: 9999px;
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in oklch, var(--foreground) 28%, transparent);
+  }
+}
+
+@utility text-gradient-brand {
+  background-image: linear-gradient(100deg, var(--chart-1), var(--chart-2));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 @keyframes radar-sweep {

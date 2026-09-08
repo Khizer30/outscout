@@ -7,7 +7,9 @@ import ThemeProvider from "@shared/providers/ThemeProvider";
 import type { Children } from "@shared/types/children.types";
 import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
-import "@fontsource-variable/roboto/wght.css";
+import "@fontsource-variable/plus-jakarta-sans/wght.css";
+import "@fontsource-variable/outfit/wght.css";
+import "@fontsource-variable/jetbrains-mono/wght.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
