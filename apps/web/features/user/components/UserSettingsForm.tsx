@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@shared/components/ui/button";
 import { Input } from "@shared/components/ui/input";
 import { Label } from "@shared/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@shared/components/ui/select";
 import { getErrorMessage } from "@shared/lib/error";
 import i18n from "@shared/lib/i18n";
 import { useAuthStore } from "@shared/stores/authStore";
@@ -233,14 +234,19 @@ export default function UserSettingsForm() {
 
       <div className="space-y-1.5">
         <Label htmlFor="settings-language">{t("settings.language")}</Label>
-        <select
-          id="settings-language"
-          className="h-9 w-full rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
-          {...register("language")}
+        <Select
+          items={{ EN: t("navbar.english"), AR: t("navbar.arabic") }}
+          value={watch("language")}
+          onValueChange={(value) => setValue("language", value as "EN" | "AR", { shouldDirty: true })}
         >
-          <option value="EN">{t("navbar.english")}</option>
-          <option value="AR">{t("navbar.arabic")}</option>
-        </select>
+          <SelectTrigger id="settings-language" className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent alignItemWithTrigger={false}>
+            <SelectItem value="EN">{t("navbar.english")}</SelectItem>
+            <SelectItem value="AR">{t("navbar.arabic")}</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-1.5">

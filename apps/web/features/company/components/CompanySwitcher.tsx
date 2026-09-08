@@ -15,6 +15,7 @@ import { getErrorMessage } from "@shared/lib/error";
 import { cn } from "@shared/lib/utils";
 import { useAuthStore } from "@shared/stores/authStore";
 import { Building2, Check, ChevronsUpDown, Plus } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
@@ -81,20 +82,24 @@ export default function CompanySwitcher({ collapsed }: CompanySwitcherProps) {
                 <DropdownMenuItem
                   key={membership.id}
                   data-active={isActive}
-                  className="gap-2.5 rounded-lg py-2 data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
+                  className="gap-2.5 rounded-lg py-2 data-[active=true]:bg-primary/10"
                   onClick={() => handleSwitch(membership.id, company.id, company.name)}
                 >
-                  <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-xs font-semibold text-primary">
-                    {company.name.charAt(0).toUpperCase()}
+                  <span className="relative flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-md bg-primary/10 text-xs font-semibold text-primary!">
+                    {company.companyImageURL ? (
+                      <Image src={company.companyImageURL} alt={company.name} fill sizes="28px" unoptimized className="object-cover" />
+                    ) : (
+                      company.name.charAt(0).toUpperCase()
+                    )}
                   </span>
                   <span className="min-w-0 flex-1 truncate font-medium">{company.name}</span>
-                  {isActive && <Check className="size-4 shrink-0 text-primary" />}
+                  {isActive && <Check className="size-4 shrink-0 text-primary!" />}
                 </DropdownMenuItem>
               );
             })}
           </DropdownMenuGroup>
           <DropdownMenuSeparator className="my-1.5" />
-          <DropdownMenuItem className="gap-2.5 rounded-lg py-2 font-medium text-primary focus:text-primary" onClick={() => setCreateOpen(true)}>
+          <DropdownMenuItem className="gap-2.5 rounded-lg py-2 font-medium text-primary! focus:**:text-primary!" onClick={() => setCreateOpen(true)}>
             <span className="flex size-7 shrink-0 items-center justify-center rounded-md border border-dashed border-primary/40">
               <Plus className="size-4" />
             </span>
