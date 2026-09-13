@@ -23,6 +23,7 @@
   },
   "sidebar": {
     "dashboard": "Dashboard",
+    "map": "Map",
     "company": "Company",
     "team": "Team",
     "logout": "Log out"
@@ -206,5 +207,28 @@
     "signupPrompt": "Don't have an account?",
     "signup": "Sign up",
     "forgotPassword": "Forgot password?"
+  },
+  "map": {
+    "title": "Map",
+    "description": "Search for local businesses and explore them on the map.",
+    "searchPlaceholder": "Search for a business or place…",
+    "allTypes": "All business types",
+    "noResults": "No results found.",
+    "selectPlacePrompt": "Search and select a place to view its details.",
+    "loadingDetails": "Loading place details…",
+    "detailsNotFound": "Details not found for this place.",
+    "noWebsite": "No website",
+    "noPhone": "No phone number",
+    "reviews": "{{count}} reviews",
+    "types": {
+      "RESTAURANT": "Restaurant",
+      "HOTEL": "Hotel",
+      "HOSPITAL": "Hospital",
+      "DENTAL_CLINIC": "Dental clinic",
+      "REAL_ESTATE_AGENCY": "Real estate agency",
+      "ACCOUNTING": "Accounting",
+      "GYM": "Gym",
+      "BEAUTY_SALON": "Beauty salon"
+    }
   }
 }

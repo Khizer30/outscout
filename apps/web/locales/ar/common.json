@@ -23,6 +23,7 @@
   },
   "sidebar": {
     "dashboard": "لوحة التحكم",
+    "map": "الخريطة",
     "company": "الشركة",
     "team": "الفريق",
     "logout": "تسجيل الخروج"
@@ -206,5 +207,28 @@
     "signupPrompt": "ليس لديك حساب؟",
     "signup": "إنشاء حساب",
     "forgotPassword": "هل نسيت كلمة المرور؟"
+  },
+  "map": {
+    "title": "الخريطة",
+    "description": "ابحث عن الأنشطة التجارية المحلية واستكشفها على الخريطة.",
+    "searchPlaceholder": "ابحث عن نشاط تجاري أو مكان…",
+    "allTypes": "جميع أنواع الأنشطة",
+    "noResults": "لم يتم العثور على نتائج.",
+    "selectPlacePrompt": "ابحث واختر مكانًا لعرض تفاصيله.",
+    "loadingDetails": "جارٍ تحميل تفاصيل المكان…",
+    "detailsNotFound": "لم يتم العثور على تفاصيل لهذا المكان.",
+    "noWebsite": "لا يوجد موقع إلكتروني",
+    "noPhone": "لا يوجد رقم هاتف",
+    "reviews": "{{count}} تقييم",
+    "types": {
+      "RESTAURANT": "مطعم",
+      "HOTEL": "فندق",
+      "HOSPITAL": "مستشفى",
+      "DENTAL_CLINIC": "عيادة أسنان",
+      "REAL_ESTATE_AGENCY": "وكالة عقارية",
+      "ACCOUNTING": "محاسبة",
+      "GYM": "نادي رياضي",
+      "BEAUTY_SALON": "صالون تجميل"
+    }
   }
 }
