@@ -2,7 +2,7 @@
 import { useMapPlaceDetails } from "@features/map/api/map.api";
 import type { LeadTypeSchema } from "@repo/dtos/lead";
 import type { PlaceDetailsSchema } from "@repo/dtos/map";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { z } from "zod";
 
 export type MapBusinessType = z.infer<typeof LeadTypeSchema> | "ALL";
@@ -26,6 +26,8 @@ interface MapContextValue {
   place: MapPlaceDetails | undefined;
   isLoadingPlace: boolean;
   markerPosition: MapLatLng | null;
+  locateUser: () => void;
+  isLocating: boolean;
 }
 
 const MapContext = createContext<MapContextValue | null>(null);
@@ -47,27 +49,34 @@ export function MapProvider({ children }: MapProviderProps) {
   const [center, setCenter] = useState<MapLatLng>(DEFAULT_CENTER);
   const [zoom, setZoom] = useState(DEFAULT_ZOOM);
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
 
   const { data: place, isLoading: isLoadingPlace } = useMapPlaceDetails(selectedPlaceId);
   const placeLat = place?.latitude ?? null;
   const placeLng = place?.longitude ?? null;
 
-  useEffect(() => {
+  const locateUser = useCallback(() => {
     if (!("geolocation" in navigator)) {
       return;
     }
 
+    setIsLocating(true);
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setCenter({ lat: position.coords.latitude, lng: position.coords.longitude });
         setZoom(LOCATED_ZOOM);
+        setIsLocating(false);
       },
       () => {
-        // Keep the default center if permission is denied or the position is unavailable
+        setIsLocating(false);
       },
       { maximumAge: 300000, timeout: 10000 }
     );
   }, []);
+
+  useEffect(() => {
+    locateUser();
+  }, [locateUser]);
 
   useEffect(() => {
     if (placeLat !== null && placeLng !== null) {
@@ -91,7 +100,9 @@ export function MapProvider({ children }: MapProviderProps) {
     selectPlace: setSelectedPlaceId,
     place,
     isLoadingPlace,
-    markerPosition
+    markerPosition,
+    locateUser,
+    isLocating
   };
 
   return <MapContext.Provider value={value}>{children}</MapContext.Provider>;

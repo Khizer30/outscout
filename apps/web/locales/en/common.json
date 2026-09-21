@@ -212,6 +212,7 @@
     "title": "Map",
     "description": "Search for local businesses and explore them on the map.",
     "searchPlaceholder": "Search for a business or place…",
+    "locateMe": "Move to current location",
     "allTypes": "All business types",
     "noResults": "No results found.",
     "selectPlacePrompt": "Search and select a place to view its details.",
