@@ -1,4 +1,5 @@
 "use client";
+import MapFindLeadsButton from "@features/map/components/MapFindLeadsButton";
 import MapPlaceDetailsPanel from "@features/map/components/MapPlaceDetailsPanel";
 import { MapProvider } from "@features/map/components/MapProvider";
 import MapSearchInput from "@features/map/components/MapSearchInput";
@@ -29,6 +30,7 @@ function MapPageContentInner() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <MapSearchInput />
         <MapTypeSelect />
+        <MapFindLeadsButton />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_360px]">
