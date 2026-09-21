@@ -1,5 +1,6 @@
 import { getErrorMessage } from "@shared/lib/error";
 import { QueryCache, QueryClient, defaultShouldDehydrateQuery } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -16,6 +17,11 @@ function makeQueryClient() {
     },
     queryCache: new QueryCache({
       onError: (error) => {
+        // Expired/invalid sessions are handled by the refresh flow + redirect to login, not worth surfacing
+        if (isAxiosError(error) && error.response?.status === 401) {
+          return;
+        }
+
         console.error(getErrorMessage(error, "Something went wrong"));
       }
     })
