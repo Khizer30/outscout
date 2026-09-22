@@ -1,5 +1,6 @@
 "use client";
 import { useUpdateLead } from "@features/lead/api/lead.api";
+import EditLeadDialog from "@features/lead/components/EditLeadDialog";
 import { LeadsProvider, useLeadsContext } from "@features/lead/components/LeadsProvider";
 import { SOCIAL_PLATFORMS, STATUS_CHIP_CLASSES, STATUS_ICONS } from "@features/lead/lib/leadDisplay";
 import { LeadStatusSchema } from "@repo/dtos/lead";
@@ -28,7 +29,7 @@ export default function LeadsPageContent() {
 
 function LeadsPageContentInner() {
   const { t } = useTranslation();
-  const { leads, meta, isLoading, page, setPage, status, setStatus } = useLeadsContext();
+  const { leads, meta, isLoading, page, setPage, status, setStatus, selectLead } = useLeadsContext();
   const updateLead = useUpdateLead();
 
   const statusItems = {
@@ -98,8 +99,8 @@ function LeadsPageContentInner() {
                     const emails = lead.emails.join(", ");
 
                     return (
-                      <TableRow key={lead.id}>
-                        <TableCell className="text-center">
+                      <TableRow key={lead.id} className="cursor-pointer" onClick={() => selectLead(lead)}>
+                        <TableCell className="text-center" onClick={(event) => event.stopPropagation()}>
                           <DropdownMenu>
                             <Tooltip>
                               <TooltipTrigger
@@ -165,7 +166,7 @@ function LeadsPageContentInner() {
 
                         <TableCell className="text-sm text-muted-foreground">{lead.phone ?? t("leads.noPhone")}</TableCell>
 
-                        <TableCell>
+                        <TableCell onClick={(event) => event.stopPropagation()}>
                           {lead.website ? (
                             <Tooltip>
                               <TooltipTrigger
@@ -210,7 +211,7 @@ function LeadsPageContentInner() {
                           )}
                         </TableCell>
 
-                        <TableCell>
+                        <TableCell onClick={(event) => event.stopPropagation()}>
                           <div className="flex items-center gap-1">
                             {SOCIAL_PLATFORMS.map(({ key, Icon }) => {
                               const href = lead.socialLinks[key];
@@ -268,6 +269,8 @@ function LeadsPageContentInner() {
           )}
         </CardContent>
       </Card>
+
+      <EditLeadDialog />
     </div>
   );
 }

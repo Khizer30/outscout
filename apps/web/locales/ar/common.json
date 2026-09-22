@@ -275,6 +275,24 @@
       "tiktok": "تيك توك",
       "youtube": "يوتيوب",
       "whatsapp": "واتساب"
+    },
+    "editDialog": {
+      "description": "قم بتحديث تفاصيل هذا العميل المحتمل ومعلومات الاتصال به.",
+      "status": "الحالة",
+      "name": "الاسم",
+      "namePlaceholder": "اسم النشاط التجاري",
+      "descriptionLabel": "الوصف",
+      "descriptionPlaceholder": "وصف مختصر للنشاط التجاري",
+      "phone": "الهاتف",
+      "phonePlaceholder": "+1 234 5678900",
+      "otherPhones": "أرقام هاتف أخرى",
+      "emails": "البريد الإلكتروني",
+      "linesPlaceholder": "إدخال واحد في كل سطر",
+      "socialLinks": "روابط التواصل الاجتماعي",
+      "otherLinks": "روابط أخرى",
+      "save": "حفظ التغييرات",
+      "saving": "جارٍ الحفظ...",
+      "success": "تم تحديث العميل المحتمل"
     }
   }
 }

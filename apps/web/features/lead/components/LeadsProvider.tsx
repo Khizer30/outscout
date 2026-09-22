@@ -18,6 +18,8 @@ interface LeadsContextValue {
   setPage: (page: number) => void;
   status: LeadStatusFilter;
   setStatus: (status: LeadStatusFilter) => void;
+  selectedLead: Lead | null;
+  selectLead: (lead: Lead | null) => void;
 }
 
 const LeadsContext = createContext<LeadsContextValue | null>(null);
@@ -37,6 +39,7 @@ interface LeadsProviderProps {
 export function LeadsProvider({ children }: LeadsProviderProps) {
   const [page, setPage] = useState(1);
   const [status, setStatusState] = useState<LeadStatusFilter>("ALL");
+  const [selectedLead, selectLead] = useState<Lead | null>(null);
 
   const { data, isLoading } = useLeads({
     page,
@@ -56,7 +59,9 @@ export function LeadsProvider({ children }: LeadsProviderProps) {
     page,
     setPage,
     status,
-    setStatus
+    setStatus,
+    selectedLead,
+    selectLead
   };
 
   return <LeadsContext.Provider value={value}>{children}</LeadsContext.Provider>;

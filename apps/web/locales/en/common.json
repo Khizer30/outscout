@@ -275,6 +275,24 @@
       "tiktok": "TikTok",
       "youtube": "YouTube",
       "whatsapp": "WhatsApp"
+    },
+    "editDialog": {
+      "description": "Update this lead's details and contact information.",
+      "status": "Status",
+      "name": "Name",
+      "namePlaceholder": "Business name",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "A short description of the business",
+      "phone": "Phone",
+      "phonePlaceholder": "+1 234 5678900",
+      "otherPhones": "Other phone numbers",
+      "emails": "Emails",
+      "linesPlaceholder": "One entry per line",
+      "socialLinks": "Social links",
+      "otherLinks": "Other links",
+      "save": "Save changes",
+      "saving": "Saving...",
+      "success": "Lead updated"
     }
   }
 }
