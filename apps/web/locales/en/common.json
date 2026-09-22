@@ -24,6 +24,7 @@
   "sidebar": {
     "dashboard": "Dashboard",
     "map": "Map",
+    "leads": "Leads",
     "company": "Company",
     "team": "Team",
     "logout": "Log out"
@@ -233,6 +234,47 @@
       "ACCOUNTING": "Accounting",
       "GYM": "Gym",
       "BEAUTY_SALON": "Beauty salon"
+    }
+  },
+  "leads": {
+    "title": "Leads",
+    "description": "Browse and manage the leads you've generated from the map.",
+    "allStatuses": "All statuses",
+    "empty": "No leads found. Find leads from the map to get started.",
+    "headerStatus": "Status",
+    "headerName": "Name",
+    "headerDescription": "Description",
+    "headerAddress": "Address",
+    "headerPhone": "Phone",
+    "headerWebsite": "Website",
+    "headerType": "Types",
+    "headerEmails": "Emails",
+    "headerSocialLinks": "Social Links",
+    "unnamed": "Unnamed",
+    "noDescription": "No description",
+    "noAddress": "No address",
+    "noPhone": "No phone",
+    "noWebsite": "No website",
+    "noEmails": "No emails",
+    "pagination": "Page {{page}} of {{totalPages}}",
+    "previous": "Previous",
+    "next": "Next",
+    "status": {
+      "ENRICHING": "Enriching",
+      "READY": "Ready",
+      "CONTACTED": "Contacted",
+      "INTERESTED": "Interested",
+      "UNRESPONSIVE": "Unresponsive",
+      "REJECTED": "Rejected"
+    },
+    "social": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "twitter": "X (Twitter)",
+      "linkedin": "LinkedIn",
+      "tiktok": "TikTok",
+      "youtube": "YouTube",
+      "whatsapp": "WhatsApp"
     }
   }
 }

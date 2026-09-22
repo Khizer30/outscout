@@ -24,6 +24,7 @@
   "sidebar": {
     "dashboard": "لوحة التحكم",
     "map": "الخريطة",
+    "leads": "العملاء المحتملون",
     "company": "الشركة",
     "team": "الفريق",
     "logout": "تسجيل الخروج"
@@ -233,6 +234,47 @@
       "ACCOUNTING": "محاسبة",
       "GYM": "نادي رياضي",
       "BEAUTY_SALON": "صالون تجميل"
+    }
+  },
+  "leads": {
+    "title": "العملاء المحتملون",
+    "description": "تصفح وأدر العملاء المحتملين الذين قمت بإنشائهم من الخريطة.",
+    "allStatuses": "جميع الحالات",
+    "empty": "لم يتم العثور على عملاء محتملين. ابحث عن عملاء محتملين من الخريطة للبدء.",
+    "headerStatus": "الحالة",
+    "headerName": "الاسم",
+    "headerDescription": "الوصف",
+    "headerAddress": "العنوان",
+    "headerPhone": "الهاتف",
+    "headerWebsite": "الموقع الإلكتروني",
+    "headerType": "الأنواع",
+    "headerEmails": "البريد الإلكتروني",
+    "headerSocialLinks": "روابط التواصل الاجتماعي",
+    "unnamed": "بدون اسم",
+    "noDescription": "لا يوجد وصف",
+    "noAddress": "لا يوجد عنوان",
+    "noPhone": "لا يوجد هاتف",
+    "noWebsite": "لا يوجد موقع إلكتروني",
+    "noEmails": "لا يوجد بريد إلكتروني",
+    "pagination": "صفحة {{page}} من {{totalPages}}",
+    "previous": "السابق",
+    "next": "التالي",
+    "status": {
+      "ENRICHING": "قيد الإثراء",
+      "READY": "جاهز",
+      "CONTACTED": "تم التواصل",
+      "INTERESTED": "مهتم",
+      "UNRESPONSIVE": "غير مستجيب",
+      "REJECTED": "مرفوض"
+    },
+    "social": {
+      "facebook": "فيسبوك",
+      "instagram": "إنستغرام",
+      "twitter": "إكس (تويتر)",
+      "linkedin": "لينكدإن",
+      "tiktok": "تيك توك",
+      "youtube": "يوتيوب",
+      "whatsapp": "واتساب"
     }
   }
 }

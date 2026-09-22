@@ -38,7 +38,9 @@ export const useLeads = (params: z.infer<typeof GetLeadsSchema>) => {
     queryFn: async () => {
       const res = await api.post<z.infer<typeof GetLeadsResponseSchema>>("/lead/search", params);
       return res.data;
-    }
+    },
+    staleTime: 0,
+    refetchOnMount: "always"
   });
 };
 
