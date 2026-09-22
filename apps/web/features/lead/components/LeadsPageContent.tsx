@@ -1,14 +1,18 @@
 "use client";
+import { useUpdateLead } from "@features/lead/api/lead.api";
 import { LeadsProvider, useLeadsContext } from "@features/lead/components/LeadsProvider";
 import { SOCIAL_PLATFORMS, STATUS_CHIP_CLASSES, STATUS_ICONS } from "@features/lead/lib/leadDisplay";
 import { LeadStatusSchema } from "@repo/dtos/lead";
 import { Button } from "@shared/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@shared/components/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@shared/components/ui/dropdown-menu";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@shared/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@shared/components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@shared/components/ui/tooltip";
+import { getErrorMessage } from "@shared/lib/error";
 import { cn } from "@shared/lib/utils";
 import { ChevronLeft, ChevronRight, Globe, Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import type { z } from "zod";
 
@@ -25,6 +29,7 @@ export default function LeadsPageContent() {
 function LeadsPageContentInner() {
   const { t } = useTranslation();
   const { leads, meta, isLoading, page, setPage, status, setStatus } = useLeadsContext();
+  const updateLead = useUpdateLead();
 
   const statusItems = {
     ALL: t("leads.allStatuses"),
@@ -33,6 +38,10 @@ function LeadsPageContentInner() {
 
   const handleStatusChange = (next: LeadStatus | "ALL" | null) => {
     setStatus(next ?? "ALL");
+  };
+
+  const handleLeadStatusUpdate = (id: string, nextStatus: LeadStatus) => {
+    updateLead.mutate({ id, status: nextStatus }, { onError: (error) => toast.error(getErrorMessage(error)) });
   };
 
   return (
@@ -90,23 +99,42 @@ function LeadsPageContentInner() {
 
                     return (
                       <TableRow key={lead.id}>
-                        <TableCell>
-                          <Tooltip>
-                            <TooltipTrigger
-                              render={
-                                <span
-                                  className={cn(
-                                    "inline-flex size-7 shrink-0 cursor-default items-center justify-center rounded-full",
-                                    STATUS_CHIP_CLASSES[lead.status]
-                                  )}
-                                  aria-label={t(`leads.status.${lead.status}`)}
-                                >
-                                  <StatusIcon className={cn("size-3.5", lead.status === "ENRICHING" && "animate-spin")} />
-                                </span>
-                              }
-                            />
-                            <TooltipContent>{t(`leads.status.${lead.status}`)}</TooltipContent>
-                          </Tooltip>
+                        <TableCell className="text-center">
+                          <DropdownMenu>
+                            <Tooltip>
+                              <TooltipTrigger
+                                render={
+                                  <DropdownMenuTrigger
+                                    render={
+                                      <button
+                                        type="button"
+                                        className={cn(
+                                          "inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-full transition-opacity hover:opacity-80",
+                                          STATUS_CHIP_CLASSES[lead.status]
+                                        )}
+                                        aria-label={t(`leads.status.${lead.status}`)}
+                                      />
+                                    }
+                                  >
+                                    <StatusIcon className={cn("size-3.5", lead.status === "ENRICHING" && "animate-spin")} />
+                                  </DropdownMenuTrigger>
+                                }
+                              />
+                              <TooltipContent>{t(`leads.status.${lead.status}`)}</TooltipContent>
+                            </Tooltip>
+                            <DropdownMenuContent align="start">
+                              {LeadStatusSchema.options.map((option) => {
+                                const OptionIcon = STATUS_ICONS[option];
+
+                                return (
+                                  <DropdownMenuItem key={option} disabled={option === lead.status} onClick={() => handleLeadStatusUpdate(lead.id, option)}>
+                                    <OptionIcon className="size-3.5" />
+                                    {t(`leads.status.${option}`)}
+                                  </DropdownMenuItem>
+                                );
+                              })}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </TableCell>
 
                         <TableCell>

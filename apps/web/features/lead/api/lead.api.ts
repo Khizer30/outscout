@@ -14,7 +14,7 @@ import type {
   WhatsAppMessagePartSchema
 } from "@repo/dtos/lead";
 import useAxios from "@shared/hooks/useAxios";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { z } from "zod";
 
 // Generate Leads
@@ -61,11 +61,15 @@ export const useLead = (id: string) => {
 // Update Lead
 export const useUpdateLead = () => {
   const api = useAxios();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ id, ...data }: z.infer<typeof UpdateLeadSchema> & { id: string }) => {
       const res = await api.patch<z.infer<typeof UpdateLeadResponseSchema>>(`/lead/${id}`, data);
       return res.data;
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["lead", "search"] });
     }
   });
 };
