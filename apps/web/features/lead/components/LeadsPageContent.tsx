@@ -2,7 +2,7 @@
 import { useUpdateLead } from "@features/lead/api/lead.api";
 import EditLeadDialog from "@features/lead/components/EditLeadDialog";
 import { LeadsProvider, useLeadsContext } from "@features/lead/components/LeadsProvider";
-import { SOCIAL_PLATFORMS, STATUS_CHIP_CLASSES, STATUS_ICONS } from "@features/lead/lib/leadDisplay";
+import { formatSocialLink, SOCIAL_PLATFORMS, STATUS_CHIP_CLASSES, STATUS_ICONS } from "@features/lead/lib/leadDisplay";
 import { LeadStatusSchema } from "@repo/dtos/lead";
 import { Button } from "@shared/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@shared/components/ui/card";
@@ -214,7 +214,8 @@ function LeadsPageContentInner() {
                         <TableCell onClick={(event) => event.stopPropagation()}>
                           <div className="flex items-center gap-1">
                             {SOCIAL_PLATFORMS.map(({ key, Icon }) => {
-                              const href = lead.socialLinks[key];
+                              const rawHref = lead.socialLinks[key];
+                              const href = rawHref ? formatSocialLink(key, rawHref) || undefined : undefined;
 
                               return (
                                 <Tooltip key={key}>

@@ -33,3 +33,42 @@ export const SOCIAL_PLATFORMS = [
   { key: "youtube", Icon: FaYoutube },
   { key: "whatsapp", Icon: FaWhatsapp }
 ] as const satisfies { key: Exclude<keyof LeadSocialLinks, "otherLinks">; Icon: unknown }[];
+
+export function formatWhatsAppLink(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return "";
+  }
+
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+
+  if (/^(wa\.me|api\.whatsapp\.com|web\.whatsapp\.com|chat\.whatsapp\.com)/i.test(trimmed)) {
+    return `https://${trimmed}`;
+  }
+
+  let cleaned = trimmed.replace(/\D/g, "");
+  if (cleaned.startsWith("00")) {
+    cleaned = cleaned.slice(2);
+  }
+
+  return cleaned ? `https://wa.me/${cleaned}` : "";
+}
+
+export function formatSocialLink(key: string, value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return "";
+  }
+
+  if (key === "whatsapp") {
+    return formatWhatsAppLink(trimmed);
+  }
+
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+
+  return `https://${trimmed}`;
+}
