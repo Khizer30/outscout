@@ -84,13 +84,17 @@ export const useUpdateLead = () => {
 // Generate Outreach Message
 export const useGenerateOutreachMessage = () => {
   const api = useAxios();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ id, channel }: { id: string; channel: z.infer<typeof MessageChannelSchema> }) => {
-      const res = await api.post<z.infer<typeof GenerateOutreachMessageResponseSchema>>(`/lead/outreach-message/${id}`, null, {
+      const res = await api.post<z.infer<typeof GenerateOutreachMessageResponseSchema>>(`/lead/outreach-message/${id}`, undefined, {
         params: { channel }
       });
       return res.data;
+    },
+    onSuccess: (data) => {
+      void queryClient.invalidateQueries({ queryKey: ["ai", "lead", data.data.leadId] });
     }
   });
 };

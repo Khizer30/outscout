@@ -1,4 +1,5 @@
 "use client";
+import AiOutreachDialog from "@features/ai/components/AiOutreachDialog";
 import { useUpdateLead } from "@features/lead/api/lead.api";
 import EditLeadDialog from "@features/lead/components/EditLeadDialog";
 import { LeadsProvider, useLeadsContext } from "@features/lead/components/LeadsProvider";
@@ -85,10 +86,10 @@ function LeadsPageContentInner() {
                     <TableHead>{t("leads.headerStatus")}</TableHead>
                     <TableHead>{t("leads.headerName")}</TableHead>
                     <TableHead>{t("leads.headerDescription")}</TableHead>
-                    <TableHead>{t("leads.headerPhone")}</TableHead>
-                    <TableHead>{t("leads.headerWebsite")}</TableHead>
                     <TableHead>{t("leads.headerType")}</TableHead>
+                    <TableHead>{t("leads.headerPhone")}</TableHead>
                     <TableHead>{t("leads.headerEmails")}</TableHead>
+                    <TableHead>{t("leads.headerWebsite")}</TableHead>
                     <TableHead>{t("leads.headerSocialLinks")}</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -152,7 +153,37 @@ function LeadsPageContentInner() {
                           )}
                         </TableCell>
 
-                        <TableCell className="text-sm text-muted-foreground">{lead.phone ?? t("leads.noPhone")}</TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {lead.types.length > 0 ? (
+                            <Tooltip>
+                              <TooltipTrigger render={<p className="max-w-48 truncate">{lead.types.map((type) => t(`map.types.${type}`)).join(", ")}</p>} />
+                              <TooltipContent>{lead.types.map((type) => t(`map.types.${type}`)).join(", ")}</TooltipContent>
+                            </Tooltip>
+                          ) : (
+                            "-"
+                          )}
+                        </TableCell>
+
+                        <TableCell className="text-sm text-muted-foreground" onClick={(event) => event.stopPropagation()}>
+                          <div className="flex items-center gap-1.5">
+                            {lead.phone && <AiOutreachDialog leadId={lead.id} channel="WHATSAPP" />}
+                            <span>{lead.phone ?? t("leads.noPhone")}</span>
+                          </div>
+                        </TableCell>
+
+                        <TableCell onClick={(event) => event.stopPropagation()}>
+                          <div className="flex items-center gap-1.5">
+                            {lead.emails.length > 0 && <AiOutreachDialog leadId={lead.id} channel="EMAIL" />}
+                            {lead.emails.length > 0 ? (
+                              <Tooltip>
+                                <TooltipTrigger render={<p className="max-w-48 truncate text-sm text-muted-foreground">{emails}</p>} />
+                                <TooltipContent>{emails}</TooltipContent>
+                              </Tooltip>
+                            ) : (
+                              <span className="text-sm text-muted-foreground">{t("leads.noEmails")}</span>
+                            )}
+                          </div>
+                        </TableCell>
 
                         <TableCell onClick={(event) => event.stopPropagation()}>
                           {lead.website ? (
@@ -174,28 +205,6 @@ function LeadsPageContentInner() {
                             </Tooltip>
                           ) : (
                             <span className="text-sm text-muted-foreground">{t("leads.noWebsite")}</span>
-                          )}
-                        </TableCell>
-
-                        <TableCell className="text-sm text-muted-foreground">
-                          {lead.types.length > 0 ? (
-                            <Tooltip>
-                              <TooltipTrigger render={<p className="max-w-48 truncate">{lead.types.map((type) => t(`map.types.${type}`)).join(", ")}</p>} />
-                              <TooltipContent>{lead.types.map((type) => t(`map.types.${type}`)).join(", ")}</TooltipContent>
-                            </Tooltip>
-                          ) : (
-                            "-"
-                          )}
-                        </TableCell>
-
-                        <TableCell>
-                          {lead.emails.length > 0 ? (
-                            <Tooltip>
-                              <TooltipTrigger render={<p className="max-w-48 truncate text-sm text-muted-foreground">{emails}</p>} />
-                              <TooltipContent>{emails}</TooltipContent>
-                            </Tooltip>
-                          ) : (
-                            <span className="text-sm text-muted-foreground">{t("leads.noEmails")}</span>
                           )}
                         </TableCell>
 

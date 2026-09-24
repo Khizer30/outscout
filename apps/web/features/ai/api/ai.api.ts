@@ -1,6 +1,7 @@
 import type { GetOutreachMessageResponseSchema, RewriteOutreachMessageResponseSchema, RewriteOutreachMessageSchema } from "@repo/dtos/ai";
 import useAxios from "@shared/hooks/useAxios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 import type { z } from "zod";
 
 // Get Outreach Messages By Lead
@@ -10,8 +11,15 @@ export const useOutreachMessagesByLead = (leadId: string) => {
   return useQuery({
     queryKey: ["ai", "lead", leadId],
     queryFn: async () => {
-      const res = await api.get<z.infer<typeof GetOutreachMessageResponseSchema>>(`/ai/lead/${leadId}`);
-      return res.data.data;
+      try {
+        const res = await api.get<z.infer<typeof GetOutreachMessageResponseSchema>>(`/ai/lead/${leadId}`);
+        return res.data.data;
+      } catch (error) {
+        if (isAxiosError(error) && error.response?.status === 404) {
+          return [];
+        }
+        throw error;
+      }
     },
     enabled: !!leadId
   });

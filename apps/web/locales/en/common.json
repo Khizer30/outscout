@@ -296,5 +296,29 @@
       "saving": "Saving...",
       "success": "Lead updated"
     }
+  },
+  "ai": {
+    "outreach": {
+      "whatsappTrigger": "Generate WhatsApp message",
+      "emailTrigger": "Generate email message",
+      "whatsappTitle": "WhatsApp outreach message",
+      "emailTitle": "Email outreach message",
+      "description": "Generate an AI-drafted message, refine it, then send it to this lead.",
+      "empty": "No message generated yet.",
+      "generate": "Generate message",
+      "promptPlaceholder": "Describe how you'd like to improve this message...",
+      "rewrite": "Rewrite",
+      "sendWhatsApp": "Send via WhatsApp",
+      "sendEmail": "Send email",
+      "emailSent": "Email sent successfully",
+      "parts": {
+        "subject": "Subject",
+        "greetings": "Greetings",
+        "opening": "Opening",
+        "body": "Body",
+        "callToAction": "Call to action",
+        "signOff": "Sign-off"
+      }
+    }
   }
 }
