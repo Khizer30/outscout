@@ -72,20 +72,19 @@ function LeadsPageContentInner() {
         <CardHeader>
           <CardTitle>{t("leads.title")}</CardTitle>
         </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="flex h-24 items-center justify-center">
-              <Loader2 className="size-6 animate-spin text-muted-foreground" />
-            </div>
-          ) : leads.length > 0 ? (
-            <>
+        <CardContent className="flex flex-col gap-4">
+          <div className="h-150 overflow-y-auto">
+            {isLoading ? (
+              <div className="flex h-full items-center justify-center">
+                <Loader2 className="size-6 animate-spin text-muted-foreground" />
+              </div>
+            ) : leads.length > 0 ? (
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>{t("leads.headerStatus")}</TableHead>
                     <TableHead>{t("leads.headerName")}</TableHead>
                     <TableHead>{t("leads.headerDescription")}</TableHead>
-                    <TableHead>{t("leads.headerAddress")}</TableHead>
                     <TableHead>{t("leads.headerPhone")}</TableHead>
                     <TableHead>{t("leads.headerWebsite")}</TableHead>
                     <TableHead>{t("leads.headerType")}</TableHead>
@@ -150,17 +149,6 @@ function LeadsPageContentInner() {
                             </Tooltip>
                           ) : (
                             <span className="text-sm text-muted-foreground">{t("leads.noDescription")}</span>
-                          )}
-                        </TableCell>
-
-                        <TableCell>
-                          {lead.address ? (
-                            <Tooltip>
-                              <TooltipTrigger render={<p className="max-w-56 truncate text-sm text-muted-foreground">{lead.address}</p>} />
-                              <TooltipContent>{lead.address}</TooltipContent>
-                            </Tooltip>
-                          ) : (
-                            <span className="text-sm text-muted-foreground">{t("leads.noAddress")}</span>
                           )}
                         </TableCell>
 
@@ -248,26 +236,26 @@ function LeadsPageContentInner() {
                   })}
                 </TableBody>
               </Table>
+            ) : (
+              <div className="flex h-full items-center justify-center">
+                <p className="text-sm text-muted-foreground">{t("leads.empty")}</p>
+              </div>
+            )}
+          </div>
 
-              {meta && meta.totalPages > 1 && (
-                <div className="flex items-center justify-between pt-4">
-                  <p className="text-sm text-muted-foreground">{t("leads.pagination", { page: meta.page, totalPages: meta.totalPages })}</p>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" disabled={!meta.hasPrevious} onClick={() => setPage(page - 1)}>
-                      <ChevronLeft />
-                      {t("leads.previous")}
-                    </Button>
-                    <Button variant="outline" size="sm" disabled={!meta.hasNext} onClick={() => setPage(page + 1)}>
-                      {t("leads.next")}
-                      <ChevronRight />
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <p className="py-6 text-center text-sm text-muted-foreground">{t("leads.empty")}</p>
-          )}
+          <div className="flex items-center justify-between border-t border-border pt-4">
+            <p className="text-sm text-muted-foreground">{t("leads.pagination", { page: meta?.page ?? page, totalPages: meta?.totalPages || 1 })}</p>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" disabled={isLoading || !meta?.hasPrevious} onClick={() => setPage(page - 1)}>
+                <ChevronLeft />
+                {t("leads.previous")}
+              </Button>
+              <Button variant="outline" size="sm" disabled={isLoading || !meta?.hasNext} onClick={() => setPage(page + 1)}>
+                {t("leads.next")}
+                <ChevronRight />
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
