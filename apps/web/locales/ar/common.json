@@ -215,6 +215,8 @@
     "searchPlaceholder": "ابحث عن نشاط تجاري أو مكان…",
     "locateMe": "الانتقال إلى الموقع الحالي",
     "allTypes": "جميع أنواع الأنشطة",
+    "searchLimit": "حد البحث",
+    "searchLimitOption": "{{count}} عميل محتمل",
     "findLeads": "ابحث عن عملاء محتملين",
     "findLeadsSuccess": "تم العثور على {{count}} عميل محتمل",
     "selectTypePrompt": "اختر نوع نشاط تجاري للبحث عن عملاء محتملين",

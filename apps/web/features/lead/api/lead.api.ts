@@ -6,6 +6,7 @@ import type {
   GetLeadResponseSchema,
   GetLeadsResponseSchema,
   GetLeadsSchema,
+  LeadResponseSchema,
   MessageChannelSchema,
   ProcessLeadResponseSchema,
   SendOutreachEmailResponseSchema,
@@ -14,8 +15,14 @@ import type {
   WhatsAppMessagePartSchema
 } from "@repo/dtos/lead";
 import useAxios from "@shared/hooks/useAxios";
+import { useAuthStore } from "@shared/stores/authStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
 import type { z } from "zod";
+
+type LeadStreamEvent = { jobId: string; data: z.infer<typeof LeadResponseSchema> };
+
+const RECONNECT_DELAY_MS = 3000;
 
 // Generate Leads
 export const useGenerateLeads = () => {
@@ -124,4 +131,85 @@ export const useProcessLead = () => {
       return res.data;
     }
   });
+};
+
+// Live Lead Updates (SSE)
+export const useLeadStream = (onLead: (lead: z.infer<typeof LeadResponseSchema>) => void) => {
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const onLeadRef = useRef(onLead);
+  onLeadRef.current = onLead;
+
+  useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
+
+    const controller = new AbortController();
+    let stopped = false;
+    let reconnectTimeout: ReturnType<typeof setTimeout> | undefined;
+
+    const connect = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/lead/stream`, {
+          headers: { Authorization: `Bearer ${accessToken}`, Accept: "text/event-stream" },
+          credentials: "include",
+          signal: controller.signal
+        });
+
+        if (!response.body) {
+          throw new Error("Lead stream response has no body");
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        while (!stopped) {
+          const { done, value } = await reader.read();
+          if (done) {
+            break;
+          }
+
+          buffer += decoder.decode(value, { stream: true });
+
+          let separatorIndex = buffer.indexOf("\n\n");
+          while (separatorIndex !== -1) {
+            const rawEvent = buffer.slice(0, separatorIndex);
+            buffer = buffer.slice(separatorIndex + 2);
+
+            const data = rawEvent
+              .split("\n")
+              .filter((line) => line.startsWith("data:"))
+              .map((line) => line.slice(5).trim())
+              .join("\n");
+
+            if (data) {
+              try {
+                const event = JSON.parse(data) as LeadStreamEvent;
+                onLeadRef.current(event.data);
+              } catch {
+                // Ignore malformed events
+              }
+            }
+
+            separatorIndex = buffer.indexOf("\n\n");
+          }
+        }
+      } catch {
+        // Connection dropped or failed; fall through to reconnect below unless unmounted
+      }
+
+      if (!stopped) {
+        reconnectTimeout = setTimeout(() => void connect(), RECONNECT_DELAY_MS);
+      }
+    };
+
+    void connect();
+
+    return () => {
+      stopped = true;
+      controller.abort();
+      clearTimeout(reconnectTimeout);
+    };
+  }, [accessToken]);
 };

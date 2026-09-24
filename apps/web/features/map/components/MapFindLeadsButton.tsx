@@ -8,11 +8,9 @@ import { Loader2, Sparkles } from "lucide-react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 
-const LEADS_LIMIT = 10;
-
 export default function MapFindLeadsButton() {
   const { t } = useTranslation();
-  const { center, zoom, businessType } = useMapContext();
+  const { center, zoom, businessType, searchLimit } = useMapContext();
   const generateLeads = useGenerateLeads();
 
   const isTypeSelected = businessType !== "ALL";
@@ -28,7 +26,7 @@ export default function MapFindLeadsButton() {
         longitude: center.lng,
         radius: zoomToRadiusMeters(center.lat, zoom),
         serviceType: businessType,
-        limit: LEADS_LIMIT
+        limit: searchLimit
       },
       {
         onSuccess: (res) => toast.success(t("map.findLeadsSuccess", { count: res.data.length })),

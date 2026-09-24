@@ -14,10 +14,13 @@ const DEFAULT_CENTER: MapLatLng = { lat: 31.5497, lng: 74.3436 };
 const DEFAULT_ZOOM = 12;
 const LOCATED_ZOOM = 13;
 const SELECTED_PLACE_ZOOM = 16;
+const DEFAULT_SEARCH_LIMIT = 10;
 
 interface MapContextValue {
   businessType: MapBusinessType;
   setBusinessType: (type: MapBusinessType) => void;
+  searchLimit: number;
+  setSearchLimit: (limit: number) => void;
   center: MapLatLng;
   zoom: number;
   onCameraChanged: (center: MapLatLng, zoom: number) => void;
@@ -46,6 +49,7 @@ interface MapProviderProps {
 
 export function MapProvider({ children }: MapProviderProps) {
   const [businessType, setBusinessType] = useState<MapBusinessType>("ALL");
+  const [searchLimit, setSearchLimit] = useState(DEFAULT_SEARCH_LIMIT);
   const [center, setCenter] = useState<MapLatLng>(DEFAULT_CENTER);
   const [zoom, setZoom] = useState(DEFAULT_ZOOM);
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
@@ -90,6 +94,8 @@ export function MapProvider({ children }: MapProviderProps) {
   const value: MapContextValue = {
     businessType,
     setBusinessType,
+    searchLimit,
+    setSearchLimit,
     center,
     zoom,
     onCameraChanged: (nextCenter, nextZoom) => {

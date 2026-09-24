@@ -3,6 +3,7 @@ import MapFindLeadsButton from "@features/map/components/MapFindLeadsButton";
 import MapPlaceDetailsPanel from "@features/map/components/MapPlaceDetailsPanel";
 import { MapProvider } from "@features/map/components/MapProvider";
 import MapSearchInput from "@features/map/components/MapSearchInput";
+import MapSearchLimitSelect from "@features/map/components/MapSearchLimitSelect";
 import MapTypeSelect from "@features/map/components/MapTypeSelect";
 import MapView from "@features/map/components/MapView";
 import { APIProvider } from "@vis.gl/react-google-maps";
@@ -30,6 +31,7 @@ function MapPageContentInner() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <MapSearchInput />
         <MapTypeSelect />
+        <MapSearchLimitSelect />
         <MapFindLeadsButton />
       </div>
 

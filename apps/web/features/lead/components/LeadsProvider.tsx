@@ -1,6 +1,7 @@
 "use client";
-import { useLeads } from "@features/lead/api/lead.api";
-import type { GetLeadsResponseSchema, LeadStatusSchema } from "@repo/dtos/lead";
+import { useLeads, useLeadStream } from "@features/lead/api/lead.api";
+import type { GetLeadResponseSchema, GetLeadsResponseSchema, LeadStatusSchema } from "@repo/dtos/lead";
+import { useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext, useState } from "react";
 import type { z } from "zod";
 
@@ -37,14 +38,28 @@ interface LeadsProviderProps {
 }
 
 export function LeadsProvider({ children }: LeadsProviderProps) {
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [status, setStatusState] = useState<LeadStatusFilter>("ALL");
-  const [selectedLead, selectLead] = useState<Lead | null>(null);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
 
   const { data, isLoading } = useLeads({
     page,
     limit: LIMIT,
     status: status === "ALL" ? undefined : [status]
+  });
+
+  useLeadStream((lead) => {
+    queryClient.setQueriesData<z.infer<typeof GetLeadsResponseSchema>>({ queryKey: ["lead", "search"] }, (old) => {
+      if (!old || !old.data.some((existing) => existing.id === lead.id)) {
+        return old;
+      }
+      return { ...old, data: old.data.map((existing) => (existing.id === lead.id ? lead : existing)) };
+    });
+
+    queryClient.setQueryData<z.infer<typeof GetLeadResponseSchema>>(["lead", lead.id], (old) => (old ? { ...old, data: lead } : old));
+
+    setSelectedLead((current) => (current && current.id === lead.id ? lead : current));
   });
 
   const setStatus = (next: LeadStatusFilter) => {
@@ -61,7 +76,7 @@ export function LeadsProvider({ children }: LeadsProviderProps) {
     status,
     setStatus,
     selectedLead,
-    selectLead
+    selectLead: setSelectedLead
   };
 
   return <LeadsContext.Provider value={value}>{children}</LeadsContext.Provider>;

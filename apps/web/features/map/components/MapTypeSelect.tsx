@@ -15,7 +15,7 @@ export default function MapTypeSelect() {
 
   return (
     <Select items={items} value={businessType} onValueChange={(next) => setBusinessType(next as MapBusinessType)}>
-      <SelectTrigger className="w-full sm:w-56">
+      <SelectTrigger className="w-full shrink-0 sm:w-56">
         <SelectValue />
       </SelectTrigger>
       <SelectContent alignItemWithTrigger={false}>

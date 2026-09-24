@@ -215,6 +215,8 @@
     "searchPlaceholder": "Search for a business or place…",
     "locateMe": "Move to current location",
     "allTypes": "All business types",
+    "searchLimit": "Search limit",
+    "searchLimitOption": "{{count}} leads",
     "findLeads": "Find leads",
     "findLeadsSuccess": "Found {{count}} leads",
     "selectTypePrompt": "Select a business type to find leads",
