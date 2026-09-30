@@ -5,12 +5,22 @@ import TeamMembersTab from "@features/team/components/TeamMembersTab";
 import { Badge } from "@shared/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@shared/components/ui/tabs";
 import { useAuthStore } from "@shared/stores/authStore";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+type TeamTab = "members" | "invitations";
 
 export default function TeamPageContent() {
   const { t } = useTranslation();
   const { data: myInvitations } = useMyInvitations();
   const hasCompany = !!useAuthStore((state) => state.user)?.companyId;
+  const [tab, setTab] = useState<TeamTab>(hasCompany ? "members" : "invitations");
+
+  useEffect(() => {
+    if (hasCompany) {
+      setTab("members");
+    }
+  }, [hasCompany]);
 
   return (
     <div className="mx-auto w-full max-w-4xl p-6 md:p-8">
@@ -19,7 +29,7 @@ export default function TeamPageContent() {
         <p className="text-sm text-muted-foreground">{t("team.description")}</p>
       </div>
 
-      <Tabs defaultValue={hasCompany ? "members" : "invitations"}>
+      <Tabs value={tab} onValueChange={(value) => setTab(value as TeamTab)}>
         <TabsList>
           {hasCompany && <TabsTrigger value="members">{t("team.tabs.members")}</TabsTrigger>}
           <TabsTrigger value="invitations" className="gap-1.5">

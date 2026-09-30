@@ -20,7 +20,7 @@ export default function TeamMembersTab() {
   const isAdmin = user?.companyRole === "COMPANY_ADMIN";
 
   const { data: members, isLoading: membersLoading } = useTeamMembers();
-  const { data: pendingInvitations, isLoading: invitationsLoading } = useListInvitations([...PENDING_STATUS]);
+  const { data: pendingInvitations, isLoading: invitationsLoading } = useListInvitations(isAdmin ? [...PENDING_STATUS] : []);
   const revokeInvitation = useRevokeInvitation();
 
   const formatDate = (value: Date) => new Date(value).toLocaleDateString(i18n.language, { year: "numeric", month: "short", day: "numeric" });
