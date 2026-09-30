@@ -15,7 +15,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "OutScout",
   description:
-    "OutScout is a geo-targeted B2B lead generation and outreach platform built for freelancers, agencies, and sales teams who need to find, qualify, and contact local businesses fast. It is designed specifically for markets where WhatsApp is the dominant communication channel (Pakistan, Gulf countries, and similar regions)."
+    "OutScout is a geo-targeted B2B lead generation and outreach platform built for freelancers, agencies, and sales teams who need to find, qualify, and contact local businesses fast. It is designed specifically for markets where WhatsApp is the dominant communication channel (Pakistan, Gulf countries, and similar regions).",
+  icons: {
+    icon: "/images/favicon.png"
+  }
 };
 
 export default function RootLayout({ children }: Children) {
