@@ -9,6 +9,7 @@ export abstract class CompanyRepository {
     userId: string,
     filters?: { membershipId?: string; companyId?: string; status?: CompanyMembershipStatus[] }
   ): Promise<{ company: CompanyEntity; membership: CompanyMembershipEntity }[]>;
+  abstract findMembershipsByCompanyId(companyId: string, filters?: { status?: CompanyMembershipStatus[] }): Promise<CompanyMembershipEntity[]>;
   abstract addMembership(membership: CompanyMembershipEntity): Promise<CompanyMembershipEntity>;
   abstract update(company: CompanyEntity): Promise<CompanyEntity | null>;
 }

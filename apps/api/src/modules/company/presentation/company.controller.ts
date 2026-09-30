@@ -1,6 +1,7 @@
 ﻿import { AuthGuard } from "@middleware/auth.guard";
 import Roles from "@middleware/roles.decorator";
 import { User } from "@middleware/user.decorator";
+import { CompanyNotFoundError } from "@modules/company/domain/company.errors";
 import { CompanyMapper, CompanyMembershipMapper } from "@modules/company/infrastructure/company.mapper";
 import { CompanyEmailSettingsMapper } from "@modules/company/infrastructure/companyEmailSettings.mapper";
 import { CompanyMessageRulesMapper } from "@modules/company/infrastructure/companyMessageRules.mapper";
@@ -9,6 +10,7 @@ import { CompanyEmailSettingsService } from "@modules/company/services/companyEm
 import { CompanyMessageRulesService } from "@modules/company/services/companyMessageRules.service";
 import { Body, Controller, Delete, ForbiddenException, Get, Patch, Post, UseGuards } from "@nestjs/common";
 import {
+  CompanySettingsResponseDto,
   CreateCompanyDto,
   CreateCompanyResponseDto,
   DeleteCompanyResponseDto,
@@ -42,6 +44,38 @@ export class CompanyController {
     };
   }
 
+  @Get("settings")
+  @UseGuards(AuthGuard)
+  @Roles(["COMPANY_ADMIN"])
+  async getSettings(@User() user: AuthenticatedUser): Promise<CompanySettingsResponseDto> {
+    const id = user.companyId;
+    if (!id) {
+      throw new ForbiddenException("You do not belong to a company");
+    }
+
+    const company = await this.companyService.findById(id);
+    if (!company) {
+      throw new CompanyNotFoundError({ id });
+    }
+
+    const [emailSettings, whatsappRules, emailRules] = await Promise.all([
+      this.companyEmailSettingsService.getSettings(id),
+      this.companyMessageRulesService.findByCompanyAndChannel(id, "WHATSAPP"),
+      this.companyMessageRulesService.findByCompanyAndChannel(id, "EMAIL")
+    ]);
+
+    return {
+      data: {
+        company: CompanyMapper.toResponse(company),
+        emailSettings: CompanyEmailSettingsMapper.toResponse(emailSettings),
+        messageRules: {
+          WHATSAPP: whatsappRules ? CompanyMessageRulesMapper.toResponse(whatsappRules) : null,
+          EMAIL: emailRules ? CompanyMessageRulesMapper.toResponse(emailRules) : null
+        }
+      }
+    };
+  }
+
   @Post()
   @UseGuards(AuthGuard)
   async create(@User() user: AuthenticatedUser, @Body() dto: CreateCompanyDto): Promise<CreateCompanyResponseDto> {
@@ -63,11 +97,15 @@ export class CompanyController {
       throw new ForbiddenException("You do not belong to a company");
     }
 
-    const updated = await this.companyService.updateCompany(id, {
-      name: dto.name,
-      about: dto.about,
-      ...(dto.companyImageURL !== undefined ? { companyImageURL: dto.companyImageURL } : {})
-    });
+    const updated = await this.companyService.updateCompany(
+      id,
+      {
+        name: dto.name,
+        about: dto.about,
+        ...(dto.companyImageURL !== undefined ? { companyImageURL: dto.companyImageURL } : {})
+      },
+      user.id
+    );
 
     return { data: CompanyMapper.toResponse(updated) };
   }
@@ -81,7 +119,7 @@ export class CompanyController {
       throw new ForbiddenException("You do not belong to a company");
     }
 
-    await this.companyService.deleteCompany(id);
+    await this.companyService.deleteCompany(id, user.id);
 
     return { message: "Company deleted successfully" };
   }
@@ -95,7 +133,7 @@ export class CompanyController {
       throw new ForbiddenException("You do not belong to a company");
     }
 
-    const updated = await this.companyEmailSettingsService.updateSettings(id, dto);
+    const updated = await this.companyEmailSettingsService.updateSettings(id, dto, user.id);
 
     return { data: CompanyEmailSettingsMapper.toResponse(updated) };
   }

@@ -18,11 +18,11 @@ export const LeadSocialLinksSchema = z.object({
 
 // Generate Leads
 export const GenerateLeadsSchema = z.object({
-  latitude: z.number().min(-90, { error: "Latitude must be between -90 and 90" }).max(90, { error: "Latitude must be between -90 and 90" }),
-  longitude: z.number().min(-180, { error: "Longitude must be between -180 and 180" }).max(180, { error: "Longitude must be between -180 and 180" }),
-  radius: z.number().int().min(1, { error: "Radius must be at least 1 meter" }).max(50000, { error: "Radius must be at most 50000 meters" }),
+  latitude: z.number().min(-90, { error: "VALIDATION_LATITUDE_RANGE" }).max(90, { error: "VALIDATION_LATITUDE_RANGE" }),
+  longitude: z.number().min(-180, { error: "VALIDATION_LONGITUDE_RANGE" }).max(180, { error: "VALIDATION_LONGITUDE_RANGE" }),
+  radius: z.number().int().min(1, { error: "VALIDATION_RADIUS_MIN" }).max(50000, { error: "VALIDATION_RADIUS_MAX" }),
   serviceType: LeadTypeSchema,
-  limit: z.number().int().min(1, { error: "Limit must be at least 1" }).max(20, { error: "Limit must be at most 20" }).default(20)
+  limit: z.number().int().min(1, { error: "VALIDATION_LIMIT_MIN" }).max(20, { error: "VALIDATION_LIMIT_MAX" }).default(20)
 });
 
 export class GenerateLeadsDto extends createZodDto(GenerateLeadsSchema) {}
@@ -30,8 +30,8 @@ export class GenerateLeadsDto extends createZodDto(GenerateLeadsSchema) {}
 // Get Leads
 export const GetLeadsSchema = z.object({
   status: z.array(LeadStatusSchema).optional(),
-  page: z.number().int().min(1, { error: "Page must be at least 1" }).default(1),
-  limit: z.number().int().min(1, { error: "Limit must be at least 1" }).max(100, { error: "Limit must be at most 100" }).default(20)
+  page: z.number().int().min(1, { error: "VALIDATION_PAGE_MIN" }).default(1),
+  limit: z.number().int().min(1, { error: "VALIDATION_LIMIT_MIN" }).max(100, { error: "VALIDATION_LIMIT_MAX" }).default(20)
 });
 
 export class GetLeadsDto extends createZodDto(GetLeadsSchema) {}

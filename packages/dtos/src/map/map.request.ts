@@ -4,10 +4,10 @@ import { LeadTypeSchema } from "../lead/lead.request.js";
 
 // Autocomplete
 export const AutocompleteSchema = z.object({
-  query: z.string().min(1, { error: "Query is required" }),
-  latitude: z.number().min(-90, { error: "Latitude must be between -90 and 90" }).max(90, { error: "Latitude must be between -90 and 90" }).optional(),
-  longitude: z.number().min(-180, { error: "Longitude must be between -180 and 180" }).max(180, { error: "Longitude must be between -180 and 180" }).optional(),
-  radius: z.number().int().min(1, { error: "Radius must be at least 1 meter" }).max(50000, { error: "Radius must be at most 50000 meters" }).optional(),
+  query: z.string().min(1, { error: "VALIDATION_QUERY_REQUIRED" }),
+  latitude: z.number().min(-90, { error: "VALIDATION_LATITUDE_RANGE" }).max(90, { error: "VALIDATION_LATITUDE_RANGE" }).optional(),
+  longitude: z.number().min(-180, { error: "VALIDATION_LONGITUDE_RANGE" }).max(180, { error: "VALIDATION_LONGITUDE_RANGE" }).optional(),
+  radius: z.number().int().min(1, { error: "VALIDATION_RADIUS_MIN" }).max(50000, { error: "VALIDATION_RADIUS_MAX" }).optional(),
   types: z.array(LeadTypeSchema).optional()
 });
 

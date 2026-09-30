@@ -1,3 +1,4 @@
+import RecentLeadsBoard from "@features/lead/components/RecentLeadsBoard";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -5,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function DashboardPage() {
-  return <div className="p-8">Dashboard</div>;
+  return <RecentLeadsBoard />;
 }

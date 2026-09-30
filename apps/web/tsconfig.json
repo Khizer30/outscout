@@ -7,7 +7,6 @@
     "jsx": "preserve",
     "allowJs": true,
     "noEmit": true,
-    "baseUrl": "./",
     "paths": {
       "@app/*": ["./app/*"],
       "@features/*": ["./features/*"],

@@ -259,7 +259,7 @@ export class AuthService {
 
   async forgotPassword(dto: ForgotPasswordDto): Promise<void> {
     const user = await this.userService.findByEmail(dto.email);
-    if (!user) {
+    if (!user || !user.isVerified) {
       throw new UserNotFoundError({ email: dto.email });
     }
 

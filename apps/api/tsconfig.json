@@ -13,7 +13,6 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "outDir": "./dist",
-    "baseUrl": "./",
     "paths": {
       "@common/*": ["./src/common/*"],
       "@schema/*": ["./src/database/schema/*"],

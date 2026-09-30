@@ -3,63 +3,63 @@ import { z } from "zod";
 
 // Signup
 export const SignupSchema = z.object({
-  name: z.string({ error: "Name is required" }).trim().min(1, { error: "Name is required" }),
-  email: z.email({ error: "Enter a valid email address" }).trim(),
+  name: z.string({ error: "VALIDATION_NAME_REQUIRED" }).trim().min(1, { error: "VALIDATION_NAME_REQUIRED" }),
+  email: z.email({ error: "VALIDATION_EMAIL_INVALID" }).trim(),
   password: z
-    .string({ error: "Password is required" })
-    .min(8, { error: "Password must be at least 8 characters long" })
-    .regex(/[a-z]/, { error: "Password must contain at least 1 lowercase letter" })
-    .regex(/[A-Z]/, { error: "Password must contain at least 1 uppercase letter" })
-    .regex(/[0-9]/, { error: "Password must contain at least 1 digit" })
-    .regex(/[^a-zA-Z0-9]/, { error: "Password must contain at least 1 special character" }),
-  timezone: z.string({ error: "Timezone must be a string" }).trim().optional(),
-  invitationToken: z.string({ error: "Invitation token must be a string" }).trim().min(1).optional()
+    .string({ error: "VALIDATION_PASSWORD_REQUIRED" })
+    .min(8, { error: "VALIDATION_PASSWORD_MIN_LENGTH" })
+    .regex(/[a-z]/, { error: "VALIDATION_PASSWORD_LOWERCASE_REQUIRED" })
+    .regex(/[A-Z]/, { error: "VALIDATION_PASSWORD_UPPERCASE_REQUIRED" })
+    .regex(/[0-9]/, { error: "VALIDATION_PASSWORD_DIGIT_REQUIRED" })
+    .regex(/[^a-zA-Z0-9]/, { error: "VALIDATION_PASSWORD_SPECIAL_CHAR_REQUIRED" }),
+  timezone: z.string({ error: "VALIDATION_TIMEZONE_INVALID" }).trim().optional(),
+  invitationToken: z.string({ error: "VALIDATION_INVITATION_TOKEN_INVALID" }).trim().min(1).optional()
 });
 
 export class SignupDto extends createZodDto(SignupSchema) {}
 
 // Verify User
 export const VerifyUserSchema = z.object({
-  email: z.email({ error: "Enter a valid email address" }).trim(),
-  otp: z.string({ error: "OTP is required" }).trim().length(6, { error: "OTP must be exactly 6 characters long" }),
-  invitationToken: z.string({ error: "Invitation token must be a string" }).trim().min(1).optional()
+  email: z.email({ error: "VALIDATION_EMAIL_INVALID" }).trim(),
+  otp: z.string({ error: "VALIDATION_OTP_REQUIRED" }).trim().length(6, { error: "VALIDATION_OTP_LENGTH" }),
+  invitationToken: z.string({ error: "VALIDATION_INVITATION_TOKEN_INVALID" }).trim().min(1).optional()
 });
 
 export class VerifyUserDto extends createZodDto(VerifyUserSchema) {}
 
 // Login
 export const LoginSchema = z.object({
-  email: z.email({ error: "Enter a valid email address" }).trim(),
-  password: z.string({ error: "Password is required" })
+  email: z.email({ error: "VALIDATION_EMAIL_INVALID" }).trim(),
+  password: z.string({ error: "VALIDATION_PASSWORD_REQUIRED" })
 });
 
 export class LoginDto extends createZodDto(LoginSchema) {}
 
 // Forgot Password
 export const ForgotPasswordSchema = z.object({
-  email: z.email({ error: "Enter a valid email address" }).trim()
+  email: z.email({ error: "VALIDATION_EMAIL_INVALID" }).trim()
 });
 
 export class ForgotPasswordDto extends createZodDto(ForgotPasswordSchema) {}
 
 // Reset Password
 export const ResetPasswordSchema = z.object({
-  email: z.email({ error: "Enter a valid email address" }).trim(),
-  otp: z.string({ error: "OTP is required" }).trim().length(6, { error: "OTP must be exactly 6 characters long" }),
+  email: z.email({ error: "VALIDATION_EMAIL_INVALID" }).trim(),
+  otp: z.string({ error: "VALIDATION_OTP_REQUIRED" }).trim().length(6, { error: "VALIDATION_OTP_LENGTH" }),
   newPassword: z
-    .string({ error: "Password is required" })
-    .min(8, { error: "Password must be at least 8 characters long" })
-    .regex(/[a-z]/, { error: "Password must contain at least 1 lowercase letter" })
-    .regex(/[A-Z]/, { error: "Password must contain at least 1 uppercase letter" })
-    .regex(/[0-9]/, { error: "Password must contain at least 1 digit" })
-    .regex(/[^a-zA-Z0-9]/, { error: "Password must contain at least 1 special character" })
+    .string({ error: "VALIDATION_PASSWORD_REQUIRED" })
+    .min(8, { error: "VALIDATION_PASSWORD_MIN_LENGTH" })
+    .regex(/[a-z]/, { error: "VALIDATION_PASSWORD_LOWERCASE_REQUIRED" })
+    .regex(/[A-Z]/, { error: "VALIDATION_PASSWORD_UPPERCASE_REQUIRED" })
+    .regex(/[0-9]/, { error: "VALIDATION_PASSWORD_DIGIT_REQUIRED" })
+    .regex(/[^a-zA-Z0-9]/, { error: "VALIDATION_PASSWORD_SPECIAL_CHAR_REQUIRED" })
 });
 
 export class ResetPasswordDto extends createZodDto(ResetPasswordSchema) {}
 
 // Switch Company
 export const SwitchCompanySchema = z.object({
-  membershipId: z.string({ error: "Membership ID is required" }).trim().min(1, { error: "Membership ID is required" })
+  membershipId: z.string({ error: "VALIDATION_MEMBERSHIP_ID_REQUIRED" }).trim().min(1, { error: "VALIDATION_MEMBERSHIP_ID_REQUIRED" })
 });
 
 export class SwitchCompanyDto extends createZodDto(SwitchCompanySchema) {}

@@ -255,21 +255,15 @@
               "urlencoded": [
                 {
                   "key": "email",
-                  "value": "syed.khizer30@gmail.com",
-                  "type": "text",
-                  "uuid": "dd114c20-fba3-476d-adae-2ff2f5b10c71"
+                  "value": "syed.khizer30@gmail.com"
                 },
                 {
                   "key": "otp",
-                  "value": "241467",
-                  "type": "text",
-                  "uuid": "57c194fa-c4c2-440a-b3b3-ae2d67c1483a"
+                  "value": "223739"
                 },
                 {
                   "key": "invitationToken",
                   "value": "{{invitationToken}}",
-                  "type": "text",
-                  "uuid": "f803a9ca-6ad4-4007-8be1-05826c1d2fff",
                   "disabled": true
                 }
               ]
@@ -293,17 +287,10 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "const jsonData = pm.response.json();\r",
-                  "\r",
-                  "if (jsonData.success && jsonData.data?.accessToken) {\r",
-                  "    pm.collectionVariables.set(\"accessToken\", jsonData.data.accessToken);\r",
-                  "}\r",
-                  ""
-                ],
                 "type": "text/javascript",
-                "packages": {},
-                "requests": {}
+                "exec": [
+                  "const jsonData = pm.response.json();\r\n\r\nif (jsonData.success && jsonData.data?.accessToken) {\r\n    pm.collectionVariables.set(\"accessToken\", jsonData.data.accessToken);\r\n}\r\n"
+                ]
               }
             }
           ],
@@ -315,15 +302,11 @@
               "urlencoded": [
                 {
                   "key": "email",
-                  "value": "syed.khizer30@gmail.com",
-                  "type": "text",
-                  "uuid": "08214f43-0a63-4283-8a09-08da39b10064"
+                  "value": "syed.khizer30@gmail.com"
                 },
                 {
                   "key": "password",
-                  "value": "Shaheer30=",
-                  "type": "text",
-                  "uuid": "bd1ed9a3-53df-459d-b559-02fe4e938f34"
+                  "value": "Shaheer30="
                 }
               ]
             },
@@ -668,6 +651,24 @@
       "name": "Company",
       "item": [
         {
+          "name": "Get Company's Settings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/company/settings",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "company",
+                "settings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Get User's Companies",
           "request": {
             "method": "GET",
@@ -694,18 +695,16 @@
               "urlencoded": [
                 {
                   "key": "name",
-                  "value": "CUST",
-                  "type": "text"
+                  "value": "CUST"
                 },
                 {
                   "key": "about",
-                  "value": "Capital University of Science & Technology abbreviated as is a federally chartered, private university located in Islamabad, Pakistan.",
-                  "type": "text"
+                  "value": "Capital University of Science & Technology abbreviated as is a federally chartered, private university located in Islamabad, Pakistan."
                 },
                 {
                   "key": "companyImageURL",
                   "value": "{{cloudinaryFileEagerURL}}",
-                  "type": "text"
+                  "disabled": true
                 }
               ]
             },
@@ -834,6 +833,24 @@
     {
       "name": "Team",
       "item": [
+        {
+          "name": "Get Team Member",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/team/members",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "members"
+              ]
+            }
+          },
+          "response": []
+        },
         {
           "name": "Send Invitation",
           "request": {
@@ -1417,21 +1434,21 @@
   "variable": [
     {
       "key": "url",
-      "value": "",
-      "disabled": true
+      "value": ""
     },
     {
       "key": "url",
-      "value": ""
-    },
-    {
-      "key": "baseURL",
       "value": "",
       "disabled": true
     },
     {
       "key": "baseURL",
       "value": ""
+    },
+    {
+      "key": "baseURL",
+      "value": "",
+      "disabled": true
     },
     {
       "key": "cloudinaryCloudName",

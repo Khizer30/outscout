@@ -20,6 +20,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
+        with:
+          version: 11
 
       - name: Setup Node.JS
         uses: actions/setup-node@v5
@@ -29,11 +31,6 @@ jobs:
 
       - name: Install Root Dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Create .env file
-        env:
-          ENV_FILE: ${{ secrets.ENV_FILE }}
-        run: printf "%s" "$ENV_FILE" > .env
 
       - name: Lint Check
         run: pnpm lint

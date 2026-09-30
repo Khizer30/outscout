@@ -36,8 +36,7 @@ import { LoggerModule } from "nestjs-pino";
         return {
           pinoHttp: {
             level: configService.get<string>("LOG_LEVEL", "info"),
-            transport: { targets },
-            customProps: () => ({ context: "WORKER" })
+            transport: { targets }
           }
         };
       },

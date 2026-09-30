@@ -12,6 +12,7 @@ import {
   InviteUserResponseDto,
   ListInvitationsDto,
   ListInvitationsResponseDto,
+  ListTeamMembersResponseDto,
   MyInvitationsResponseDto,
   RejectInvitationResponseDto,
   RevokeInvitationResponseDto
@@ -73,7 +74,12 @@ export class TeamController {
   async listMine(@User() user: AuthenticatedUser): Promise<MyInvitationsResponseDto> {
     const invitations = await this.teamService.listMyInvitations(user.id);
 
-    return { data: invitations.map(InvitationMapper.toResponse) };
+    return {
+      data: invitations.map(({ invitation, companyName }) => ({
+        ...InvitationMapper.toResponse(invitation),
+        companyName
+      }))
+    };
   }
 
   @Post("invitations/:id/accept")
@@ -90,5 +96,28 @@ export class TeamController {
     await this.teamService.rejectInvitationById(id, user.id);
 
     return { message: "Invitation rejected successfully" };
+  }
+
+  @Get("members")
+  @UseGuards(AuthGuard)
+  async listMembers(@User() user: AuthenticatedUser): Promise<ListTeamMembersResponseDto> {
+    if (!user.companyId) {
+      throw new ForbiddenException("You do not belong to a company");
+    }
+
+    const members = await this.teamService.listMembers(user.companyId);
+
+    return {
+      data: members.map(({ membership, user: memberUser }) => ({
+        id: membership.id,
+        userId: memberUser.id,
+        name: memberUser.name,
+        email: memberUser.email,
+        profileImage: memberUser.profileImageURL,
+        role: membership.role,
+        status: membership.status,
+        joinedAt: membership.joinedAt
+      }))
+    };
   }
 }

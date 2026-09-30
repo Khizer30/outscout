@@ -21,13 +21,144 @@
     "light": "Light",
     "dark": "Dark"
   },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "map": "Map",
+    "leads": "Leads",
+    "company": "Company",
+    "team": "Team",
+    "logout": "Log out"
+  },
+  "companySwitcher": {
+    "selectCompany": "Select company",
+    "yourCompanies": "Your companies",
+    "createCompany": "Create company",
+    "switchSuccess": "Switched to {{company}}.",
+    "createDialog": {
+      "title": "Create a company",
+      "description": "Set up a new company to start inviting teammates and managing leads.",
+      "name": "Company name",
+      "namePlaceholder": "Acme Inc.",
+      "submit": "Create company",
+      "submitting": "Creating…",
+      "success": "Company created successfully."
+    }
+  },
+  "settings": {
+    "title": "Account settings",
+    "description": "Update your profile and preferences.",
+    "name": "Name",
+    "email": "Email",
+    "language": "Language",
+    "uploadImage": "Upload photo",
+    "removeImage": "Remove",
+    "imageHint": "JPG, PNG or GIF. Max 5MB.",
+    "invalidImage": "Please select a valid image file.",
+    "imageTooLarge": "Image must be smaller than 5MB.",
+    "newPassword": "New password",
+    "newPasswordHint": "Leave blank to keep your current password.",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "success": "Your settings have been updated."
+  },
+  "companySettings": {
+    "title": "Company settings",
+    "description": "Manage your company profile, email sending, and outreach message rules.",
+    "noCompany": "You don't belong to a company yet. Use the company switcher in the sidebar to create one.",
+    "notAdmin": "Only company admins can view and manage company settings.",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "success": "Company settings updated successfully.",
+    "details": {
+      "title": "Company details",
+      "description": "Basic information about your company.",
+      "name": "Company name",
+      "about": "About",
+      "aboutPlaceholder": "Briefly describe what your company does…",
+      "uploadImage": "Upload logo",
+      "removeImage": "Remove",
+      "imageHint": "JPG, PNG or GIF. Max 5MB.",
+      "invalidImage": "Please select a valid image file.",
+      "imageTooLarge": "Image must be smaller than 5MB."
+    },
+    "email": {
+      "title": "Email settings",
+      "description": "Configure the Brevo account used to send outreach emails.",
+      "fromEmail": "From email",
+      "fromEmailPlaceholder": "hello@yourcompany.com",
+      "apiKey": "Brevo API key",
+      "apiKeyConfiguredPlaceholder": "Already configured — leave blank to keep it",
+      "apiKeyPlaceholder": "Enter your Brevo API key",
+      "apiKeyHint": "Leave blank to keep your current key.",
+      "signature": "Email signature",
+      "signaturePlaceholder": "Best regards, Your Team",
+      "primaryColor": "Primary color",
+      "secondaryColor": "Secondary color"
+    },
+    "rules": {
+      "title": "Outreach message rules",
+      "description": "Guide how AI drafts your WhatsApp and email outreach messages.",
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "greeting": "Greeting",
+      "greetingPlaceholder": "How the message should open, e.g. a friendly hello",
+      "rules": "Rules",
+      "rulesPlaceholder": "Keep messages short, friendly, and mention our services…"
+    }
+  },
+  "team": {
+    "title": "Team",
+    "description": "Manage your teammates and invitations.",
+    "tabs": {
+      "members": "My Team",
+      "invitations": "My Invitations"
+    },
+    "invite": "Invite member",
+    "inviteDialog": {
+      "title": "Invite a teammate",
+      "description": "They'll receive an email invitation to join your team.",
+      "email": "Email",
+      "emailPlaceholder": "teammate@company.com",
+      "submit": "Send invitation",
+      "submitting": "Sending…",
+      "success": "Invitation sent successfully."
+    },
+    "members": {
+      "empty": "No teammates yet.",
+      "you": "You",
+      "roleAdmin": "Admin",
+      "roleUser": "Member",
+      "joined": "Joined {{date}}",
+      "headerMember": "Member",
+      "headerRole": "Role",
+      "headerJoined": "Joined"
+    },
+    "pendingInvitations": {
+      "title": "Pending invitations",
+      "empty": "No pending invitations.",
+      "revoke": "Revoke",
+      "revokeSuccess": "Invitation revoked.",
+      "invitedBy": "Invited by {{name}}",
+      "expires": "Expires {{date}}",
+      "headerActions": "Actions"
+    },
+    "myInvitations": {
+      "empty": "You have no pending invitations.",
+      "invitedBy": "Invited by {{name}}",
+      "accept": "Accept",
+      "reject": "Reject",
+      "acceptSuccess": "You've joined {{company}}.",
+      "rejectSuccess": "Invitation declined."
+    }
+  },
   "signup": {
     "title": "Create your account",
     "description": "Start finding and reaching out to local leads.",
     "name": "Name",
-    "namePlaceholder": "Muhammad Khizer",
+    "namePlaceholder": "John Doe",
     "email": "Email",
-    "emailPlaceholder": "khizer@company.com",
+    "emailPlaceholder": "john@company.com",
     "password": "Password",
     "submit": "Create account",
     "submitting": "Creating account…",
@@ -46,15 +177,153 @@
     "submitting": "Verifying…",
     "backToSignup": "Back to sign up"
   },
+  "forgotPassword": {
+    "title": "Forgot your password?",
+    "description": "Enter your email address and we'll send you a reset code.",
+    "email": "Email",
+    "emailPlaceholder": "john@company.com",
+    "submit": "Send reset code",
+    "submitting": "Sending…",
+    "success": "Reset code sent. Check your inbox.",
+    "backToLogin": "Back to log in"
+  },
+  "resetPassword": {
+    "title": "Reset your password",
+    "description": "Enter the 6-digit code sent to <bold>{{email}}</bold> and choose a new password.",
+    "otp": "Verification code",
+    "otpPlaceholder": "123456",
+    "newPassword": "New password",
+    "submit": "Reset password",
+    "submitting": "Resetting…",
+    "backToForgotPassword": "Back"
+  },
   "login": {
     "title": "Welcome back",
     "description": "Log in to find and reach out to local leads.",
     "email": "Email",
-    "emailPlaceholder": "khizer@company.com",
+    "emailPlaceholder": "john@company.com",
     "password": "Password",
     "submit": "Log in",
     "submitting": "Logging in…",
     "signupPrompt": "Don't have an account?",
-    "signup": "Sign up"
+    "signup": "Sign up",
+    "forgotPassword": "Forgot password?"
+  },
+  "map": {
+    "title": "Map",
+    "description": "Search for local businesses and explore them on the map.",
+    "searchPlaceholder": "Search for a business or place…",
+    "locateMe": "Move to current location",
+    "allTypes": "All business types",
+    "searchLimit": "Search limit",
+    "searchLimitOption": "{{count}} leads",
+    "findLeads": "Find leads",
+    "findLeadsSuccess": "Found {{count}} leads",
+    "selectTypePrompt": "Select a business type to find leads",
+    "noResults": "No results found.",
+    "selectPlacePrompt": "Search and select a place to view its details.",
+    "loadingDetails": "Loading place details…",
+    "detailsNotFound": "Details not found for this place.",
+    "noWebsite": "No website",
+    "noPhone": "No phone number",
+    "reviews": "{{count}} reviews",
+    "types": {
+      "RESTAURANT": "Restaurant",
+      "HOTEL": "Hotel",
+      "HOSPITAL": "Hospital",
+      "DENTAL_CLINIC": "Dental clinic",
+      "REAL_ESTATE_AGENCY": "Real estate agency",
+      "ACCOUNTING": "Accounting",
+      "GYM": "Gym",
+      "BEAUTY_SALON": "Beauty salon"
+    }
+  },
+  "leads": {
+    "title": "Leads",
+    "description": "Browse and manage the leads you've generated from the map.",
+    "allStatuses": "All statuses",
+    "empty": "No leads found. Find leads from the map to get started.",
+    "headerStatus": "Status",
+    "headerName": "Name",
+    "headerDescription": "Description",
+    "headerAddress": "Address",
+    "headerPhone": "Phone",
+    "headerWebsite": "Website",
+    "headerType": "Types",
+    "headerEmails": "Emails",
+    "headerSocialLinks": "Social Links",
+    "unnamed": "Unnamed",
+    "noDescription": "No description",
+    "noAddress": "No address",
+    "noPhone": "No phone",
+    "noWebsite": "No website",
+    "noEmails": "No emails",
+    "pagination": "Page {{page}} of {{totalPages}}",
+    "previous": "Previous",
+    "next": "Next",
+    "board": {
+      "title": "Recent leads",
+      "description": "Drag a lead into another column to update its status. Showing the {{count}} most recent leads.",
+      "emptyColumn": "No leads here"
+    },
+    "status": {
+      "ENRICHING": "Enriching",
+      "READY": "Ready",
+      "CONTACTED": "Contacted",
+      "INTERESTED": "Interested",
+      "UNRESPONSIVE": "Unresponsive",
+      "REJECTED": "Rejected"
+    },
+    "social": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "twitter": "X (Twitter)",
+      "linkedin": "LinkedIn",
+      "tiktok": "TikTok",
+      "youtube": "YouTube",
+      "whatsapp": "WhatsApp"
+    },
+    "editDialog": {
+      "description": "Update this lead's details and contact information.",
+      "status": "Status",
+      "name": "Name",
+      "namePlaceholder": "Business name",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "A short description of the business",
+      "phone": "Phone",
+      "phonePlaceholder": "+1 234 5678900",
+      "otherPhones": "Other phone numbers",
+      "emails": "Emails",
+      "linesPlaceholder": "One entry per line",
+      "socialLinks": "Social links",
+      "otherLinks": "Other links",
+      "save": "Save changes",
+      "saving": "Saving...",
+      "success": "Lead updated"
+    }
+  },
+  "ai": {
+    "outreach": {
+      "whatsappTrigger": "Generate WhatsApp message",
+      "emailTrigger": "Generate email message",
+      "whatsappTitle": "WhatsApp outreach message",
+      "emailTitle": "Email outreach message",
+      "description": "Generate an AI-drafted message, refine it, then send it to this lead.",
+      "empty": "No message generated yet.",
+      "generate": "Generate message",
+      "promptPlaceholder": "Describe how you'd like to improve this message...",
+      "rewrite": "Rewrite",
+      "sendWhatsApp": "Send via WhatsApp",
+      "sendEmail": "Send email",
+      "emailSent": "Email sent successfully",
+      "parts": {
+        "subject": "Subject",
+        "greetings": "Greetings",
+        "opening": "Opening",
+        "body": "Body",
+        "callToAction": "Call to action",
+        "signOff": "Sign-off"
+      }
+    }
   }
 }

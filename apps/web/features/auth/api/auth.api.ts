@@ -63,7 +63,7 @@ export const useLogout = () => {
 export const useRefresh = () =>
   useMutation({
     mutationFn: async () => {
-      const res = await api.post<z.infer<typeof RefreshResponseSchema>>("/auth/refresh");
+      const res = await api.get<z.infer<typeof RefreshResponseSchema>>("/auth/refresh");
       return res.data;
     }
   });

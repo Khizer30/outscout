@@ -56,11 +56,16 @@ export default function LoginForm() {
           aria-invalid={!!((isSubmitted || dirtyFields.email) && errors.email)}
           {...register("email")}
         />
-        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.email) && errors.email?.message}</p>
+        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.email) && errors.email?.message && t(`errors:${errors.email.message}`)}</p>
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="password">{t("login.password")}</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="password">{t("login.password")}</Label>
+          <Link href={ROUTES.auth.forgotPassword} className="text-xs text-primary hover:underline">
+            {t("login.forgotPassword")}
+          </Link>
+        </div>
         <Input
           id="password"
           type="password"
@@ -69,7 +74,9 @@ export default function LoginForm() {
           aria-invalid={!!((isSubmitted || dirtyFields.password) && errors.password)}
           {...register("password")}
         />
-        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.password) && errors.password?.message}</p>
+        <p className="min-h-4 text-xs text-destructive">
+          {(isSubmitted || dirtyFields.password) && errors.password?.message && t(`errors:${errors.password.message}`)}
+        </p>
       </div>
 
       <Button type="submit" className="w-full" size="lg" disabled={login.isPending}>

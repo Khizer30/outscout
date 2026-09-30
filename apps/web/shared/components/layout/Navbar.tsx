@@ -1,33 +1,18 @@
 "use client";
 import logoDark from "@shared/assets/images/logo_dark.webp";
 import logoLight from "@shared/assets/images/logo_light.webp";
-import { Button } from "@shared/components/ui/button";
+import AppearanceControls from "@shared/components/layout/AppearanceControls";
 import { ROUTES } from "@shared/lib/routes";
-import { Languages, Moon, Sun } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
-  const { t, i18n } = useTranslation();
-  const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const toggleLanguage = () => {
-    i18n.changeLanguage(i18n.resolvedLanguage === "ar" ? "en" : "ar");
-  };
-
-  const toggleTheme = () => {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
-  };
-
-  const isDark = mounted && resolvedTheme === "dark";
+  if (pathname.startsWith("/dashboard")) {
+    return null;
+  }
 
   return (
     <header dir="ltr" className="flex h-20 items-center justify-between px-16 py-4">
@@ -36,21 +21,7 @@ export default function Navbar() {
         <Image src={logoLight} alt="Outscout" className="hidden h-14 w-auto dark:block" draggable={false} priority />
       </Link>
 
-      <div className="flex items-center gap-1">
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label={t("navbar.language")}
-          title={i18n.resolvedLanguage === "ar" ? t("navbar.english") : t("navbar.arabic")}
-          onClick={toggleLanguage}
-        >
-          <Languages />
-        </Button>
-
-        <Button variant="ghost" size="icon-sm" aria-label={t("navbar.theme")} title={isDark ? t("navbar.light") : t("navbar.dark")} onClick={toggleTheme}>
-          {isDark ? <Sun /> : <Moon />}
-        </Button>
-      </div>
+      <AppearanceControls />
     </header>
   );
 }

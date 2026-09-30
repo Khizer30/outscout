@@ -8,7 +8,7 @@ on:
 
 jobs:
   Dockerize:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
 
     steps:
       - name: Checkout Repository
@@ -28,6 +28,7 @@ jobs:
         with:
           context: .
           file: Dockerfile
+          platforms: linux/arm64
           push: true
           tags: |
             khizer30/outscout:latest
@@ -45,10 +46,10 @@ jobs:
         with:
           host: ${{ secrets.VPS_SSH_HOST }}
           username: ${{ secrets.VPS_SSH_USER }}
-          password: ${{ secrets.VPS_SSH_PASSWORD }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd avenu
+            cd outscout
             docker pull khizer30/outscout:latest
             docker compose down
             docker compose up -d
@@ -67,6 +68,14 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
+        with:
+          version: 11
+
+      - name: Setup Node.JS
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest

@@ -4,7 +4,7 @@ import { UserRepository } from "@modules/user/domain/user.repository";
 import { UserMapper } from "@modules/user/infrastructure/user.mapper";
 import { Injectable } from "@nestjs/common";
 import { usersTable } from "@schema/users";
-import { eq, isNull, and } from "drizzle-orm";
+import { eq, isNull, and, inArray } from "drizzle-orm";
 
 @Injectable()
 export class UserDrizzleRepository extends UserRepository {
@@ -28,6 +28,18 @@ export class UserDrizzleRepository extends UserRepository {
       .where(and(eq(usersTable.id, id), isNull(usersTable.deletedAt)))
       .limit(1);
     return row ? UserMapper.toDomain(row) : null;
+  }
+
+  async findByIds(ids: string[]): Promise<UserEntity[]> {
+    if (ids.length === 0) {
+      return [];
+    }
+
+    const rows = await this.databaseService.db
+      .select()
+      .from(usersTable)
+      .where(and(inArray(usersTable.id, ids), isNull(usersTable.deletedAt)));
+    return rows.map(UserMapper.toDomain);
   }
 
   async create(entity: UserEntity): Promise<UserEntity> {

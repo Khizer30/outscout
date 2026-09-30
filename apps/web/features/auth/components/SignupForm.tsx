@@ -86,7 +86,7 @@ export default function SignupForm() {
           aria-invalid={!!((isSubmitted || dirtyFields.name) && errors.name)}
           {...register("name")}
         />
-        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.name) && errors.name?.message}</p>
+        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.name) && errors.name?.message && t(`errors:${errors.name.message}`)}</p>
       </div>
 
       <div className="space-y-1.5">
@@ -100,7 +100,7 @@ export default function SignupForm() {
           aria-invalid={!!((isSubmitted || dirtyFields.email) && errors.email)}
           {...register("email")}
         />
-        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.email) && errors.email?.message}</p>
+        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.email) && errors.email?.message && t(`errors:${errors.email.message}`)}</p>
       </div>
 
       <div className="space-y-1.5">
@@ -113,7 +113,9 @@ export default function SignupForm() {
           aria-invalid={!!((isSubmitted || dirtyFields.password) && errors.password)}
           {...register("password")}
         />
-        <p className="min-h-4 text-xs text-destructive">{(isSubmitted || dirtyFields.password) && errors.password?.message}</p>
+        <p className="min-h-4 text-xs text-destructive">
+          {(isSubmitted || dirtyFields.password) && errors.password?.message && t(`errors:${errors.password.message}`)}
+        </p>
       </div>
 
       <Button type="submit" className="w-full" size="lg" disabled={signup.isPending}>

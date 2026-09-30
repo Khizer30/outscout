@@ -1,3 +1,4 @@
+import { AuditModule } from "@modules/audit/audit.module";
 import { EncryptionModule } from "@modules/encryption/encryption.module";
 import { JWTModule } from "@modules/jwt/jwt.module";
 import { MediaModule } from "@modules/media/media.module";
@@ -8,7 +9,7 @@ import { UserService } from "@modules/user/services/user.service";
 import { Module } from "@nestjs/common";
 
 @Module({
-  imports: [EncryptionModule, JWTModule, MediaModule],
+  imports: [EncryptionModule, JWTModule, MediaModule, AuditModule],
   controllers: [UserController],
   providers: [
     UserService,
