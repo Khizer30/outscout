@@ -3,7 +3,7 @@ FROM node:24-slim AS builder
 
 WORKDIR /app
 
-RUN corepack enable
+RUN corepack enable && corepack prepare pnpm@11 --activate
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml  ./
 COPY packages/typescript-config/package.json          ./packages/typescript-config/

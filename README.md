@@ -79,7 +79,7 @@ Zod schemas live in `packages/dtos/src` and are consumed by both the NestJS back
 ## Prerequisites
 
 - **Node.js** >= 24
-- **pnpm** >= 11.10.0
+- **pnpm** 11.x
 - **Docker** & **Docker Compose** (for containerised API)
 
 ---
