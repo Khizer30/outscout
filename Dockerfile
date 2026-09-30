@@ -18,9 +18,9 @@ COPY packages/dtos                ./packages/dtos
 COPY apps/api                     ./apps/api
 
 RUN pnpm --filter @repo/dtos build
-RUN pnpm --filter nestjs build
+RUN pnpm --filter api build
 
-RUN pnpm --filter nestjs deploy --prod --legacy /deploy/api
+RUN pnpm --filter api deploy --prod --legacy /deploy/api
 
 # ---------- Production ----------
 FROM mcr.microsoft.com/playwright:v1.61.0-jammy
