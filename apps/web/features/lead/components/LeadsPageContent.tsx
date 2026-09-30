@@ -1,5 +1,6 @@
 "use client";
 import AiOutreachDialog from "@features/ai/components/AiOutreachDialog";
+import NoCompanyMessage from "@features/company/components/NoCompanyMessage";
 import { useUpdateLead } from "@features/lead/api/lead.api";
 import EditLeadDialog from "@features/lead/components/EditLeadDialog";
 import { LeadsProvider, useLeadsContext } from "@features/lead/components/LeadsProvider";
@@ -13,6 +14,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@shared/components/ui/tooltip";
 import { getErrorMessage } from "@shared/lib/error";
 import { cn } from "@shared/lib/utils";
+import { useAuthStore } from "@shared/stores/authStore";
 import { ChevronLeft, ChevronRight, Globe, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
@@ -21,6 +23,16 @@ import type { z } from "zod";
 type LeadStatus = z.infer<typeof LeadStatusSchema>;
 
 export default function LeadsPageContent() {
+  const companyId = useAuthStore((state) => state.user?.companyId);
+
+  if (!companyId) {
+    return (
+      <div className="p-6 md:p-8">
+        <NoCompanyMessage />
+      </div>
+    );
+  }
+
   return (
     <LeadsProvider>
       <LeadsPageContentInner />

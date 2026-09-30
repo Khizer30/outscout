@@ -1,4 +1,5 @@
 "use client";
+import NoCompanyMessage from "@features/company/components/NoCompanyMessage";
 import MapFindLeadsButton from "@features/map/components/MapFindLeadsButton";
 import MapPlaceDetailsPanel from "@features/map/components/MapPlaceDetailsPanel";
 import { MapProvider } from "@features/map/components/MapProvider";
@@ -6,10 +7,21 @@ import MapSearchInput from "@features/map/components/MapSearchInput";
 import MapSearchLimitSelect from "@features/map/components/MapSearchLimitSelect";
 import MapTypeSelect from "@features/map/components/MapTypeSelect";
 import MapView from "@features/map/components/MapView";
+import { useAuthStore } from "@shared/stores/authStore";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { useTranslation } from "react-i18next";
 
 export default function MapPageContent() {
+  const companyId = useAuthStore((state) => state.user?.companyId);
+
+  if (!companyId) {
+    return (
+      <div className="p-6 md:p-8">
+        <NoCompanyMessage />
+      </div>
+    );
+  }
+
   return (
     <MapProvider>
       <MapPageContentInner />

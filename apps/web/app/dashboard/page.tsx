@@ -6,9 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function DashboardPage() {
-  return (
-    <div className="space-y-4 p-6 md:p-8">
-      <RecentLeadsBoard />
-    </div>
-  );
+  return <RecentLeadsBoard />;
 }

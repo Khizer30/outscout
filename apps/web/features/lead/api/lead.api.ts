@@ -37,7 +37,7 @@ export const useGenerateLeads = () => {
 };
 
 // Get Leads
-export const useLeads = (params: z.infer<typeof GetLeadsSchema>) => {
+export const useLeads = (params: z.infer<typeof GetLeadsSchema>, enabled = true) => {
   const api = useAxios();
 
   return useQuery({
@@ -46,6 +46,7 @@ export const useLeads = (params: z.infer<typeof GetLeadsSchema>) => {
       const res = await api.post<z.infer<typeof GetLeadsResponseSchema>>("/lead/search", params);
       return res.data;
     },
+    enabled,
     staleTime: 0,
     refetchOnMount: "always"
   });
