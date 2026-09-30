@@ -261,6 +261,11 @@
     "pagination": "Page {{page}} of {{totalPages}}",
     "previous": "Previous",
     "next": "Next",
+    "board": {
+      "title": "Recent leads",
+      "description": "Drag a lead into another column to update its status. Showing the {{count}} most recent leads.",
+      "emptyColumn": "No leads here"
+    },
     "status": {
       "ENRICHING": "Enriching",
       "READY": "Ready",

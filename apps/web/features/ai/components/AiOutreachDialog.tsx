@@ -8,6 +8,7 @@ import { Textarea } from "@shared/components/ui/textarea";
 import { getErrorMessage } from "@shared/lib/error";
 import { Loader2, Sparkles, WandSparkles } from "lucide-react";
 import { useState } from "react";
+import type { ComponentType } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import type { z } from "zod";
@@ -20,9 +21,10 @@ const EMAIL_PARTS = ["subject", "opening", "body", "callToAction", "signOff"] as
 interface AiOutreachDialogProps {
   leadId: string;
   channel: Channel;
+  icon?: ComponentType<{ className?: string }>;
 }
 
-export default function AiOutreachDialog({ leadId, channel }: AiOutreachDialogProps) {
+export default function AiOutreachDialog({ leadId, channel, icon: TriggerIcon = Sparkles }: AiOutreachDialogProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
@@ -98,7 +100,7 @@ export default function AiOutreachDialog({ leadId, channel }: AiOutreachDialogPr
             aria-label={t(channel === "WHATSAPP" ? "ai.outreach.whatsappTrigger" : "ai.outreach.emailTrigger")}
             onClick={(event) => event.stopPropagation()}
           >
-            <Sparkles />
+            <TriggerIcon />
           </Button>
         }
       />
