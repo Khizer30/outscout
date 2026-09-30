@@ -30,11 +30,6 @@ jobs:
       - name: Install Root Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Create .env file
-        env:
-          ENV_FILE: ${{ secrets.ENV_FILE }}
-        run: printf "%s" "$ENV_FILE" > .env
-
       - name: Lint Check
         run: pnpm lint
 
