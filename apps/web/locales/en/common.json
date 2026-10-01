@@ -94,7 +94,8 @@
       "signature": "Email signature",
       "signaturePlaceholder": "Best regards, Your Team",
       "primaryColor": "Primary color",
-      "secondaryColor": "Secondary color"
+      "secondaryColor": "Secondary color",
+      "preview": "Preview"
     },
     "rules": {
       "title": "Outreach message rules",

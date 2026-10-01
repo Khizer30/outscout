@@ -1,4 +1,5 @@
 "use client";
+import CompanyEmailPreview from "@features/company/components/CompanyEmailPreview";
 import { useCompanySettingsContext } from "@features/company/components/CompanySettingsProvider";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@shared/components/ui/card";
 import { Input } from "@shared/components/ui/input";
@@ -9,6 +10,12 @@ import { useTranslation } from "react-i18next";
 export default function CompanyEmailSettingsCard() {
   const { t } = useTranslation();
   const { settings, register, errors, watch, setValue } = useCompanySettingsContext();
+
+  const primaryColor = /^#[0-9a-fA-F]{6}$/.test(watch("primaryColor")) ? watch("primaryColor") : "#38BDF8";
+  const secondaryColor = /^#[0-9a-fA-F]{6}$/.test(watch("secondaryColor")) ? watch("secondaryColor") : "#0F172A";
+  const signature = watch("emailSignature");
+  const companyImageURL = watch("companyImageURL");
+  const companyName = settings.company.name;
 
   return (
     <Card>
@@ -88,6 +95,17 @@ export default function CompanyEmailSettingsCard() {
             </div>
             <p className="min-h-4 text-xs text-destructive">{errors.secondaryColor?.message && t(`errors:${errors.secondaryColor.message}`)}</p>
           </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <Label>{t("companySettings.email.preview")}</Label>
+          <CompanyEmailPreview
+            primaryColor={primaryColor}
+            secondaryColor={secondaryColor}
+            signature={signature}
+            companyImageURL={companyImageURL}
+            companyName={companyName}
+          />
         </div>
       </CardContent>
     </Card>

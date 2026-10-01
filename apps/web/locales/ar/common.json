@@ -94,7 +94,8 @@
       "signature": "توقيع البريد الإلكتروني",
       "signaturePlaceholder": "مع أطيب التحيات، فريقك",
       "primaryColor": "اللون الأساسي",
-      "secondaryColor": "اللون الثانوي"
+      "secondaryColor": "اللون الثانوي",
+      "preview": "معاينة"
     },
     "rules": {
       "title": "قواعد رسائل التواصل",
