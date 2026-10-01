@@ -9,7 +9,22 @@ export const leadTypeEnum = pgEnum("lead_type", [
   "REAL_ESTATE_AGENCY",
   "ACCOUNTING",
   "GYM",
-  "BEAUTY_SALON"
+  "BEAUTY_SALON",
+  "DENTIST",
+  "LAWYER",
+  "SPA",
+  "CAFE",
+  "CLOTHING_STORE",
+  "SCHOOL",
+  "UNIVERSITY",
+  "CAR_DEALER",
+  "CAR_RENTAL",
+  "COWORKING_SPACE",
+  "HOSTEL",
+  "WEDDING_VENUE",
+  "PRESCHOOL",
+  "PRIMARY_SCHOOL",
+  "SECONDARY_SCHOOL"
 ]);
 export type LeadType = (typeof leadTypeEnum.enumValues)[number];
 

@@ -236,7 +236,22 @@
       "REAL_ESTATE_AGENCY": "Real estate agency",
       "ACCOUNTING": "Accounting",
       "GYM": "Gym",
-      "BEAUTY_SALON": "Beauty salon"
+      "BEAUTY_SALON": "Beauty salon",
+      "DENTIST": "Dentist",
+      "LAWYER": "Lawyer",
+      "SPA": "Spa",
+      "CAFE": "Cafe",
+      "CLOTHING_STORE": "Clothing store",
+      "SCHOOL": "School",
+      "UNIVERSITY": "University",
+      "CAR_DEALER": "Car dealer",
+      "CAR_RENTAL": "Car rental",
+      "COWORKING_SPACE": "Coworking space",
+      "HOSTEL": "Hostel",
+      "WEDDING_VENUE": "Wedding venue",
+      "PRESCHOOL": "Preschool",
+      "PRIMARY_SCHOOL": "Primary school",
+      "SECONDARY_SCHOOL": "Secondary school"
     }
   },
   "leads": {

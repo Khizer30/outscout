@@ -236,7 +236,22 @@
       "REAL_ESTATE_AGENCY": "وكالة عقارية",
       "ACCOUNTING": "محاسبة",
       "GYM": "نادي رياضي",
-      "BEAUTY_SALON": "صالون تجميل"
+      "BEAUTY_SALON": "صالون تجميل",
+      "DENTIST": "طبيب أسنان",
+      "LAWYER": "محامي",
+      "SPA": "منتجع صحي",
+      "CAFE": "مقهى",
+      "CLOTHING_STORE": "متجر ملابس",
+      "SCHOOL": "مدرسة",
+      "UNIVERSITY": "جامعة",
+      "CAR_DEALER": "وكيل سيارات",
+      "CAR_RENTAL": "تأجير سيارات",
+      "COWORKING_SPACE": "مساحة عمل مشتركة",
+      "HOSTEL": "نزل شباب",
+      "WEDDING_VENUE": "قاعة أفراح",
+      "PRESCHOOL": "روضة أطفال",
+      "PRIMARY_SCHOOL": "مدرسة ابتدائية",
+      "SECONDARY_SCHOOL": "مدرسة ثانوية"
     }
   },
   "leads": {
