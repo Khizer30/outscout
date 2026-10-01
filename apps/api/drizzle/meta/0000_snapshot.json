@@ -1,5 +1,5 @@
 {
-  "id": "7b0e0a32-30b9-493a-b591-6d3e66221593",
+  "id": "f1beb123-472c-41e2-aa23-8c797513d937",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1372,7 +1372,31 @@
     "public.lead_type": {
       "name": "lead_type",
       "schema": "public",
-      "values": ["RESTAURANT", "HOTEL", "HOSPITAL", "DENTAL_CLINIC", "REAL_ESTATE_AGENCY", "ACCOUNTING", "GYM", "BEAUTY_SALON"]
+      "values": [
+        "RESTAURANT",
+        "HOTEL",
+        "HOSPITAL",
+        "DENTAL_CLINIC",
+        "REAL_ESTATE_AGENCY",
+        "ACCOUNTING",
+        "GYM",
+        "BEAUTY_SALON",
+        "DENTIST",
+        "LAWYER",
+        "SPA",
+        "CAFE",
+        "CLOTHING_STORE",
+        "SCHOOL",
+        "UNIVERSITY",
+        "CAR_DEALER",
+        "CAR_RENTAL",
+        "COWORKING_SPACE",
+        "HOSTEL",
+        "WEDDING_VENUE",
+        "PRESCHOOL",
+        "PRIMARY_SCHOOL",
+        "SECONDARY_SCHOOL"
+      ]
     },
     "public.user_language": {
       "name": "user_language",

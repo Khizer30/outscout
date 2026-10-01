@@ -3,7 +3,31 @@ import { z } from "zod";
 
 export const LeadStatusSchema = z.enum(["ENRICHING", "READY", "CONTACTED", "INTERESTED", "UNRESPONSIVE", "REJECTED"]);
 
-export const LeadTypeSchema = z.enum(["RESTAURANT", "HOTEL", "HOSPITAL", "DENTAL_CLINIC", "REAL_ESTATE_AGENCY", "ACCOUNTING", "GYM", "BEAUTY_SALON"]);
+export const LeadTypeSchema = z.enum([
+  "RESTAURANT",
+  "HOTEL",
+  "HOSPITAL",
+  "DENTAL_CLINIC",
+  "REAL_ESTATE_AGENCY",
+  "ACCOUNTING",
+  "GYM",
+  "BEAUTY_SALON",
+  "DENTIST",
+  "LAWYER",
+  "SPA",
+  "CAFE",
+  "CLOTHING_STORE",
+  "SCHOOL",
+  "UNIVERSITY",
+  "CAR_DEALER",
+  "CAR_RENTAL",
+  "COWORKING_SPACE",
+  "HOSTEL",
+  "WEDDING_VENUE",
+  "PRESCHOOL",
+  "PRIMARY_SCHOOL",
+  "SECONDARY_SCHOOL"
+]);
 
 export const LeadSocialLinksSchema = z.object({
   instagram: z.string().optional(),

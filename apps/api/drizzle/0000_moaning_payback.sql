@@ -4,7 +4,7 @@ CREATE TYPE "public"."company_membership_role" AS ENUM('COMPANY_ADMIN', 'COMPANY
 CREATE TYPE "public"."company_membership_status" AS ENUM('ACTIVE', 'INACTIVE');--> statement-breakpoint
 CREATE TYPE "public"."message_channel" AS ENUM('WHATSAPP', 'EMAIL');--> statement-breakpoint
 CREATE TYPE "public"."lead_status" AS ENUM('ENRICHING', 'READY', 'CONTACTED', 'INTERESTED', 'UNRESPONSIVE', 'REJECTED');--> statement-breakpoint
-CREATE TYPE "public"."lead_type" AS ENUM('RESTAURANT', 'HOTEL', 'HOSPITAL', 'DENTAL_CLINIC', 'REAL_ESTATE_AGENCY', 'ACCOUNTING', 'GYM', 'BEAUTY_SALON');--> statement-breakpoint
+CREATE TYPE "public"."lead_type" AS ENUM('RESTAURANT', 'HOTEL', 'HOSPITAL', 'DENTAL_CLINIC', 'REAL_ESTATE_AGENCY', 'ACCOUNTING', 'GYM', 'BEAUTY_SALON', 'DENTIST', 'LAWYER', 'SPA', 'CAFE', 'CLOTHING_STORE', 'SCHOOL', 'UNIVERSITY', 'CAR_DEALER', 'CAR_RENTAL', 'COWORKING_SPACE', 'HOSTEL', 'WEDDING_VENUE', 'PRESCHOOL', 'PRIMARY_SCHOOL', 'SECONDARY_SCHOOL');--> statement-breakpoint
 CREATE TYPE "public"."user_language" AS ENUM('EN', 'AR');--> statement-breakpoint
 CREATE TYPE "public"."verification_type" AS ENUM('VERIFY', 'RESET');--> statement-breakpoint
 CREATE TABLE "ai_generated_messages" (
