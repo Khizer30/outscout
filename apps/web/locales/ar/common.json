@@ -288,7 +288,9 @@
       "CONTACTED": "تم التواصل",
       "INTERESTED": "مهتم",
       "UNRESPONSIVE": "غير مستجيب",
-      "REJECTED": "مرفوض"
+      "REJECTED": "مرفوض",
+      "COMPLETED": "مكتمل",
+      "ARCHIVED": "مؤرشف"
     },
     "social": {
       "facebook": "فيسبوك",

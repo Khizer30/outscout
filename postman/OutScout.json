@@ -1,0 +1,1695 @@
+{
+  "info": {
+    "name": "OutScout",
+    "description": "",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Check Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{baseURL}}",
+              "protocol": "",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [],
+              "query": [],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Media",
+      "item": [
+        {
+          "name": "Get Image Upload Signed URL",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/media/image/signed-url",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "media",
+                "image",
+                "signed-url"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"folder\": \"outscout/users\",\n    \"width\": 250,\n    \"height\": 250\n    // \"folder\": \"outscout/companies\",\n    // \"width\": 600,\n    // \"height\": 250\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "const { data } = pm.response.json();",
+                  "",
+                  "pm.collectionVariables.set(\"cloudinaryTimestamp\", data.timestamp);",
+                  "pm.collectionVariables.set(\"cloudinarySignature\", data.signature);",
+                  "pm.collectionVariables.set(\"cloudinaryFolder\", data.folder);",
+                  "pm.collectionVariables.set(\"cloudinaryEager\", data.eager);",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Upload To Cloudinary",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "https://api.cloudinary.com/v1_1/{{cloudinaryCloudName}}/image/upload",
+              "protocol": "https",
+              "host": [
+                "api",
+                "cloudinary",
+                "com"
+              ],
+              "path": [
+                "v1_1",
+                "{{cloudinaryCloudName}}",
+                "image",
+                "upload"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "disabled": false,
+                  "type": "file",
+                  "description": "",
+                  "src": "/C:/Users/khizer/Pictures/My Camera/1.png"
+                },
+                {
+                  "key": "api_key",
+                  "disabled": false,
+                  "type": "text",
+                  "description": "",
+                  "value": "{{cloudinaryAPIKey}}"
+                },
+                {
+                  "key": "timestamp",
+                  "disabled": false,
+                  "type": "text",
+                  "description": "",
+                  "value": "{{cloudinaryTimestamp}}"
+                },
+                {
+                  "key": "signature",
+                  "disabled": false,
+                  "type": "text",
+                  "description": "",
+                  "value": "{{cloudinarySignature}}"
+                },
+                {
+                  "key": "folder",
+                  "disabled": false,
+                  "type": "text",
+                  "description": "",
+                  "value": "{{cloudinaryFolder}}"
+                },
+                {
+                  "key": "eager",
+                  "disabled": false,
+                  "type": "text",
+                  "description": "",
+                  "value": "{{cloudinaryEager}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.collectionVariables.set(\"cloudinaryFilePublicID\", res.public_id);",
+                  "pm.collectionVariables.set(\"cloudinaryFileURL\", pm.response.url);",
+                  "pm.collectionVariables.set(\"cloudinaryFileEagerURL\", res.eager[0].url);",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete Image",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/media/image",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "media",
+                "image"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "url",
+                  "value": "{{cloudinaryFileURL}}",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Sign Up",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/auth/signup",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "signup"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "Syed Muhammad Khizer",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "email",
+                  "value": "syed.khizer30@gmail.com",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "password",
+                  "value": "Shaheer30=",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "timezone",
+                  "value": "Asia/Karachi",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "invitationToken",
+                  "value": "{{invitationToken}}",
+                  "disabled": true,
+                  "type": "default",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Verify User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/auth/verify-user",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "verify-user"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "syed.khizer30@gmail.com",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "otp",
+                  "value": "403840",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "invitationToken",
+                  "value": "{{invitationToken}}",
+                  "disabled": true,
+                  "type": "default",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/auth/login",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "syed.khizer30@gmail.com",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "password",
+                  "value": "Shaheer30=",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "",
+                  "if (jsonData.success && jsonData.data?.accessToken) {",
+                  "    pm.collectionVariables.set(\"accessToken\", jsonData.data.accessToken);",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/auth/forgot-password",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "forgot-password"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "syed.khizer30@gmail.com",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/auth/reset-password",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "reset-password"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "syed.khizer30@gmail.com",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "otp",
+                  "value": "210978",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "newPassword",
+                  "value": "Shaheer30=",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Logged In User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/auth/me",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Refresh Session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/auth/refresh",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "refresh"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "",
+                  "if (jsonData.success && jsonData.data?.accessToken) {",
+                  "    pm.collectionVariables.set(\"accessToken\", jsonData.data.accessToken);",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/auth/logout",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "",
+                  "if (jsonData.success) {",
+                  "    pm.collectionVariables.set(\"accessToken\", \"\");",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Switch Company",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/auth/switch-company",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "switch-company"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "membershipId",
+                  "value": "{{membershipId}}",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "",
+                  "if (jsonData.success && jsonData.data?.accessToken) {",
+                  "    pm.collectionVariables.set(\"accessToken\", jsonData.data.accessToken);",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/auth/me",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ],
+              "query": [],
+              "variable": []
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "",
+                  "if (jsonData.success) {",
+                  "    pm.collectionVariables.set(\"accessToken\", \"\");",
+                  "}",
+                  ""
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/user/me",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "user",
+                "me"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/user/me",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "user",
+                "me"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "Muhammad Khizer",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "password",
+                  "value": "Shaheer30=",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "timezone",
+                  "value": "Asia/Karachi",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "language",
+                  "value": "EN",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "profileImageURL",
+                  "value": "{{cloudinaryFileEagerURL}}",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "language",
+                  "value": "AR",
+                  "disabled": true,
+                  "type": "default",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Company",
+      "item": [
+        {
+          "name": "Get Company's Settings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/company/settings",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "company",
+                "settings"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get User's Companies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/company",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "company"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Create Company",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/company",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "company"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "CUST",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "about",
+                  "value": "Capital University of Science & Technology abbreviated as is a federally chartered, private university located in Islamabad, Pakistan.",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "companyImageURL",
+                  "value": "{{cloudinaryFileEagerURL}}",
+                  "disabled": true,
+                  "type": "default",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Company",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/company",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "company"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "CUST",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "about",
+                  "value": "Capital University of Science & Technology abbreviated as is a federally chartered, private university located in Islamabad, Pakistan.",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "companyImageURL",
+                  "value": "{{cloudinaryFileEagerURL}}",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Company Email Settings",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/company/email-settings",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "company",
+                "email-settings"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"brevoApiKey\": \"{{brevoAPIKey}}\",\n    \"fromEmail\": \"welcome@asknestor.com\",\n    \"emailSignature\": \"Nook Ltd.\",\n    \"primaryColor\": \"#FFFFFF\",\n    \"secondaryColor\": \"#38BDF8\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Update Company Message Rules",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/company/message-rules",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "company",
+                "message-rules"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"channel\": \"WHATSAPP\",\n    // \"channel\": \"EMAIL\",\n    \"rules\": \"- Language: English - Write a cold outreach EMAIL — it must have a subject line and a proper email body - Address the recipient as the business owner/team, not by a personal name - Keep the body under 200 words - Tone: professional, human, and warm — not salesy, not pushy, not spammy - Subject line: concise, curiosity-driven, relevant to their business type — no clickbait - Opening line: a genuine, specific observation about their business (from their website if available, otherwise from their business type/location) - Mention 1-2 services most relevant to their specific business type - If the business has no website, specifically mention that we can build one for them - If a website URL is provided, pull one concrete specific detail from it (product, service, tagline, design style) to personalise the opening — do not fabricate; if inaccessible, note that - End with a single soft call-to-action — invite a reply or a quick call, nothing aggressive - Sign off as: Outscout Marketing Agency - Do NOT use emojis - Do NOT mention Google Map ratings - Do NOT use generic filler phrases like 'I hope this email finds you well' or 'I came across your business'\",\n    \"greeting\": \"Assalam Wallikum\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete Company",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/company",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "company"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Team",
+      "item": [
+        {
+          "name": "Get Team Member",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/team/members",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "members"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Send Invitation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/team/invitations",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "invitations"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "syed.khizer30+1@gmail.com",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Invitation's Email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/team/invitations/{{invitationToken}}/email",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "invitations",
+                "{{invitationToken}}",
+                "email"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get Company's Invitations",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/team/invitations/list",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "invitations",
+                "list"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": [\n        \"PENDING\"\n        // \"ACCEPTED\",\n        // \"REJECTED\",\n        // \"REVOKED\",\n        // \"EXPIRED\"\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Revoke Company's Invitation",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/team/invitations/{{invitationToken}}",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "invitations",
+                "{{invitationToken}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": []
+            }
+          }
+        },
+        {
+          "name": "Get My Invitations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/team/invitations/me",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "invitations",
+                "me"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Accept Invitation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/team/invitations/{{invitationToken}}/accept",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "invitations",
+                "{{invitationToken}}",
+                "accept"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Reject Invitation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/team/invitations/{{invitationToken}}/reject",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "team",
+                "invitations",
+                "{{invitationToken}}",
+                "reject"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Map",
+      "item": [
+        {
+          "name": "Query Places",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/map/autocomplete",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "map",
+                "autocomplete"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"query\": \"Saddar\",\n    \"latitude\": 33.4929479,\n    \"longitude\": 73.0997494,\n    \"radius\": 2000,\n    \"types\": [\n        \"RESTAURANT\"\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Place By ID (Google Maps)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/map/place/{{placeId}}",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "map",
+                "place",
+                "{{placeId}}"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lead",
+      "item": [
+        {
+          "name": "Generate Leads",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/lead/generate",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "generate"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"latitude\": 33.4929479,\n    \"longitude\": 73.0997494,\n    \"radius\": 2000,\n    // \"serviceType\": \"RESTAURANT\",\n    \"serviceType\": \"HOTEL\",\n    // \"serviceType\": \"HOSPITAL\",\n    // \"serviceType\": \"DENTAL_CLINIC\",\n    // \"serviceType\": \"REAL_ESTATE_AGENCY\",\n    // \"serviceType\": \"ACCOUNTING\",\n    // \"serviceType\": \"GYM\",\n    // \"serviceType\": \"BEAUTY_SALON\",\n    \"limit\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Company's Leads (SSE)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/event-stream",
+                "description": "",
+                "disabled": false,
+                "type": "default"
+              }
+            ],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/lead/stream",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "stream"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get Company's Leads",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/lead/search",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "search"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": [\n    \"ENRICHING\",\n    \"READY\",\n    \"CONTACTED\",\n    \"INTERESTED\",\n    \"UNRESPONSIVE\",\n    \"REJECTED\",\n    \"COMPLETED\",\n    \"ARCHIVED\"\n  ],\n  \"page\": 1,\n  \"limit\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Lead By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/lead/{{leadId}}",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "{{leadId}}"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Update Lead",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/lead/{{leadId}}",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "{{leadId}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ENRICHING\",\n  // \"status\": \"READY\",\n  // \"status\": \"CONTACTED\",\n  // \"status\": \"INTERESTED\",\n  // \"status\": \"UNRESPONSIVE\",\n  // \"status\": \"REJECTED\",\n  // \"status\": \"COMPLETED\",\n  // \"status\": \"ARCHIVED\",\n  \"name\": \"Google\",\n  \"description\": \"A nice place to work\",\n  \"phone\": \"+92 123 1234567\",\n  \"emails\": [\n    \"google@gmail.com\"\n  ],\n  \"otherPhones\": [\n    \"+92 321 1234567\"\n  ],\n  \"socialLinks\": {\n    \"instagram\": \"\",\n    \"facebook\": \"\",\n    \"twitter\": \"\",\n    \"linkedin\": \"\",\n    \"tiktok\": \"\",\n    \"youtube\": \"\",\n    \"whatsapp\": \"\",\n    \"otherLinks\": []\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Process Lead",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/lead/process-lead/{{leadId}}",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "process-lead",
+                "{{leadId}}"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Generate Outreach Message",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/lead/outreach-message/{{leadId}}?channel=WHATSAPP",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "outreach-message",
+                "{{leadId}}?channel=WHATSAPP"
+              ],
+              "query": [
+                {
+                  "key": "channel",
+                  "value": "WHATSAPP"
+                },
+                {
+                  "key": "channel",
+                  "value": "EMAIL"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get WhatsApp Message Link",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/lead/whatsapp-link/{{aiMessageId}}",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "whatsapp-link",
+                "{{aiMessageId}}"
+              ],
+              "query": [
+                {
+                  "key": "messagePart",
+                  "value": "greetings"
+                },
+                {
+                  "key": "messagePart",
+                  "value": "opening"
+                },
+                {
+                  "key": "messagePart",
+                  "value": "body"
+                },
+                {
+                  "key": "messagePart",
+                  "value": "callToAction"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Send Email to Lead",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/lead/email/{{aiMessageId}}",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "lead",
+                "email",
+                "{{aiMessageId}}"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI",
+      "item": [
+        {
+          "name": "Get Messages By Lead",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/ai/lead/{{leadId}}",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "ai",
+                "lead",
+                "{{leadId}}"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Rewrite Outreach Message",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "",
+            "url": {
+              "raw": "{{url}}/ai/rewrite/{{aiMessageId}}",
+              "protocol": "",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "ai",
+                "rewrite",
+                "{{aiMessageId}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "prompt",
+                  "value": "Improve this!",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "messagePart",
+                  "value": "body",
+                  "disabled": false,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "messagePart",
+                  "value": "greetings",
+                  "disabled": true,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "messagePart",
+                  "value": "subject",
+                  "disabled": true,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "messagePart",
+                  "value": "opening",
+                  "disabled": true,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "messagePart",
+                  "value": "callToAction",
+                  "disabled": true,
+                  "type": "default",
+                  "description": ""
+                },
+                {
+                  "key": "messagePart",
+                  "value": "signOff",
+                  "disabled": true,
+                  "type": "default",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "cloudinaryCloudName",
+      "value": "dl0xs7uz9",
+      "type": "default"
+    },
+    {
+      "key": "cloudinaryAPIKey",
+      "value": "847466672755923",
+      "type": "default"
+    },
+    {
+      "key": "cloudinaryTimestamp",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "cloudinarySignature",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "cloudinaryFolder",
+      "value": "outscout/users",
+      "type": "default"
+    },
+    {
+      "key": "cloudinaryEager",
+      "value": "c_fill,w_250,h_250/f_png",
+      "type": "default"
+    },
+    {
+      "key": "cloudinaryFilePublicID",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "cloudinaryFileURL",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "cloudinaryFileEagerURL",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "accessToken",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiZXl2YXJoMXZtZnh1enF4dnlhOWg4d2FnIiwibmFtZSI6Ik11aGFtbWFkIEtoaXplciIsInByb2ZpbGVJbWFnZSI6Imh0dHBzOi8vcmVzLmNsb3VkaW5hcnkuY29tL2RsMHhzN3V6OS9pbWFnZS91cGxvYWQvY19maWxsLHdfMjUwLGhfMjUwL2ZfcG5nL3YxNzg5MzE1NDA3L291dHNjb3V0L3VzZXJzL3U3Y202dWVmazBtdDQ5cWJpZzI4LnBuZyIsImlzU3VwZXJBZG1pbiI6ZmFsc2UsImNvbXBhbnlJZCI6Im1zOXg0emg1NDk5cHNnaHhnOXd3M2llMCIsImNvbXBhbnlOYW1lIjoiSmFrc29uIEVkdWNhdGlvbiBTeXN0ZW0iLCJjb21wYW55Um9sZSI6IkNPTVBBTllfQURNSU4ifSwiaWF0IjoxNzkwMjc2OTgyLCJleHAiOjE3OTAyNzc4ODJ9.W6OEPjoxES_2OhqtF62vMWCegAIW5SSG0qLxPtj0svM",
+      "type": "default"
+    },
+    {
+      "key": "membershipId",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "brevoAPIKey",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "invitationId",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "invitationToken",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "placeId",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "leadId",
+      "value": "ChIJX1SpI-Lt3zgRjrTXcFNZAU0",
+      "type": "default"
+    },
+    {
+      "key": "aiMessageId",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "url",
+      "value": "http://localhost:5000/api",
+      "type": "default"
+    },
+    {
+      "key": "baseURL",
+      "value": "http://localhost:5000",
+      "type": "default"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  }
+}

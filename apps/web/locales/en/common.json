@@ -288,7 +288,9 @@
       "CONTACTED": "Contacted",
       "INTERESTED": "Interested",
       "UNRESPONSIVE": "Unresponsive",
-      "REJECTED": "Rejected"
+      "REJECTED": "Rejected",
+      "COMPLETED": "Completed",
+      "ARCHIVED": "Archived"
     },
     "social": {
       "facebook": "Facebook",
