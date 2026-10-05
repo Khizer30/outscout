@@ -21,6 +21,7 @@ export class LeadEntity {
     public readonly emails: string[],
     public readonly otherPhones: string[],
     public readonly socialLinks: LeadSocialLinks,
+    public readonly completedBy: string | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -45,6 +46,7 @@ export class LeadEntity {
       props.emails ?? [],
       props.otherPhones ?? [],
       props.socialLinks ?? { otherLinks: [] },
+      props.completedBy ?? null,
       props.createdAt ?? new Date(),
       props.updatedAt ?? new Date()
     );
@@ -70,6 +72,7 @@ export class LeadEntity {
       props.emails ?? this.emails,
       props.otherPhones ?? this.otherPhones,
       props.socialLinks ?? this.socialLinks,
+      props.completedBy !== undefined ? props.completedBy : this.completedBy,
       this.createdAt,
       new Date()
     );

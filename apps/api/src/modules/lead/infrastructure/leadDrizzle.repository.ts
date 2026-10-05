@@ -5,7 +5,7 @@ import { LeadStatus } from "@modules/lead/domain/lead.types";
 import { LeadMapper } from "@modules/lead/infrastructure/lead.mapper";
 import { Injectable } from "@nestjs/common";
 import { leadsTable } from "@schema/index";
-import { and, count, desc, eq, inArray } from "drizzle-orm";
+import { and, count, desc, eq, inArray, ne } from "drizzle-orm";
 
 @Injectable()
 export class LeadDrizzleRepository extends LeadRepository {
@@ -38,7 +38,13 @@ export class LeadDrizzleRepository extends LeadRepository {
     filters?: { status?: LeadStatus[] },
     pagination?: { page: number; limit: number }
   ): Promise<{ leads: LeadEntity[]; total: number }> {
-    const where = and(eq(leadsTable.companyId, companyId), filters?.status ? inArray(leadsTable.status, filters.status) : undefined);
+    const includeArchived = filters?.status?.includes("ARCHIVED") ?? false;
+
+    const where = and(
+      eq(leadsTable.companyId, companyId),
+      filters?.status ? inArray(leadsTable.status, filters.status) : undefined,
+      includeArchived ? undefined : ne(leadsTable.status, "ARCHIVED")
+    );
 
     const page = pagination?.page ?? 1;
     const limit = pagination?.limit ?? 20;

@@ -22,6 +22,7 @@ export const LeadResponseSchema = z.object({
   emails: z.array(z.string()),
   otherPhones: z.array(z.string()),
   socialLinks: LeadSocialLinksSchema,
+  completedBy: z.string().nullable(),
   createdAt: z.date(),
   updatedAt: z.date()
 });

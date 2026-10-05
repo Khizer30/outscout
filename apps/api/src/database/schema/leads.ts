@@ -1,4 +1,5 @@
 import { companyTable } from "@schema/company";
+import { usersTable } from "@schema/users";
 import { pgTable, text, integer, doublePrecision, jsonb, timestamp, pgEnum, index } from "drizzle-orm/pg-core";
 
 export const leadTypeEnum = pgEnum("lead_type", [
@@ -28,7 +29,7 @@ export const leadTypeEnum = pgEnum("lead_type", [
 ]);
 export type LeadType = (typeof leadTypeEnum.enumValues)[number];
 
-export const leadStatusEnum = pgEnum("lead_status", ["ENRICHING", "READY", "CONTACTED", "INTERESTED", "UNRESPONSIVE", "REJECTED"]);
+export const leadStatusEnum = pgEnum("lead_status", ["ENRICHING", "READY", "CONTACTED", "INTERESTED", "UNRESPONSIVE", "REJECTED", "COMPLETED", "ARCHIVED"]);
 export type LeadStatus = (typeof leadStatusEnum.enumValues)[number];
 
 export type LeadSocialLinks = {
@@ -65,6 +66,7 @@ export const leadsTable = pgTable(
     emails: text().array().notNull().default([]),
     otherPhones: text().array().notNull().default([]),
     socialLinks: jsonb().$type<LeadSocialLinks>().notNull().default({ otherLinks: [] }),
+    completedBy: text().references(() => usersTable.id, { onDelete: "set null" }),
     createdAt: timestamp().defaultNow().notNull(),
     updatedAt: timestamp()
       .defaultNow()
