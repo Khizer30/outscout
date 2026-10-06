@@ -6,8 +6,8 @@ import { Button } from "@shared/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@shared/components/ui/dialog";
 import { Textarea } from "@shared/components/ui/textarea";
 import { getErrorMessage } from "@shared/lib/error";
-import { Loader2, Sparkles, WandSparkles } from "lucide-react";
-import { useState } from "react";
+import { ChevronLeft, ChevronRight, Loader2, Sparkles, WandSparkles } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import type { ComponentType } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
@@ -28,11 +28,25 @@ export default function AiOutreachDialog({ leadId, channel, icon: TriggerIcon = 
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
+  const [versionIndex, setVersionIndex] = useState(0);
 
   const { data: messages, isLoading } = useOutreachMessagesByLead(open ? leadId : "");
-  const message = messages?.find((existing) => existing.channel === channel);
+  const channelMessages = useMemo(
+    () => (messages ?? []).filter((existing) => existing.channel === channel).sort((a, b) => a.version - b.version),
+    [messages, channel]
+  );
+  const latestMessage = channelMessages.at(-1);
+  const selectedMessage = channelMessages[versionIndex];
+  const maxVersion = latestMessage?.version ?? 1;
   const parts = channel === "WHATSAPP" ? WHATSAPP_PARTS : EMAIL_PARTS;
-  const messageData = (message?.data ?? {}) as Record<string, string>;
+
+  useEffect(() => {
+    if (!open || channelMessages.length === 0) {
+      return;
+    }
+
+    setVersionIndex(channelMessages.length - 1);
+  }, [open, channelMessages.length, latestMessage?.id]);
 
   const generate = useGenerateOutreachMessage();
   const rewrite = useRewriteOutreachMessage();
@@ -44,12 +58,12 @@ export default function AiOutreachDialog({ leadId, channel, icon: TriggerIcon = 
   };
 
   const handleRewrite = () => {
-    if (!message || !prompt.trim()) {
+    if (!latestMessage || !prompt.trim()) {
       return;
     }
 
     rewrite.mutate(
-      { id: message.id, prompt: prompt.trim() },
+      { id: latestMessage.id, prompt: prompt.trim() },
       {
         onSuccess: () => setPrompt(""),
         onError: (error) => toast.error(getErrorMessage(error))
@@ -58,20 +72,20 @@ export default function AiOutreachDialog({ leadId, channel, icon: TriggerIcon = 
   };
 
   const handleSend = () => {
-    if (!message) {
+    if (!selectedMessage) {
       return;
     }
 
     if (channel === "WHATSAPP") {
       generateWhatsAppLink.mutate(
-        { id: message.id },
+        { id: selectedMessage.id },
         {
           onSuccess: (res) => window.open(res.data.link, "_blank", "noopener,noreferrer"),
           onError: (error) => toast.error(getErrorMessage(error))
         }
       );
     } else {
-      sendEmail.mutate(message.id, {
+      sendEmail.mutate(selectedMessage.id, {
         onSuccess: () => toast.success(t("ai.outreach.emailSent")),
         onError: (error) => toast.error(getErrorMessage(error))
       });
@@ -87,6 +101,7 @@ export default function AiOutreachDialog({ leadId, channel, icon: TriggerIcon = 
         setOpen(nextOpen);
         if (!nextOpen) {
           setPrompt("");
+          setVersionIndex(0);
         }
       }}
     >
@@ -114,13 +129,40 @@ export default function AiOutreachDialog({ leadId, channel, icon: TriggerIcon = 
           <div className="flex h-32 items-center justify-center">
             <Loader2 className="size-6 animate-spin text-muted-foreground" />
           </div>
-        ) : message ? (
+        ) : selectedMessage ? (
           <div className="space-y-4">
             <div className="space-y-3 rounded-lg border border-border p-3">
+              <div className="flex items-center justify-center gap-1">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  className="text-muted-foreground"
+                  aria-label={t("ai.outreach.previousVersion")}
+                  disabled={versionIndex <= 0}
+                  onClick={() => setVersionIndex((index) => Math.max(0, index - 1))}
+                >
+                  <ChevronLeft className="size-4" />
+                </Button>
+                <span className="min-w-12 text-center text-xs font-semibold text-muted-foreground tabular-nums">
+                  {t("ai.outreach.versionPager", { current: selectedMessage.version, total: maxVersion })}
+                </span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  className="text-muted-foreground"
+                  aria-label={t("ai.outreach.nextVersion")}
+                  disabled={versionIndex >= channelMessages.length - 1}
+                  onClick={() => setVersionIndex((index) => Math.min(channelMessages.length - 1, index + 1))}
+                >
+                  <ChevronRight className="size-4" />
+                </Button>
+              </div>
               {parts.map((part) => (
                 <div key={part}>
                   <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">{t(`ai.outreach.parts.${part}`)}</p>
-                  <p className="text-sm whitespace-pre-line text-foreground">{messageData[part]}</p>
+                  <p className="text-sm whitespace-pre-line text-foreground">{(selectedMessage.data as Record<string, string>)[part]}</p>
                 </div>
               ))}
             </div>

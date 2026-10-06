@@ -22,7 +22,9 @@ function makeQueryClient() {
           return;
         }
 
-        console.error(getErrorMessage(error, "Something went wrong"));
+        const message = getErrorMessage(error, "Something went wrong");
+        const path = isAxiosError(error) ? error.config?.url : undefined;
+        console.error(path ? `${message} (${path})` : message);
       }
     })
   });

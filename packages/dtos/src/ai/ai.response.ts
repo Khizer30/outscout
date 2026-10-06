@@ -8,6 +8,7 @@ export const RewriteOutreachMessageResponseSchema = z.object({
     id: z.string(),
     leadId: z.string(),
     channel: MessageChannelSchema,
+    version: z.number().int().min(1),
     data: z.union([GeneratedWhatsAppMessageSchema, GeneratedEmailMessageSchema])
   })
 });
@@ -20,6 +21,7 @@ export const GetOutreachMessageResponseSchema = z.object({
       id: z.string(),
       leadId: z.string(),
       channel: MessageChannelSchema,
+      version: z.number().int().min(1),
       data: z.union([GeneratedWhatsAppMessageSchema, GeneratedEmailMessageSchema]),
       createdAt: z.date(),
       updatedAt: z.date()

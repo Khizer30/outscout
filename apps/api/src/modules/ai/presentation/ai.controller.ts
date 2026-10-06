@@ -23,7 +23,15 @@ export class AiController {
       data: messages.map((message) => {
         const { channel, ...data } = message.data;
 
-        return { id: message.id, leadId: message.leadId, channel, data, createdAt: message.createdAt, updatedAt: message.updatedAt };
+        return {
+          id: message.id,
+          leadId: message.leadId,
+          channel,
+          version: message.version,
+          data,
+          createdAt: message.createdAt,
+          updatedAt: message.updatedAt
+        };
       })
     };
   }
@@ -41,9 +49,9 @@ export class AiController {
       throw new ForbiddenException("You do not belong to a company");
     }
 
-    const rewritten = await this.aiService.rewriteOutreachMessage(id, companyId, dto.prompt, dto.messagePart);
+    const rewritten = await this.aiService.rewriteOutreachMessage(id, companyId, user.id, dto.prompt, dto.messagePart);
     const { channel, ...data } = rewritten.data;
 
-    return { data: { id: rewritten.id, leadId: rewritten.leadId, channel, data } };
+    return { data: { id: rewritten.id, leadId: rewritten.leadId, channel, version: rewritten.version, data } };
   }
 }

@@ -21,6 +21,7 @@ export const aiGeneratedMessagesTable = pgTable(
       .references(() => companyTable.id, { onDelete: "cascade" }),
     companyMessageRulesId: text().references(() => companyMessageRulesTable.id, { onDelete: "set null" }),
     companyMessageRulesVersion: integer(),
+    version: integer().notNull().default(1),
     data: jsonb().$type<AiGeneratedMessageData>().notNull(),
     createdBy: text().references(() => usersTable.id, { onDelete: "set null" }),
     createdAt: timestamp().defaultNow().notNull(),

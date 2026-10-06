@@ -19,12 +19,12 @@ type Lead = z.infer<typeof LeadResponseSchema>;
 type LeadStatus = z.infer<typeof LeadStatusSchema>;
 
 const RECENT_LEADS_LIMIT = 20;
-const BOARD_STATUSES = LeadStatusSchema.options.filter((status) => status !== "ARCHIVED");
+const BOARD_STATUSES = LeadStatusSchema.options;
 
 export default function RecentLeadsBoard() {
   const companyId = useAuthStore((state) => state.user?.companyId);
   const { t } = useTranslation();
-  const { data, isLoading } = useLeads({ page: 1, limit: RECENT_LEADS_LIMIT }, !!companyId);
+  const { data, isLoading } = useLeads({ page: 1, limit: RECENT_LEADS_LIMIT, status: [...BOARD_STATUSES] }, !!companyId);
   const updateLead = useUpdateLead();
   const [draggedLeadId, setDraggedLeadId] = useState<string | null>(null);
   const [dragOverStatus, setDragOverStatus] = useState<LeadStatus | null>(null);
