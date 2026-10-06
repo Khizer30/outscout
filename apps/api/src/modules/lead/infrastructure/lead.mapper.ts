@@ -24,6 +24,7 @@ export class LeadMapper {
       row.emails,
       row.otherPhones,
       row.socialLinks as LeadSocialLinks,
+      row.completedBy,
       row.createdAt,
       row.updatedAt
     );
@@ -49,6 +50,7 @@ export class LeadMapper {
       emails: entity.emails,
       otherPhones: entity.otherPhones,
       socialLinks: entity.socialLinks,
+      completedBy: entity.completedBy,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt
     };
@@ -74,6 +76,7 @@ export class LeadMapper {
       emails: entity.emails,
       otherPhones: entity.otherPhones,
       socialLinks: entity.socialLinks,
+      completedBy: entity.completedBy,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt
     };

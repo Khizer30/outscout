@@ -88,10 +88,17 @@ export class LeadService {
     return this.leadRepo.findByCompany(companyId, filters, pagination);
   }
 
-  async update(id: string, companyId: string, props: UpdateLeadProps): Promise<LeadEntity> {
+  async update(id: string, companyId: string, props: UpdateLeadProps, userId?: string): Promise<LeadEntity> {
     const lead = await this.findById(id, companyId);
 
-    const updated = await this.leadRepo.update(lead.update(props));
+    const nextProps: UpdateLeadProps = { ...props };
+    if (props.status === "COMPLETED") {
+      nextProps.completedBy = userId ?? lead.completedBy;
+    } else if (props.status) {
+      nextProps.completedBy = null;
+    }
+
+    const updated = await this.leadRepo.update(lead.update(nextProps));
     if (!updated) {
       throw new LeadNotFoundError({ id });
     }

@@ -127,7 +127,7 @@ export class LeadController {
       throw new ForbiddenException("You do not belong to a company");
     }
 
-    const updated = await this.leadService.update(id, companyId, dto);
+    const updated = await this.leadService.update(id, companyId, dto, user.id);
 
     await this.leadCacheService.invalidate(companyId);
 

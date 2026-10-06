@@ -1,5 +1,5 @@
 import type { LeadSocialLinksSchema, LeadStatusSchema } from "@repo/dtos/lead";
-import { Ban, CircleCheck, Clock, Heart, Loader2, Send } from "lucide-react";
+import { Archive, Ban, CircleCheck, Clock, Heart, Loader2, Send } from "lucide-react";
 import { FaFacebook, FaInstagram, FaLinkedin, FaTiktok, FaWhatsapp, FaXTwitter, FaYoutube } from "react-icons/fa6";
 import type { z } from "zod";
 
@@ -12,7 +12,9 @@ export const STATUS_ICONS: Record<LeadStatus, typeof Loader2> = {
   CONTACTED: Send,
   INTERESTED: Heart,
   UNRESPONSIVE: Clock,
-  REJECTED: Ban
+  REJECTED: Ban,
+  COMPLETED: CircleCheck,
+  ARCHIVED: Archive
 };
 
 export const STATUS_CHIP_CLASSES: Record<LeadStatus, string> = {
@@ -21,7 +23,9 @@ export const STATUS_CHIP_CLASSES: Record<LeadStatus, string> = {
   CONTACTED: "bg-primary/15 text-primary",
   INTERESTED: "bg-amber-500/15 text-amber-500",
   UNRESPONSIVE: "bg-muted text-muted-foreground",
-  REJECTED: "bg-destructive/15 text-destructive"
+  REJECTED: "bg-destructive/15 text-destructive",
+  COMPLETED: "bg-emerald-500/15 text-emerald-500",
+  ARCHIVED: "bg-muted text-muted-foreground"
 };
 
 export const SOCIAL_PLATFORMS = [

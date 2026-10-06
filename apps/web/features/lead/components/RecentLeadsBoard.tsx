@@ -19,6 +19,7 @@ type Lead = z.infer<typeof LeadResponseSchema>;
 type LeadStatus = z.infer<typeof LeadStatusSchema>;
 
 const RECENT_LEADS_LIMIT = 20;
+const BOARD_STATUSES = LeadStatusSchema.options.filter((status) => status !== "ARCHIVED");
 
 export default function RecentLeadsBoard() {
   const companyId = useAuthStore((state) => state.user?.companyId);
@@ -31,7 +32,7 @@ export default function RecentLeadsBoard() {
   const leads = data?.data ?? [];
 
   const columns = useMemo(() => {
-    const grouped = new Map<LeadStatus, Lead[]>(LeadStatusSchema.options.map((status) => [status, []]));
+    const grouped = new Map<LeadStatus, Lead[]>(BOARD_STATUSES.map((status) => [status, []]));
     for (const lead of data?.data ?? []) {
       grouped.get(lead.status)?.push(lead);
     }
@@ -80,7 +81,7 @@ export default function RecentLeadsBoard() {
             </div>
           ) : (
             <div className="flex gap-4 overflow-x-auto pb-2">
-              {LeadStatusSchema.options.map((status) => {
+              {BOARD_STATUSES.map((status) => {
                 const StatusIcon = STATUS_ICONS[status];
                 const columnLeads = columns.get(status) ?? [];
 

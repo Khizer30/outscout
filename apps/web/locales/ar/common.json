@@ -288,7 +288,9 @@
       "CONTACTED": "تم التواصل",
       "INTERESTED": "مهتم",
       "UNRESPONSIVE": "غير مستجيب",
-      "REJECTED": "مرفوض"
+      "REJECTED": "مرفوض",
+      "COMPLETED": "مكتمل",
+      "ARCHIVED": "مؤرشف"
     },
     "social": {
       "facebook": "فيسبوك",
@@ -313,6 +315,7 @@
       "linesPlaceholder": "إدخال واحد في كل سطر",
       "socialLinks": "روابط التواصل الاجتماعي",
       "otherLinks": "روابط أخرى",
+      "completedBy": "تم الإنجاز بواسطة <strong>{{name}}</strong>",
       "save": "حفظ التغييرات",
       "saving": "جارٍ الحفظ...",
       "success": "تم تحديث العميل المحتمل"

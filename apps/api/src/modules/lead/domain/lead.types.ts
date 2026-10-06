@@ -25,7 +25,7 @@ export const LEAD_TYPES = [
 ] as const;
 export type LeadType = (typeof LEAD_TYPES)[number];
 
-export type LeadStatus = "ENRICHING" | "READY" | "CONTACTED" | "INTERESTED" | "UNRESPONSIVE" | "REJECTED";
+export type LeadStatus = "ENRICHING" | "READY" | "CONTACTED" | "INTERESTED" | "UNRESPONSIVE" | "REJECTED" | "COMPLETED" | "ARCHIVED";
 
 export interface LeadSocialLinks {
   instagram?: string;
@@ -57,6 +57,7 @@ export interface CreateLeadProps {
   emails?: string[];
   otherPhones?: string[];
   socialLinks?: LeadSocialLinks;
+  completedBy?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -78,4 +79,5 @@ export interface UpdateLeadProps {
   emails?: string[];
   otherPhones?: string[];
   socialLinks?: LeadSocialLinks;
+  completedBy?: string | null;
 }
