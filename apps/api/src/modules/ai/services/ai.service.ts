@@ -68,6 +68,7 @@ export class AiService {
         companyId,
         companyMessageRulesId: messageRules?.id ?? null,
         companyMessageRulesVersion: messageRules?.version ?? null,
+        version: 1,
         data: generated,
         createdBy: userId
       });
@@ -79,7 +80,13 @@ export class AiService {
     }
   }
 
-  async rewriteOutreachMessage(id: string, companyId: string, prompt: string, messagePart: MessagePart | undefined): Promise<AiGeneratedMessageEntity> {
+  async rewriteOutreachMessage(
+    id: string,
+    companyId: string,
+    userId: string,
+    prompt: string,
+    messagePart: MessagePart | undefined
+  ): Promise<AiGeneratedMessageEntity> {
     const existing = await this.aiGeneratedMessageRepo.findById(id);
     if (!existing) {
       throw new AiGeneratedMessageNotFoundError({ id });
@@ -112,18 +119,17 @@ export class AiService {
         messageRules: { rules: messageRules?.rules ?? null, greeting: messageRules?.greeting ?? null }
       });
 
-      const updated = AiGeneratedMessageEntity.create({
-        id: existing.id,
+      const entity = AiGeneratedMessageEntity.create({
         leadId: existing.leadId,
         companyId: existing.companyId,
         companyMessageRulesId: existing.companyMessageRulesId,
         companyMessageRulesVersion: existing.companyMessageRulesVersion,
+        version: existing.version + 1,
         data: rewritten,
-        createdBy: existing.createdBy,
-        createdAt: existing.createdAt
+        createdBy: userId
       });
 
-      return await this.aiGeneratedMessageRepo.update(updated);
+      return await this.aiGeneratedMessageRepo.create(entity);
     } catch (error) {
       this.logger.error(`Failed to rewrite outreach message: ${error instanceof Error ? error.message : String(error)}`);
       throw new AiGenerationFailedError();
@@ -131,12 +137,7 @@ export class AiService {
   }
 
   async getByLead(leadId: string, companyId: string): Promise<AiGeneratedMessageEntity[]> {
-    const messages = await this.aiGeneratedMessageRepo.findByLead(leadId, companyId);
-    if (messages.length === 0) {
-      throw new AiGeneratedMessageNotFoundError({ leadId });
-    }
-
-    return messages;
+    return this.aiGeneratedMessageRepo.findByLead(leadId, companyId);
   }
 
   async getWhatsAppMessageText(id: string, companyId: string, messagePart: MessagePart | undefined): Promise<{ leadId: string; text: string }> {

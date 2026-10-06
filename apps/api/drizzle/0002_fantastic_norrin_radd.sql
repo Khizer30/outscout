@@ -1,0 +1,1 @@
+ALTER TABLE "ai_generated_messages" ADD COLUMN "version" integer DEFAULT 1 NOT NULL;

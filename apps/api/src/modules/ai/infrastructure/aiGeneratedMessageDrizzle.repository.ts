@@ -29,17 +29,9 @@ export class AiGeneratedMessageDrizzleRepository extends AiGeneratedMessageRepos
       .select()
       .from(aiGeneratedMessagesTable)
       .where(and(eq(aiGeneratedMessagesTable.leadId, leadId), eq(aiGeneratedMessagesTable.companyId, companyId)))
-      .orderBy(desc(aiGeneratedMessagesTable.createdAt));
+      .orderBy(desc(aiGeneratedMessagesTable.version), desc(aiGeneratedMessagesTable.createdAt));
 
-    const latestByChannel = new Map<string, AiGeneratedMessageEntity>();
-    for (const row of rows) {
-      const entity = AiGeneratedMessageMapper.toDomain(row);
-      if (!latestByChannel.has(entity.data.channel)) {
-        latestByChannel.set(entity.data.channel, entity);
-      }
-    }
-
-    return [...latestByChannel.values()];
+    return rows.map(AiGeneratedMessageMapper.toDomain);
   }
 
   async update(entity: AiGeneratedMessageEntity): Promise<AiGeneratedMessageEntity> {

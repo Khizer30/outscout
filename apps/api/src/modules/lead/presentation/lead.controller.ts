@@ -149,7 +149,7 @@ export class LeadController {
     const generated = await this.leadService.generateOutreachMessage(id, companyId, query.channel, user.id);
     const { channel, ...data } = generated.data;
 
-    return { data: { id: generated.id, leadId: generated.leadId, channel, data } };
+    return { data: { id: generated.id, leadId: generated.leadId, channel, version: generated.version, data } };
   }
 
   @Get("whatsapp-link/:id")

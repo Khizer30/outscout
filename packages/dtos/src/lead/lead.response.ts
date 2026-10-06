@@ -93,6 +93,7 @@ export const GenerateOutreachMessageResponseSchema = z.object({
     id: z.string(),
     leadId: z.string(),
     channel: MessageChannelSchema,
+    version: z.number().int().min(1),
     data: z.union([GeneratedWhatsAppMessageSchema, GeneratedEmailMessageSchema])
   })
 });

@@ -10,10 +10,10 @@ export class AiGeneratedMessageMapper {
       row.companyId,
       row.companyMessageRulesId,
       row.companyMessageRulesVersion,
+      row.version,
       row.data as GeneratedMessage,
       row.createdBy,
-      row.createdAt,
-      row.updatedAt
+      row.createdAt
     );
   }
 
@@ -24,10 +24,10 @@ export class AiGeneratedMessageMapper {
       companyId: entity.companyId,
       companyMessageRulesId: entity.companyMessageRulesId,
       companyMessageRulesVersion: entity.companyMessageRulesVersion,
+      version: entity.version,
       data: entity.data,
       createdBy: entity.createdBy,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt
+      createdAt: entity.createdAt
     };
   }
 }
