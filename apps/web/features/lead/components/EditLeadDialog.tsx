@@ -2,6 +2,7 @@
 import { useUpdateLead } from "@features/lead/api/lead.api";
 import { useLeadsContext, type Lead } from "@features/lead/components/LeadsProvider";
 import { SOCIAL_PLATFORMS, STATUS_ICONS } from "@features/lead/lib/leadDisplay";
+import { useTeamMembers } from "@features/team/api/team.api";
 import { LeadStatusSchema } from "@repo/dtos/lead";
 import { Button } from "@shared/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@shared/components/ui/dialog";
@@ -14,7 +15,7 @@ import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import type { z } from "zod";
 
 type LeadStatus = z.infer<typeof LeadStatusSchema>;
@@ -65,6 +66,8 @@ export default function EditLeadDialog() {
   const { t } = useTranslation();
   const { selectedLead: lead, selectLead } = useLeadsContext();
   const updateLead = useUpdateLead();
+  const { data: teamMembers } = useTeamMembers();
+  const completedByName = teamMembers?.find((member) => member.userId === lead?.completedBy)?.name;
 
   const { register, control, handleSubmit, reset } = useForm<EditLeadFormValues>({
     defaultValues: buildDefaultValues(lead)
@@ -118,6 +121,16 @@ export default function EditLeadDialog() {
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+          {lead?.completedBy && (
+            <p className="-mt-3 text-sm text-muted-foreground">
+              <Trans
+                i18nKey="leads.editDialog.completedBy"
+                values={{ name: completedByName ?? lead.completedBy }}
+                components={{ strong: <strong className="font-semibold text-foreground" /> }}
+              />
+            </p>
+          )}
+
           <div className="space-y-1.5">
             <Label htmlFor="edit-lead-status">{t("leads.editDialog.status")}</Label>
             <Controller

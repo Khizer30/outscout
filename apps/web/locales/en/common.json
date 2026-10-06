@@ -315,6 +315,7 @@
       "linesPlaceholder": "One entry per line",
       "socialLinks": "Social links",
       "otherLinks": "Other links",
+      "completedBy": "Completed by <strong>{{name}}</strong>",
       "save": "Save changes",
       "saving": "Saving...",
       "success": "Lead updated"
