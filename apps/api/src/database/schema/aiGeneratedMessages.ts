@@ -24,11 +24,7 @@ export const aiGeneratedMessagesTable = pgTable(
     version: integer().notNull().default(1),
     data: jsonb().$type<AiGeneratedMessageData>().notNull(),
     createdBy: text().references(() => usersTable.id, { onDelete: "set null" }),
-    createdAt: timestamp().defaultNow().notNull(),
-    updatedAt: timestamp()
-      .defaultNow()
-      .$onUpdate(() => new Date())
-      .notNull()
+    createdAt: timestamp().defaultNow().notNull()
   },
   (table) => [index("ai_generated_messages_lead_id_idx").on(table.leadId), index("ai_generated_messages_company_id_idx").on(table.companyId)]
 );

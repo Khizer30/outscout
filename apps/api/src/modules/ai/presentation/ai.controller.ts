@@ -29,8 +29,7 @@ export class AiController {
           channel,
           version: message.version,
           data,
-          createdAt: message.createdAt,
-          updatedAt: message.updatedAt
+          createdAt: message.createdAt
         };
       })
     };

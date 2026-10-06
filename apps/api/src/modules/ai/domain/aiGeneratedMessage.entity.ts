@@ -11,8 +11,7 @@ export class AiGeneratedMessageEntity {
     public readonly version: number,
     public readonly data: GeneratedMessage,
     public readonly createdBy: string | null,
-    public readonly createdAt: Date,
-    public readonly updatedAt: Date
+    public readonly createdAt: Date
   ) {}
 
   static create(props: {
@@ -25,7 +24,6 @@ export class AiGeneratedMessageEntity {
     data: GeneratedMessage;
     createdBy?: string | null;
     createdAt?: Date;
-    updatedAt?: Date;
   }): AiGeneratedMessageEntity {
     return new AiGeneratedMessageEntity(
       props.id ?? createId(),
@@ -36,8 +34,7 @@ export class AiGeneratedMessageEntity {
       props.version ?? 1,
       props.data,
       props.createdBy ?? null,
-      props.createdAt ?? new Date(),
-      props.updatedAt ?? new Date()
+      props.createdAt ?? new Date()
     );
   }
 }

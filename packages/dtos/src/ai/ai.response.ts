@@ -23,8 +23,7 @@ export const GetOutreachMessageResponseSchema = z.object({
       channel: MessageChannelSchema,
       version: z.number().int().min(1),
       data: z.union([GeneratedWhatsAppMessageSchema, GeneratedEmailMessageSchema]),
-      createdAt: z.date(),
-      updatedAt: z.date()
+      createdAt: z.date()
     })
   )
 });

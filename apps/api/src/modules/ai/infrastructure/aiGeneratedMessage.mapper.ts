@@ -13,8 +13,7 @@ export class AiGeneratedMessageMapper {
       row.version,
       row.data as GeneratedMessage,
       row.createdBy,
-      row.createdAt,
-      row.updatedAt
+      row.createdAt
     );
   }
 
@@ -28,8 +27,7 @@ export class AiGeneratedMessageMapper {
       version: entity.version,
       data: entity.data,
       createdBy: entity.createdBy,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt
+      createdAt: entity.createdAt
     };
   }
 }

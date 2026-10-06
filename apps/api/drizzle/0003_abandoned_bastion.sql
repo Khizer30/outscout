@@ -1,0 +1,1 @@
+ALTER TABLE "ai_generated_messages" DROP COLUMN "updatedAt";
